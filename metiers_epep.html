@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les Métiers – ÉPEP Ixelles</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Nunito:wght@600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#F0EEE9; --white:#FAFAF8; --text:#1A1A2E; --soft:#6B7280; --border:#E5E7EB;
+  --c0:#3B82F6; --c0d:#1D4ED8; --c0b:rgba(59,130,246,0.15);
+  --c1:#00BFA6; --c1d:#007A6A; --c1b:rgba(0,191,166,0.15);
+  --c2:#FF6B35; --c2d:#B84A20; --c2b:rgba(255,107,53,0.15);
+  --c3:#7C3AED; --c3d:#4C1D95; --c3b:rgba(124,58,237,0.15);
+  --c4:#F59E0B; --c4d:#92400E; --c4b:rgba(245,158,11,0.15);
+  --sh:0 8px 28px rgba(0,0,0,0.08); --shl:0 16px 40px rgba(0,0,0,0.14);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);height:100vh;overflow:hidden;user-select:none;}
+
+/* ── FOND ANIMÉ ── */
+.animated-bg{position:fixed;top:-50%;left:-50%;width:200%;height:200%;
+  background:radial-gradient(circle,rgba(0,191,166,0.05) 0%,transparent 55%),
+             radial-gradient(circle,rgba(245,158,11,0.04) 0%,transparent 55%);
+  background-position:0 0,100% 100%;
+  animation:bgMove 20s infinite alternate;
+  z-index:0;pointer-events:none;}
+@keyframes bgMove{0%{transform:translate(0,0);}100%{transform:translate(-20px,-20px);}}
+
+/* ── TRANSITIONS GLOBALES ── */
+.screen{transition:opacity 0.3s ease;}
+
+/* ═══════════════════════════════
+   ACCUEIL
+═══════════════════════════════ */
+#sc-home{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:100vh;padding:2rem;position:relative;z-index:1;
+  background:#FAFAF8;
+}
+.home-badge{
+  font-size:0.88rem;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:0.9rem;
+  opacity:0;animation:fadeInDown 0.7s 0.1s forwards;
+}
+.home-h1{
+  font-family:'Baloo 2',cursive;font-size:clamp(2.2rem,4.5vw,3.8rem);
+  font-weight:800;line-height:1.1;text-align:center;margin-bottom:0.5rem;
+  opacity:0;animation:fadeInUp 0.7s 0.2s forwards;
+}
+.home-h1 span{color:var(--c1);font-style:italic;}
+.home-sub{
+  font-size:1.05rem;color:var(--soft);margin-bottom:2rem;text-align:center;
+  opacity:0;animation:fadeInUp 0.7s 0.3s forwards;
+}
+.cards-grid{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:1.2rem;
+  width:100%;max-width:960px;margin-bottom:2rem;
+  opacity:0;animation:fadeInUp 0.7s 0.4s forwards;
+}
+.mcard{
+  flex:0 0 280px;
+  width:280px;
+  background:var(--white);border:1.5px solid #EBEBEB;border-radius:22px;
+  padding:1.6rem 1.4rem;cursor:pointer;
+  transition:transform 0.3s cubic-bezier(0.175,0.885,0.32,1.275),box-shadow 0.3s,border-color 0.2s;
+  display:flex;align-items:center;gap:1.2rem;
+  position:relative;overflow:hidden;
+  box-shadow:0 4px 16px rgba(0,0,0,0.06);
+  opacity:0;transform:translateY(24px);
+  animation:popIn 0.5s forwards;
+}
+.mcard:nth-child(1){animation-delay:0.1s;}
+.mcard:nth-child(2){animation-delay:0.2s;}
+.mcard:nth-child(3){animation-delay:0.3s;}
+.mcard:nth-child(4){animation-delay:0.4s;}
+.mcard::before{content:'';position:absolute;top:0;left:0;width:6px;height:100%;border-radius:4px 0 0 4px;}
+.mc0::before{background:var(--c0);} .mc1::before{background:var(--c1);} .mc2::before{background:var(--c2);}
+.mc3::before{background:var(--c3);} .mc4::before{background:var(--c4);}
+.mcard:hover{transform:translateY(-6px) scale(1.02);box-shadow:0 20px 45px rgba(0,0,0,0.12);}
+.mc0:hover{border-color:var(--c0);} .mc1:hover{border-color:var(--c1);} .mc2:hover{border-color:var(--c2);}
+.mc3:hover{border-color:var(--c3);} .mc4:hover{border-color:var(--c4);}
+
+.mcard-emoji{
+  font-size:2.2rem;width:58px;height:58px;border-radius:16px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:transform 0.3s;
+}
+.mcard:hover .mcard-emoji{transform:rotate(8deg) scale(1.12);}
+.mc0 .mcard-emoji{background:var(--c0b);}
+.mc1 .mcard-emoji{background:var(--c1b);}
+.mc2 .mcard-emoji{background:var(--c2b);}
+.mc3 .mcard-emoji{background:var(--c3b);}
+.mc4 .mcard-emoji{background:var(--c4b);}
+
+.mcard-info{flex:1;}
+.mcard-sector{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--soft);margin-bottom:0.3rem;}
+.mcard-name{font-family:'Baloo 2',cursive;font-weight:700;font-size:1.05rem;line-height:1.25;color:var(--text);}
+.mcard-arrow{font-size:1.4rem;opacity:0.2;transition:opacity 0.2s,transform 0.2s;}
+.mcard:hover .mcard-arrow{opacity:0.7;transform:translateX(5px);}
+
+/* Badge statut */
+.stat-tag{
+  position:absolute;top:14px;right:14px;
+  font-size:0.68rem;font-weight:800;padding:4px 10px;
+  border-radius:99px;text-transform:uppercase;letter-spacing:0.05em;
+}
+.st-todo{background:#E5E7EB;color:var(--soft);}
+.st-doing{background:#DBEAFE;color:#1E40AF;animation:pulse 2s infinite;}
+.st-done{background:#DCFCE7;color:#15803D;}
+
+.btn-startall{
+  font-family:'Baloo 2',cursive;font-weight:800;font-size:1.2rem;
+  background:var(--text);color:var(--white);border:none;
+  padding:1.1rem 2.8rem;border-radius:99px;cursor:pointer;
+  box-shadow:0 10px 24px rgba(26,26,46,0.2);
+  transition:transform 0.25s,box-shadow 0.25s;
+  opacity:0;animation:fadeInUp 0.7s 0.5s forwards;
+  position:relative;overflow:hidden;
+  display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;
+  text-align:center;
+}
+.btn-startall::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.18),transparent);transition:0.5s;}
+.btn-startall:hover{transform:translateY(-3px);box-shadow:0 16px 30px rgba(26,26,46,0.3);}
+.btn-startall:hover::after{left:100%;}
+
+/* ═══════════════════════════════
+   SLIDE
+═══════════════════════════════ */
+#sc-slide{display:none;height:100vh;flex-direction:column;background:var(--bg);position:relative;z-index:2;}
+.pbar-wrap{position:absolute;top:0;left:0;width:100%;height:6px;background:rgba(0,0,0,0.05);z-index:20;}
+.pbar{height:100%;width:0%;border-radius:0 4px 4px 0;transition:width 0.6s cubic-bezier(0.4,0,0.2,1);}
+
+.slide-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0.9rem 1.8rem;
+  background:rgba(255,255,255,0.92);backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(0,0,0,0.06);position:relative;z-index:10;
+}
+.btn-home{
+  display:flex;align-items:center;gap:0.45rem;
+  background:var(--white);border:1.5px solid var(--border);
+  color:var(--text);font-family:'Nunito',sans-serif;font-weight:700;font-size:0.88rem;
+  padding:0.45rem 1rem;border-radius:99px;cursor:pointer;transition:all 0.2s;
+}
+.btn-home:hover{background:var(--bg);transform:scale(1.04);}
+.sdots{display:flex;gap:0.4rem;align-items:center;}
+.dot{width:30px;height:8px;border-radius:99px;background:var(--border);transition:background 0.3s,width 0.3s;cursor:pointer;}
+.dot.active{width:40px;}
+.scounter{font-size:0.85rem;font-weight:700;color:var(--soft);}
+
+.slide-body{flex:1;display:flex;overflow:hidden;}
+
+/* Panneau gauche photo */
+.slide-left{width:42%;position:relative;overflow:hidden;}
+.slide-left-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform 6s ease;}
+.slide-left:hover .slide-left-bg{transform:scale(1.06);}
+.slide-left-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.82) 0%,rgba(0,0,0,0.2) 60%,transparent 100%);}
+.slide-left-content{
+  position:absolute;bottom:0;left:0;padding:2.5rem;color:#fff;z-index:2;
+  transform:translateY(20px);opacity:0;transition:all 0.6s ease;
+}
+.slide-active .slide-left-content{transform:translateY(0);opacity:1;}
+.sl-sector{text-transform:uppercase;letter-spacing:0.15em;font-size:0.85rem;font-weight:800;margin-bottom:0.5rem;opacity:0.8;}
+.sl-emoji{font-size:4.5rem;display:block;margin-bottom:0.8rem;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.4));}
+.sl-title{font-family:'Baloo 2',cursive;font-size:clamp(1.6rem,3vw,2.6rem);font-weight:800;line-height:1.1;margin-bottom:0.8rem;text-shadow:0 2px 12px rgba(0,0,0,0.35);}
+.sl-desc{font-size:1rem;line-height:1.65;opacity:0.9;text-shadow:0 1px 6px rgba(0,0,0,0.4);max-width:90%;}
+
+/* Panneau droit */
+.slide-right{
+  flex:1;background:#FAFAF8;
+  display:flex;flex-direction:column;padding:1.8rem 2.2rem;
+  overflow-y:auto;gap:1.1rem;
+  box-shadow:-8px 0 24px rgba(0,0,0,0.05);
+  transition:opacity 0.3s,transform 0.3s;
+}
+
+/* Blocs révélation */
+.reveal-block{
+  background:var(--bg);border-left:5px solid var(--text);border-radius:14px;
+  padding:1.3rem 1.5rem;opacity:0;transform:translateY(12px);
+  transition:opacity 0.4s ease,transform 0.4s ease,padding 0.4s ease,max-height 0.4s ease;
+  overflow:hidden;max-height:400px;
+}
+.reveal-block.visible{opacity:1;transform:translateY(0);}
+/* Bloc réduit : seul le label reste visible */
+.reveal-block.collapsed{
+  padding:0.7rem 1.5rem;max-height:48px;cursor:pointer;
+}
+.reveal-block.collapsed .block-content{
+  opacity:0;height:0;overflow:hidden;pointer-events:none;
+  transition:opacity 0.3s,height 0.3s;
+}
+.reveal-block.collapsed .blabel{
+  margin-bottom:0;color:var(--text);opacity:0.5;font-size:0.7rem;
+}
+.reveal-block.collapsed::after{
+  content:'▸';float:right;opacity:0.4;font-size:0.85rem;
+}
+.blabel{font-size:0.72rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--soft);margin-bottom:0.8rem;transition:margin 0.3s;}
+.tags{display:flex;flex-wrap:wrap;gap:0.5rem;}
+.tag{padding:0.4rem 1rem;border-radius:99px;font-size:0.9rem;font-weight:700;border:1.5px solid;background:var(--white);}
+.profil-list{display:flex;flex-direction:column;gap:0.5rem;}
+.profil-item{display:flex;align-items:center;gap:0.65rem;font-size:1rem;font-weight:600;}
+.pcheck{width:24px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:900;flex-shrink:0;color:white;}
+.debs{display:flex;flex-direction:column;gap:0.4rem;}
+.deb{font-size:0.95rem;font-weight:600;display:flex;align-items:center;gap:0.55rem;}
+.debdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+/* Nav */
+.slide-nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.8rem;background:rgba(255,255,255,0.92);backdrop-filter:blur(12px);border-top:1px solid rgba(0,0,0,0.06);}
+.btn-nav{
+  background:var(--white);border:2px solid var(--border);
+  color:var(--text);font-family:'Nunito',sans-serif;font-weight:800;
+  font-size:0.95rem;padding:0.75rem 1.6rem;border-radius:99px;cursor:pointer;transition:all 0.2s;
+}
+.btn-nav:hover{border-color:var(--text);transform:translateY(-2px);}
+.btn-nav:disabled{opacity:0.3;cursor:default;transform:none;}
+.btn-nav.pri{background:var(--text);color:var(--white);border-color:var(--text);box-shadow:0 5px 15px rgba(0,0,0,0.18);}
+.btn-nav.pri:hover{background:#2d2d4a;transform:translateY(-3px);box-shadow:0 8px 22px rgba(0,0,0,0.25);}
+.nhint{font-size:0.78rem;color:var(--soft);font-style:italic;}
+
+/* ── INTERACTION ── */
+.iw{
+  border-radius:14px;padding:1.4rem 1.6rem;border:2px dashed;
+  opacity:0;transform:translateY(12px);
+  transition:opacity 0.4s ease,transform 0.5s cubic-bezier(0.175,0.885,0.32,1.275);
+}
+.iw.visible{opacity:1;transform:translateY(0);}
+.ilabel{font-size:0.7rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--soft);margin-bottom:0.7rem;}
+.iq{font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:700;margin-bottom:1.1rem;line-height:1.4;color:var(--text);}
+.bgrp{display:flex;gap:0.7rem;flex-wrap:wrap;}
+.bchoice{
+  flex:1;min-width:110px;padding:0.85rem 1.1rem;border-radius:12px;
+  border:2px solid var(--border);background:var(--white);color:var(--text);
+  font-family:'Nunito',sans-serif;font-size:0.95rem;font-weight:700;
+  cursor:pointer;transition:all 0.2s;
+}
+.bchoice:hover{border-color:#9CA3AF;background:var(--bg);transform:translateY(-2px);}
+.bchoice.correct{background:#DCFCE7;border-color:#22C55E;color:#15803D;animation:bounce 0.5s;}
+.bchoice.wrong{background:#FEE2E2;border-color:#EF4444;color:#B91C1C;animation:shake 0.4s;}
+.ifb{margin-top:0.9rem;font-size:0.92rem;font-weight:600;padding:0.8rem 1rem;border-radius:10px;display:none;line-height:1.5;}
+.ifb.show{display:block;}
+.fb-ok{background:#DCFCE7;border:1px solid #86EFAC;color:#15803D;}
+.fb-ko{background:#FEE2E2;border:1px solid #FCA5A5;color:#B91C1C;}
+
+/* ═══════════════════════════════
+   QUIZ
+═══════════════════════════════ */
+#sc-quiz{display:none;height:100vh;flex-direction:column;background:var(--white);z-index:10;}
+.qhdr{
+  padding:1rem 1.8rem;background:rgba(255,255,255,0.92);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;
+}
+.qtitle{font-family:'Baloo 2',cursive;font-weight:700;font-size:1.3rem;}
+.qscore{font-size:1rem;font-weight:700;color:var(--soft);}
+.qbody{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:2.5rem;gap:1.8rem;max-width:860px;margin:0 auto;width:100%;
+}
+.qbar-w{width:100%;height:8px;background:var(--bg);border-radius:99px;overflow:hidden;border:1px solid var(--border);}
+.qbar-f{height:100%;border-radius:99px;transition:width 0.5s ease;}
+.qnum{font-size:0.88rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--soft);}
+.qq{
+  font-family:'Baloo 2',cursive;font-size:clamp(1.5rem,2.8vw,2.2rem);
+  font-weight:700;text-align:center;line-height:1.35;color:var(--text);
+  animation:fadeInDown 0.5s ease;
+}
+.qopts{display:grid;grid-template-columns:1fr 1fr;gap:1rem;width:100%;}
+.qopt{
+  padding:1.3rem 1.5rem;border-radius:16px;border:2px solid var(--border);
+  background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;
+  font-size:1.05rem;font-weight:700;cursor:pointer;text-align:left;
+  transition:background 0.25s,border-color 0.25s,color 0.25s;
+  display:flex;gap:0.85rem;align-items:flex-start;
+  opacity:0;transform:translateY(16px);animation:popIn 0.35s forwards;
+}
+.qopt:nth-child(1){animation-delay:0s;}
+.qopt:nth-child(2){animation-delay:0.08s;}
+.qopt:nth-child(3){animation-delay:0.16s;}
+.qopt:nth-child(4){animation-delay:0.24s;}
+.qopt:hover{border-color:#9CA3AF;background:var(--white);box-shadow:var(--sh);transform:translateY(-3px);}
+.qopt.correct{background:#DCFCE7;border-color:#22C55E;color:#15803D;opacity:1;transform:none;animation:none;}
+.qopt.wrong{background:#FEE2E2;border-color:#EF4444;color:#B91C1C;opacity:1;transform:none;animation:none;}
+.oletter{width:32px;height:32px;border-radius:9px;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:0.9rem;font-weight:900;flex-shrink:0;color:var(--text);}
+.qfb{
+  font-size:1.05rem;font-weight:600;text-align:center;width:100%;
+  line-height:1.5;padding:1rem 1.5rem;border-radius:12px;
+  opacity:0;transition:opacity 0.4s;min-height:2rem;
+}
+.qfb.ok{background:#DCFCE7;color:#15803D;}
+.qfb.ko{background:#FEE2E2;color:#B91C1C;}
+.qnav{padding:1rem 1.8rem;background:rgba(255,255,255,0.92);backdrop-filter:blur(12px);border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+
+/* ═══════════════════════════════
+   SCORE
+═══════════════════════════════ */
+#sc-score{
+  display:none;height:100vh;flex-direction:column;
+  align-items:center;justify-content:center;
+  background:var(--white);text-align:center;padding:2rem;gap:1.2rem;z-index:10;
+}
+.sc-emoji{font-size:5.5rem;}
+.sc-val{
+  font-family:'Baloo 2',cursive;font-size:clamp(3.5rem,8vw,6rem);font-weight:800;
+  background:linear-gradient(45deg,var(--c1),var(--c3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.sc-lbl{font-size:1rem;color:var(--soft);font-weight:700;}
+.sc-msg{font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:700;max-width:440px;line-height:1.4;color:var(--text);}
+.btn-restart{font-family:'Baloo 2',cursive;font-weight:800;font-size:1.1rem;background:var(--text);color:var(--white);border:none;padding:1rem 2.2rem;border-radius:99px;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;}
+.btn-restart:hover{transform:translateY(-3px);box-shadow:var(--shl);}
+.cfw{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:100;}
+.cfp{position:absolute;width:10px;height:10px;border-radius:2px;animation:fall 3s ease-in forwards;opacity:0;}
+
+/* ═══════════════════════════════
+   KEYFRAMES
+═══════════════════════════════ */
+@keyframes popIn{to{opacity:1;transform:translateY(0) scale(1);}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeInDown{from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+@keyframes bounce{0%,20%,50%,80%,100%{transform:translateY(0);}40%{transform:translateY(-10px);}60%{transform:translateY(-5px);}}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-8px);}75%{transform:translateX(8px);}}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(30,64,175,0.4);}70%{box-shadow:0 0 0 8px rgba(30,64,175,0);}100%{box-shadow:0 0 0 0 rgba(30,64,175,0);}}
+@keyframes fall{0%{opacity:1;transform:translateY(-20px) rotate(0deg);}100%{opacity:0;transform:translateY(110vh) rotate(720deg);}}
+</style>
+</head>
+<body>
+
+<div class="animated-bg"></div>
+
+<!-- ACCUEIL -->
+<div id="sc-home">
+  <p class="home-badge">ÉPEP Ixelles · Enseignement Spécialisé</p>
+  <h1 class="home-h1">Tu veux savoir<br><span>quel métier te correspond ?</span></h1>
+  <p class="home-sub">Clique sur un métier pour le découvrir, ou lance la visite complète !</p>
+  <div class="cards-grid" id="main-grid"></div>
+  <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;">
+    <button class="btn-startall" onclick="startAll()">🚀 Tout découvrir dans l'ordre</button>
+    <button class="btn-startall" style="background:var(--c2);" onclick="startJeu()">🎯 Devine le métier !</button>
+  </div>
+</div>
+
+<!-- SLIDE -->
+<div id="sc-slide" style="display:none;flex-direction:column;position:relative;">
+  <div class="pbar-wrap"><div class="pbar" id="pbar"></div></div>
+  <div class="slide-hdr">
+    <button class="btn-home" onclick="goHome()">🏠 Accueil</button>
+    <div class="sdots" id="sdots"></div>
+    <div class="scounter" id="scounter"></div>
+  </div>
+  <div class="slide-body">
+    <div class="slide-left" id="slide-left">
+      <div class="slide-left-bg" id="slide-bg"></div>
+      <div class="slide-left-overlay" id="slide-overlay"></div>
+      <div class="slide-left-content">
+        <div class="sl-sector" id="sl-sector"></div>
+        <span class="sl-emoji" id="sl-emoji"></span>
+        <h2 class="sl-title" id="sl-title"></h2>
+        <p class="sl-desc" id="sl-desc"></p>
+      </div>
+    </div>
+    <div class="slide-right" id="slide-right"></div>
+  </div>
+  <div class="slide-nav">
+    <button class="btn-nav" id="btn-prev" onclick="prevStep()">← Retour</button>
+    <span class="nhint" id="nhint">Clique pour révéler les infos</span>
+    <button class="btn-nav pri" id="btn-next" onclick="nextStep()">Suivant →</button>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="sc-quiz" style="display:none;flex-direction:column;">
+  <div class="qhdr">
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <button class="btn-home" onclick="goHome()">🏠 Accueil</button>
+      <div class="qtitle" id="qtitle"></div>
+    </div>
+    <div class="qscore" id="qscore"></div>
+  </div>
+  <div class="qbody">
+    <div class="qnum" id="qnum"></div>
+    <div class="qbar-w"><div class="qbar-f" id="qbarf"></div></div>
+    <div class="qq" id="qq"></div>
+    <div class="qopts" id="qopts"></div>
+    <div class="qfb" id="qfb"></div>
+  </div>
+  <div class="qnav">
+    <button class="btn-home" onclick="goHome()">🏠 Accueil</button>
+    <button class="btn-nav pri" id="btn-qnext" onclick="nextQ()" disabled>Question suivante →</button>
+  </div>
+</div>
+
+<!-- SCORE INTERMÉDIAIRE -->
+<div id="sc-score-quiz" style="display:none;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:var(--white);text-align:center;gap:1.2rem;padding:2rem;z-index:10;">
+  <div id="sqz-emoji" style="font-size:5rem;"></div>
+  <div id="sqz-val" style="font-family:'Baloo 2',cursive;font-size:5rem;font-weight:800;color:var(--text);"></div>
+  <div id="sqz-label" style="font-size:1rem;color:var(--soft);font-weight:600;"></div>
+  <div id="sqz-msg" style="font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:700;max-width:440px;line-height:1.4;color:var(--text);"></div>
+  <button class="btn-nav pri" onclick="afterQuizScore()" id="btn-sqz">Retour à l'accueil 🏠</button>
+</div>
+
+<!-- SCORE FINAL -->
+<div id="sc-score" style="display:none;flex-direction:column;align-items:center;justify-content:center;">
+  <div class="cfw" id="cfw"></div>
+  <div class="sc-emoji" id="sc-emoji"></div>
+  <div class="sc-val" id="sc-val"></div>
+  <div class="sc-lbl" id="sc-lbl"></div>
+  <div class="sc-msg" id="sc-msg"></div>
+  <button class="btn-restart" onclick="goHome()">🏠 Retour à l'accueil</button>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// COULEURS
+// ══════════════════════════════════════════════════════
+const C   = ['#3B82F6','#00BFA6','#FF6B35','#7C3AED','#F59E0B'];
+const CD  = ['#1D4ED8','#007A6A','#B84A20','#4C1D95','#92400E'];
+const CB  = ['rgba(59,130,246,0.15)','rgba(0,191,166,0.15)','rgba(255,107,53,0.15)','rgba(124,58,237,0.15)','rgba(245,158,11,0.15)'];
+const CR  = ['rgba(59,130,246,0.4)','rgba(0,191,166,0.4)','rgba(255,107,53,0.4)','rgba(124,58,237,0.4)','rgba(245,158,11,0.4)'];
+const COV = ['rgba(15,40,100,0.82)','rgba(0,60,50,0.78)','rgba(120,45,10,0.78)','rgba(45,10,100,0.78)','rgba(110,65,0,0.78)'];
+
+// ══════════════════════════════════════════════════════
+// DONNÉES — contenu original complet
+// ══════════════════════════════════════════════════════
+const metiers = [
+  {
+    id:'ecole', emoji:'🏫', ci:0, status:'todo',
+    sector:'Ton parcours à l’école',
+    title:'Comment ça va se passer à l’école ?',
+    photo:'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=900&q=80',
+    indices:["Je ne suis pas un métier, mais un lieu où tu vas apprendre...", "On t’y explique clairement ce qu’on attend de toi...", "Tu t’entraînes avant d’être évalué, et tu n’es jamais seul..."],
+    desc:'On veut t’aider à réussir. On veut que ce soit clair pour toi. On veut que ce soit juste pour tout le monde.',
+    blocks:[
+      { label:'Ton parcours étape par étape', type:'profil',
+        items:[
+          'Tu sais ce que tu dois faire : on t’explique clairement les tâches et les objectifs',
+          'Tu t’entraînes avant : tu pratiques en atelier avant les situations réelles',
+          'Tu es évalué de manière juste : les règles sont les mêmes pour tous',
+          'Tu es accompagné : tu n’es jamais seul face aux épreuves',
+          'Tu fais des exemples avant : pour mieux comprendre ce qu’on attend de toi'
+        ] },
+      { label:'Et plus tard dans ton parcours...', type:'tags',
+        items:['Une épreuve de qualification','Tu montres ce que tu sais faire','Dans une situation réelle du métier','Reconnue officiellement'] },
+      { label:'Les 3 principes de ton école', type:'debouches',
+        items:['On veut t’aider à réussir','On veut que ce soit clair pour toi','On veut que ce soit juste pour tout le monde'] }
+    ],
+    interaction:{
+      question:"🤔 À ton avis, à quoi sert une épreuve de qualification ?",
+      reponses:[
+        {label:'😬 À te piéger',correct:false},
+        {label:'✅ À vérifier ce que tu sais faire dans la réalité',correct:true},
+        {label:'📊 À te donner une note uniquement',correct:false}
+      ],
+      feedback_ok:"🎉 Exactement ! L’épreuve de qualification sert à montrer ce que tu sais vraiment faire dans le métier. C’est une chance, pas un piège !",
+      feedback_ko:"Pas tout à fait ! L’épreuve de qualification, c’est le moment où tu montres concrètement ce que tu sais faire dans le métier. Tu es préparé pour ça."
+    },
+    quiz:[
+      { q:"Selon toi, à quoi sert une épreuve de qualification ?",
+        options:['À te piéger','À te donner une note uniquement','À vérifier ce que tu sais faire dans la réalité','À punir les élèves'],
+        correct:2, explication:"L’épreuve de qualification te permet de montrer concrètement tes compétences dans le métier. Tu es accompagné et préparé pour y arriver !" },
+      { q:"Comment l’école t’aide à te préparer ?",
+        options:["Elle ne t’aide pas","Tu travailles seul sans explication","Tu t’entraînes en atelier avant les situations réelles et on t’explique clairement ce qu’on attend","Tu dois tout deviner par toi-même"],
+        correct:2, explication:"À l’école, on t’explique les objectifs, tu t’entraînes en atelier, et tu es accompagné à chaque étape. Tu n’es jamais seul !" },
+      { q:"Qu’est-ce qui est garanti pour tous les élèves lors des évaluations ?",
+        options:["Certains élèves ont des questions plus faciles","Les règles sont différentes selon les élèves","Les règles sont les mêmes pour tout le monde","Les profs choisissent leurs élèves préférés"],
+        correct:2, explication:"L’équité est au cœur de l’évaluation : les mêmes règles pour tous, pour que ce soit juste pour chaque élève." }
+    ]
+  },
+  {
+    id:'menuiserie', emoji:'🪵', ci:2, status:'todo',
+    sector:'Secteur · Construction',
+    title:"Monteur·Placeur d'Éléments Menuisés",
+    photo:'https://images.unsplash.com/photo-1615974679960-414c1c7f08ea?w=900&q=80',
+    indices:["Je travaille avec une matière naturelle qu’on trouve dans les forêts...", "J’utilise des outils comme une scie, un mètre et un rabot...", "Je fabrique et installe des portes, des fenêtres et des meubles..."],
+    desc:"Tu fabriques et tu installes des éléments en bois : portes, fenêtres, meubles, placards. Tu vois le résultat de ton travail de tes propres yeux.",
+    blocks:[
+      { label:'Ce que tu vas apprendre', type:'tags',
+        items:['Lire des plans simples','Mesurer et tracer avec précision','Utiliser des outils de menuiserie','Couper et assembler des pièces','Installer des portes et fenêtres'] },
+      { label:"Ce métier c'est pour toi si...", type:'profil',
+        items:['Tu aimes fabriquer avec tes propres mains et voir directement ce que tu as réalisé','Tu aimes construire ou bricoler','Tu es précis·e et soigneux·se','Tu aimes voir le résultat concret de ton travail'] },
+      { label:'Où tu peux travailler après ?', type:'debouches',
+        items:['Une entreprise de menuiserie','Un chantier de construction','Un atelier de fabrication'] }
+    ],
+    interaction:{
+      question:"🤔 Vrai ou faux ? Un Monteur·Placeur d'Éléments Menuisés peut fabriquer et installer une porte en bois.",
+      reponses:[{label:'✅ Vrai',correct:true},{label:'❌ Faux',correct:false}],
+      feedback_ok:"🎉 Exactement ! Il fabrique et installe des portes, fenêtres, meubles, placards... Tout ce qui est en bois !",
+      feedback_ko:"En fait c'est vrai ! Le Monteur·Placeur fabrique et installe des éléments en bois : portes, fenêtres, meubles, placards."
+    },
+    quiz:[
+      { q:"Que fait concrètement un Monteur·Placeur d'Éléments Menuisés ?",
+        options:['Il vend des meubles en magasin','Il dessine des plans pour les architectes','Il fabrique ET installe des éléments en bois comme des portes et des fenêtres','Il répare des voitures'],
+        correct:2, explication:"Il fabrique ET installe : portes, fenêtres, meubles, placards. Deux compétences en une !" },
+      { q:"Où se passe la formation pratique du Monteur·Placeur d'Éléments Menuisés ?",
+        options:['Dans un supermarché','Dans un hôpital',"En atelier à l'école, puis sur de vrais chantiers",'Dans un bureau'],
+        correct:2, explication:"Tu apprends les bases en atelier à l'école, puis tu pars sur de vrais chantiers pendant les stages." },
+      { q:"Pourquoi la précision est-elle si importante dans ce métier ?",
+        options:["Pour aller plus vite que les autres","Pour impressionner les clients","Ce n'est pas vraiment important","Parce qu'une porte mal mesurée ne ferme pas correctement"],
+        correct:3, explication:"En menuiserie, chaque millimètre compte. Une porte mal mesurée ne ferme pas, une fenêtre mal posée laisse passer le froid !" }
+    ]
+  },
+  {
+    id:'soins', emoji:'🏥', ci:4, status:'todo',
+    sector:'Secteur · Service aux Personnes',
+    title:'Assistant·e Logistique en Milieu de Soins et Collectivité',
+    photo:'https://plus.unsplash.com/premium_photo-1681995321209-b886246a2db8?w=900&q=80',
+    indices:["Je travaille dans des lieux où des personnes ont besoin d’aide au quotidien...", "Je m’occupe des repas, du linge et de l’entretien des locaux...", "Je peux travailler dans une maison de repos, une crèche ou un hôpital..."],
+    desc:"Tu aides les personnes dans leur quotidien dans des maisons de repos, des crèches ou des hôpitaux. Un boulot concret et humain.",
+    blocks:[
+      { label:'Ce que tu vas apprendre', type:'tags',
+        items:['Aider pour les repas','Nettoyer et entretenir les locaux','Entretenir le linge',"Respecter les règles d'hygiène",'Travailler en équipe'] },
+      { label:"Ce métier c'est pour toi si...", type:'profil',
+        items:['Tu aimes aider les autres','Tu as le sens du contact','Tu aimes rendre service','Tu es soigneux·se dans ton travail'] },
+      { label:'Où tu peux travailler après ?', type:'debouches',
+        items:['Une maison de repos','Une crèche','Un hôpital'] }
+    ],
+    interaction:{
+      question:"🤔 Dans lequel de ces endroits un·e Assistant·e Logistique en Milieu de Soins ne travaille PAS ?",
+      reponses:[{label:'🏠 Une maison de repos',correct:false},{label:'🍕 Une pizzeria',correct:true},{label:'👶 Une crèche',correct:false},{label:'🏨 Un hôpital',correct:false}],
+      feedback_ok:"🎉 Bien joué ! La pizzeria c'est le cuisinier. L'Assistant·e Logistique travaille là où les personnes ont besoin d'aide au quotidien.",
+      feedback_ko:"L'Assistant·e Logistique en Milieu de Soins travaille dans des lieux de soin : maisons de repos, crèches et hôpitaux. Pas dans une pizzeria !"
+    },
+    quiz:[
+      { q:"Dans quel type de lieu travaille un·e Assistant·e Logistique en Milieu de Soins et Collectivité ?",
+        options:['Dans une menuiserie ou un atelier','Dans un supermarché','Dans une maison de repos, une crèche ou un hôpital','Dans une imprimerie'],
+        correct:2, explication:"Ce métier se passe là où des personnes ont besoin d'aide au quotidien : maisons de repos, crèches, hôpitaux." },
+      { q:"Quelle tâche concrète fait partie du métier d'Assistant·e Logistique en Milieu de Soins ?",
+        options:["Installer des portes et des fenêtres","Mettre des produits en rayon","Aider pour les repas et entretenir les locaux","Imprimer des t-shirts et des affiches"],
+        correct:2, explication:"Aider pour les repas, nettoyer les locaux, entretenir le linge... Des tâches utiles et concrètes tous les jours." },
+      { q:"Pendant les stages, avec qui tu vas travailler ?",
+        options:['Avec de vrais professionnels et de vraies personnes à aider','Uniquement avec des robots','Uniquement avec des élèves','Seul·e, sans aide'],
+        correct:0, explication:"Tu découvres le terrain en travaillant avec de vrais professionnels et en aidant de vraies personnes. C'est là que le métier prend tout son sens !" }
+    ]
+  },
+  {
+    id:'magasin', emoji:'🛒', ci:1, status:'todo',
+    sector:'Secteur · Économie',
+    title:'Auxiliaire de Magasin',
+    photo:'https://images.unsplash.com/photo-1753161029001-153c43be9eb7?w=900&q=80',
+    indices:["Je travaille dans un endroit où les gens font leurs courses...", "J’accueille les clients et je range les produits sur des étagères...", "Je peux utiliser une caisse enregistreuse et passer des commandes..."],
+    desc:'Tu travailles dans un vrai magasin. Tu gères les clients, tu mets les produits en rayon, tu bouges. Chaque journée est différente !',
+    blocks:[
+      { label:'Ce que tu vas apprendre', type:'tags',
+        items:['Mettre en rayon','Accueillir les clients','Utiliser une caisse','Organiser un magasin','Présenter les produits','Passer et recevoir des commandes'] },
+      { label:"Ce métier c'est pour toi si...", type:'profil',
+        items:['Tu aimes le contact avec les gens','Tu aimes bouger','Tu es organisé·e','Tu veux un boulot actif'] },
+      { label:'Où tu peux travailler après ?', type:'debouches',
+        items:['Supermarchés et grandes surfaces','Petits magasins de quartier','Entrepôts logistiques','Entrepôts de distribution','Magasins de vêtements et multimédia'] }
+    ],
+    interaction:{
+      question:"🤔 Vrai ou faux ? Un Auxiliaire de Magasin reste derrière une caisse toute la journée.",
+      reponses:[{label:'✅ Vrai',correct:false},{label:'❌ Faux',correct:true}],
+      feedback_ok:"🎉 Exactement ! Il bouge tout le temps : mise en rayon, accueil clients, organisation... Jamais ennuyeux !",
+      feedback_ko:"Pas tout à fait ! La caisse c'est juste une partie du boulot. Il fait aussi le rayon, l'accueil, l'organisation."
+    },
+    quiz:[
+      { q:"Dans quel type de lieu un Auxiliaire de Magasin peut-il travailler ?",
+        options:['Uniquement dans les pharmacies','Dans un supermarché, une boutique de vêtements ou une grande surface','Uniquement dans les restaurants','Dans les hôpitaux'],
+        correct:1, explication:"Les supermarchés, grandes surfaces et magasins de vêtements ou multimédia recrutent tous des Auxiliaires de Magasin." },
+      { q:"Pendant les stages, qu'est-ce que tu vas faire concrètement ?",
+        options:["Rester en classe à prendre des notes","Travailler dans un vrai magasin partenaire de l'école","Faire du sport","Cuisiner"],
+        correct:1, explication:"Les stages se passent dans de vrais magasins partenaires. Tu vis le métier sur le terrain pour la première fois !" },
+      { q:"Quelle tâche fait partie du travail d'un Auxiliaire de Magasin ?",
+        options:['Réparer des machines','Construire des meubles en bois','Présenter les produits et accueillir les clients','Imprimer des affiches'],
+        correct:2, explication:"Présenter les produits, accueillir les clients, gérer la caisse, organiser le magasin... c'est le boulot au quotidien !" }
+    ]
+  },
+  {
+    id:'serigraphie', emoji:'🎨', ci:3, status:'todo',
+    sector:'Secteur · Arts Appliqués',
+    title:'Ouvrier·e en Sérigraphie',
+    photo:'https://images.unsplash.com/photo-1614494731690-53925976ea29?w=900&q=80',
+    indices:["Je travaille dans un atelier avec des encres et des écrans spéciaux...", "Je crée des visuels et des dessins pour les imprimer sur différents supports...", "Tu peux voir mon travail sur des t-shirts, des sacs ou des affiches..."],
+    desc:"Tu imprimes des dessins, logos et formes sur des t-shirts, sacs et affiches. Un métier créatif ET concret à la fois.",
+    blocks:[
+      { label:'Ce que tu vas apprendre', type:'tags',
+        items:['Dessiner et créer des visuels','Imprimer sur papier et tissu','Utiliser du matériel professionnel','Travailler avec plusieurs couleurs'] },
+      { label:"Ce métier c'est pour toi si...", type:'profil',
+        items:['Tu es créatif·ve','Tu aimes dessiner ou créer','Tu es patient·e et précis·e','Tu aimes travailler en équipe'] },
+      { label:'Où tu peux travailler après ?', type:'debouches',
+        items:['Une imprimerie','Un atelier artistique','Un magasin de textile','Le secteur de la publicité'] }
+    ],
+    interaction:{
+      question:"🤔 Vrai ou faux ? La sérigraphie c'est juste imprimer des photos sur du papier, comme une imprimante normale.",
+      reponses:[{label:'✅ Vrai',correct:false},{label:'❌ Faux',correct:true}],
+      feedback_ok:"🎉 Exactement ! On imprime sur des t-shirts, des sacs, des affiches... avec des encres et écrans spéciaux. Rien à voir avec une imprimante !",
+      feedback_ko:"Faux ! La sérigraphie permet d'imprimer sur du tissu, des objets, des affiches avec des techniques pro. C'est bien différent !"
+    },
+    quiz:[
+      { q:"Sur quels supports un Ouvrier·e en Sérigraphie peut-il imprimer ?",
+        options:['Sur du tissu, du papier, des sacs, des affiches...','Uniquement sur du papier blanc','Uniquement sur du plastique dur','Sur des murs uniquement'],
+        correct:0, explication:"La sérigraphie permet d'imprimer sur plein de surfaces : t-shirts, sacs, affiches, papier... C'est ce qui rend ce métier polyvalent !" },
+      { q:"Pendant les stages en sérigraphie, qu'est-ce que tu vas faire ?",
+        options:['Rester en classe','Travailler dans un magasin','Construire des meubles','Imprimer de vraies commandes dans une imprimerie ou un atelier créatif'],
+        correct:3, explication:"Tu sors de l'atelier pour aller en entreprise ! Tu imprimeras de vraies commandes et découvriras le rythme du métier." },
+      { q:"Quelles sont les qualités utiles pour le métier d'Ouvrier·e en Sérigraphie ?",
+        options:['Être fort physiquement et aimer courir','Parler plusieurs langues','Être créatif·ve, patient·e ET précis·e','Avoir uniquement le sens des affaires'],
+        correct:2, explication:"Ce métier mélange créativité (créer les visuels) et précision (bien imprimer). Les deux vont toujours ensemble !" }
+    ]
+  }
+];
+
+const STEPS = ['indice1','indice2','indice3','accroche','block0','block1','block2','interaction','quiz'];
+let isMystere = false;
+let cm=0, cs=0, qi=0, qs=0, qa=false, tot=0, totQ=0;
+
+// Mode mystère retiré
+
+function renderIndice(step) {
+  const m = metiers[cm];
+  const right = document.getElementById('slide-right');
+  const key = `m${cm}`;
+
+  // Panneau gauche : cacher la photo, afficher "Qui suis-je ?"
+  document.getElementById('slide-bg').style.backgroundImage = '';
+  document.getElementById('slide-overlay').style.background = 'linear-gradient(135deg, #1A1A2E 0%, #2d2d4a 100%)';
+  document.getElementById('sl-sector').textContent = '🤔 Mystère';
+  document.getElementById('sl-emoji').textContent = '❓';
+  document.getElementById('sl-title').textContent = 'Qui suis-je ?';
+  document.getElementById('sl-desc').textContent = 'Lis les indices et essaie de deviner le métier !';
+
+  const numIndice = parseInt(step.replace('indice',''));
+  const indices = m.indices || [];
+
+  // Ajouter les indices un par un
+  for(let i = 0; i < numIndice; i++) {
+    const bid = `${key}-indice${i}`;
+    if(right.querySelector(`[data-bid="${bid}"]`)) continue;
+    const el = document.createElement('div');
+    el.className = 'reveal-block';
+    el.dataset.bid = bid;
+    el.style.borderLeftColor = C[m.ci];
+    el.innerHTML = `<div class="blabel">Indice ${i+1}</div>
+      <div style="font-size:1.1rem;font-weight:700;color:var(--text)">${indices[i] || ''}</div>`;
+    right.appendChild(el);
+    setTimeout(()=>{
+      el.classList.add('visible');
+      setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
+    }, 80);
+  }
+
+  document.getElementById('btn-next').textContent =
+    numIndice < 3 ? `Indice suivant →` : '💡 Révéler le métier !';
+  document.getElementById('nhint').textContent = 'Les indices apparaissent un par un';
+}
+
+// ══ INIT ACCUEIL ══
+function initHome() {
+  const grid = document.getElementById('main-grid');
+  grid.innerHTML = '';
+  metiers.forEach((m, i) => {
+    const card = document.createElement('div');
+    card.className = `mcard mc${m.ci}`;
+
+    // Carte "école" : toujours visible normalement
+    if(m.id === 'ecole') {
+      card.onclick = () => goTo(i);
+      card.innerHTML = `
+        <div class="mcard-emoji">${m.emoji}</div>
+        <div class="mcard-info">
+          <div class="mcard-sector" style="color:${C[m.ci]}">${m.sector}</div>
+          <div class="mcard-name">${m.title}</div>
+        </div>
+        <span class="mcard-arrow">→</span>`;
+      grid.appendChild(card);
+      return;
+    }
+
+    // Cartes métiers : mystère si pas encore révélé
+    const revele = m.status === 'done';
+
+    if(revele) {
+      // Carte révélée : affiche le vrai nom
+      card.onclick = () => goTo(i);
+      const shortTitles = {
+        'menuiserie': "Monteur·Placeur<br>d'Éléments Menuisés",
+        'soins': "Assistant·e Logistique<br>en Milieu de Soins"
+      };
+      const displayTitle = shortTitles[m.id] || m.title;
+      card.innerHTML = `
+        <span class="stat-tag st-done">Révélé ✨</span>
+        <div class="mcard-emoji">${m.emoji}</div>
+        <div class="mcard-info">
+          <div class="mcard-sector" style="color:${C[m.ci]}">${m.sector}</div>
+          <div class="mcard-name">${displayTitle}</div>
+        </div>
+        <span class="mcard-arrow">→</span>`;
+    } else {
+      // Carte mystère : juste un "???" et l'emoji
+      card.onclick = () => goTo(i);
+      card.style.opacity = '0.75';
+      card.innerHTML = `
+        <span class="stat-tag st-todo">Mystère 🎲</span>
+        <div class="mcard-emoji">❓</div>
+        <div class="mcard-info">
+          <div class="mcard-sector" style="color:${C[m.ci]}">${m.sector}</div>
+          <div class="mcard-name" style="color:var(--soft);font-style:italic;">Qui suis-je ?</div>
+        </div>
+        <span class="mcard-arrow">→</span>`;
+    }
+    grid.appendChild(card);
+  });
+}
+
+// ══ NAVIGATION ══
+function goTo(idx) {
+  cm=idx; cs=0;
+  const m = metiers[cm];
+
+  // Carte école → accès direct sans mystère
+  // Carte métier déjà révélée → accès direct
+  // Carte métier pas révélée → lancer le jeu indices pour ce métier
+  if(m.id !== 'ecole' && m.status !== 'done') {
+    // Lancer le jeu en mode "carte cliquée"
+    jeuOrdre = [JEU_METIERS.find(jm => jm.id === m.id)].filter(Boolean);
+    if(jeuOrdre.length === 0) { goToSlide(idx); return; }
+    jeuIdx = 0; jeuScore = 0;
+    const home = document.getElementById('sc-home');
+    home.style.opacity='0';
+    setTimeout(()=>{
+      home.style.display='none';
+      document.getElementById('sc-jeu').style.display='flex';
+      renderJeuMetier();
+    },280);
+    // Après le jeu, marquer comme done et revenir à l'accueil
+    jeuAfterCallback = () => { metiers[cm].status='done'; };
+    return;
+  }
+  goToSlide(idx);
+}
+
+function goToSlide(idx) {
+  cm=idx;
+  // Pour la carte école : sauter les indices, commencer à l'accroche
+  cs = metiers[idx].id === 'ecole' ? STEPS.indexOf('accroche') : 0;
+  metiers[cm].status='doing';
+  const home = document.getElementById('sc-home');
+  home.style.opacity='0';
+  setTimeout(()=>{
+    home.style.display='none';
+    document.getElementById('sc-quiz').style.display='none';
+    document.getElementById('sc-score').style.display='none';
+    document.getElementById('slide-right').innerHTML='';
+    const slide = document.getElementById('sc-slide');
+    slide.style.display='flex';
+    slide.style.opacity='0';
+    document.getElementById('slide-left').classList.remove('slide-active');
+    renderSlide();
+    setTimeout(()=>{
+      slide.style.opacity='1';
+      document.getElementById('slide-left').classList.add('slide-active');
+    },60);
+  },280);
+}
+
+function goHome() {
+  ['sc-slide','sc-quiz','sc-score'].forEach(id=>{
+    const el=document.getElementById(id);
+    el.style.opacity='0';
+    setTimeout(()=>el.style.display='none',280);
+  });
+  setTimeout(()=>{
+    const home=document.getElementById('sc-home');
+    home.style.display='flex';
+    home.style.opacity='0';
+    initHome();
+    setTimeout(()=>home.style.opacity='1',60);
+  },300);
+}
+
+function startAll(){ metiers.forEach(m=>m.status='todo'); tot=0; totQ=0; goTo(0); }
+
+function nextStep(){
+  const right=document.getElementById('slide-right');
+  setTimeout(()=>{
+    if(cs<STEPS.length-1){
+      cs++;
+      if(STEPS[cs]==='interaction') renderInteraction();
+      else if(STEPS[cs]==='quiz') startQuiz();
+      else renderSlide();
+    } else {
+      metiers[cm].status='done';
+      cm++;
+      if(cm<metiers.length){ cs=0; document.getElementById('slide-right').innerHTML=''; goTo(cm); }
+      else showScore();
+    }
+  },260);
+}
+
+function prevStep(){
+  if(cs>0){ cs--; if(STEPS[cs]==='interaction') renderInteraction(); else renderSlide(); }
+  else if(cm>0){ cm--; cs=STEPS.length-2; document.getElementById('slide-right').innerHTML=''; goTo(cm); }
+  else goHome();
+}
+
+// ══ SLIDE ══
+function renderSlide(){
+  const m=metiers[cm];
+  // Photo + overlay (géré après les indices)
+
+  // Barre
+  document.getElementById('pbar').style.background=C[m.ci];
+  const tot2=metiers.length*STEPS.length, done=cm*STEPS.length+cs;
+  setTimeout(()=>document.getElementById('pbar').style.width=(done/tot2*100)+'%',80);
+
+  // Dots
+  const dotsEl=document.getElementById('sdots'); dotsEl.innerHTML='';
+  metiers.forEach((mt,i)=>{
+    const d=document.createElement('div');
+    d.className='dot'+(i===cm?' active':'');
+    if(i===cm)d.style.background=C[mt.ci];
+    d.onclick=()=>goTo(i);
+    dotsEl.appendChild(d);
+  });
+  document.getElementById('scounter').textContent=`Étape ${cs+1}/${STEPS.length}`;
+
+  // Panneau droit — incrémental
+  const right=document.getElementById('slide-right');
+  const key=`m${cm}`;
+  const first=right.querySelector('.reveal-block[data-bid]');
+  if(first&&!first.dataset.bid.startsWith(key)) right.innerHTML='';
+
+  // Gérer les étapes indices (mode mystère)
+  if(STEPS[cs]==='indice1'||STEPS[cs]==='indice2'||STEPS[cs]==='indice3'){
+    renderIndice(STEPS[cs]); return;
+  }
+
+  // Révélation à l'accroche : remettre la vraie photo
+  document.getElementById('slide-bg').style.backgroundImage=`url('${m.photo}')`;
+  document.getElementById('slide-overlay').style.background=COV[m.ci];
+  document.getElementById('sl-sector').textContent=m.sector;
+  document.getElementById('sl-emoji').textContent=m.emoji;
+  document.getElementById('sl-title').textContent=m.title;
+  document.getElementById('sl-desc').textContent=m.desc;
+
+  if(STEPS[cs]==='accroche'){
+    right.innerHTML='';
+    const el=document.createElement('div'); el.className='reveal-block'; el.dataset.bid=`${key}-ac`;
+    el.style.borderLeftColor=C[m.ci];
+    const wasMyster = isMystere && cs===3;
+    el.innerHTML=`<div style="text-align:center;padding:1rem 0">
+      ${wasMyster?`<div style="font-size:1rem;font-weight:700;color:var(--c1);margin-bottom:0.5rem">✨ C'était...</div>`:''}
+      <div style="font-size:3.5rem;margin-bottom:0.8rem">${m.emoji}</div>
+      <div style="font-family:'Baloo 2',cursive;font-size:1.5rem;font-weight:700;margin-bottom:0.6rem;color:var(--text)">${m.title}</div>
+      <div style="color:var(--soft);font-size:1rem;line-height:1.7">${m.desc}<br><br><em>👉 Clique sur "Suivant" pour en savoir plus !</em></div>
+    </div>`;
+    right.appendChild(el); setTimeout(()=>el.classList.add('visible'),80);
+  } else {
+    const bs=parseInt(STEPS[cs].replace('block',''));
+    for(let i=0;i<=Math.min(bs,m.blocks.length-1);i++){
+      const bid=`${key}-b${i}`;
+      if(right.querySelector(`[data-bid="${bid}"]`)) continue;
+      const block=m.blocks[i];
+      const el=document.createElement('div'); el.className='reveal-block'; el.dataset.bid=bid;
+      el.style.borderLeftColor=C[m.ci];
+      el.innerHTML=buildBlock(block,m);
+      right.appendChild(el);
+      setTimeout(()=>{
+        el.classList.add('visible');
+        // Scroll automatique vers le nouveau bloc
+        setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
+      },80);
+    }
+  }
+
+  document.getElementById('btn-prev').disabled=(cm===0&&cs===0);
+  const isLast=cm===metiers.length-1;
+  document.getElementById('btn-next').textContent=
+    cs===STEPS.length-2?'🧩 Quiz !':
+    (isLast&&cs===STEPS.length-1)?'🏁 Voir le score':
+    cs===STEPS.length-1?'Métier suivant →':'Suivant →';
+  document.getElementById('nhint').textContent='Clique pour révéler les infos une par une';
+}
+
+function buildBlock(block,m){
+  const c=C[m.ci];
+  let inner='';
+  if(block.type==='tags'){
+    inner+='<div class="tags">';
+    block.items.forEach(it=>{ inner+=`<span class="tag" style="background:${CB[m.ci]};border-color:${CR[m.ci]};color:${c}">${it}</span>`; });
+    inner+='</div>';
+  } else if(block.type==='profil'){
+    inner+='<div class="profil-list">';
+    block.items.forEach(it=>{ inner+=`<div class="profil-item"><span class="pcheck" style="background:${c}">✓</span>${it}</div>`; });
+    inner+='</div>';
+  } else if(block.type==='debouches'){
+    inner+='<div class="debs">';
+    block.items.forEach(it=>{ inner+=`<div class="deb"><span class="debdot" style="background:${c}"></span>${it}</div>`; });
+    inner+='</div>';
+  }
+  return `<div class="blabel">${block.label}</div><div class="block-content">${inner}</div>`;
+}
+
+// ══ INTERACTION ══
+function renderInteraction(){
+  const m=metiers[cm];
+  document.getElementById('slide-bg').style.backgroundImage=`url('${m.photo}')`;
+  document.getElementById('slide-overlay').style.background=COV[m.ci];
+  document.getElementById('sl-sector').textContent=m.sector;
+  document.getElementById('sl-emoji').textContent=m.emoji;
+  document.getElementById('sl-title').textContent=m.title;
+  document.getElementById('sl-desc').textContent=m.desc;
+
+  const right=document.getElementById('slide-right'); right.innerHTML='';
+  m.blocks.forEach(block=>{
+    const el=document.createElement('div'); el.className='reveal-block visible';
+    el.style.borderLeftColor=C[m.ci]; el.style.padding='0.7rem 1.1rem';
+    el.innerHTML=buildBlock(block,m); right.appendChild(el);
+  });
+
+  const iw=document.createElement('div'); iw.className='iw'; iw.id='iw';
+  iw.style.borderColor=CR[m.ci]; iw.style.background=CB[m.ci];
+  const btns=m.interaction.reponses.map((r,i)=>`<button class="bchoice" id="ch${i}" onclick="checkC(${i})">${r.label}</button>`).join('');
+  iw.innerHTML=`<div class="ilabel">⚡ Question aux élèves</div><div class="iq">${m.interaction.question}</div><div class="bgrp">${btns}</div><div class="ifb" id="ifb"></div>`;
+  right.appendChild(iw); setTimeout(()=>iw.classList.add('visible'),150);
+  document.getElementById('btn-next').textContent='🧩 Quiz !';
+  document.getElementById('nhint').textContent='Fais répondre les élèves, puis passe au quiz';
+}
+
+function checkC(idx){
+  const m=metiers[cm]; const correct=m.interaction.reponses[idx].correct;
+  m.interaction.reponses.forEach((r,i)=>{
+    const b=document.getElementById('ch'+i); b.disabled=true;
+    // On colorie uniquement le bouton cliqué
+    if(i===idx){
+      b.classList.add(correct?'correct':'wrong');
+    }
+  });
+  if(correct) spawnMiniConfetti(document.getElementById('ch'+idx));
+  const fb=document.getElementById('ifb');
+  fb.className='ifb show '+(correct?'fb-ok':'fb-ko');
+  fb.textContent=correct?m.interaction.feedback_ok:m.interaction.feedback_ko;
+}
+
+function spawnMiniConfetti(el){
+  const rect=el.getBoundingClientRect(); const cfw=document.getElementById('cfw');
+  for(let i=0;i<20;i++){
+    const p=document.createElement('div'); p.className='cfp';
+    p.style.left=(rect.left+rect.width/2)+'px'; p.style.top=(rect.top+rect.height/2)+'px';
+    p.style.backgroundColor=C[Math.floor(Math.random()*C.length)];
+    p.style.animationDuration='1.2s';
+    p.style.transform=`translate(${Math.random()*120-60}px,${Math.random()*120-60}px)`;
+    cfw.appendChild(p); setTimeout(()=>p.remove(),1200);
+  }
+}
+
+// ══ QUIZ ══
+function startQuiz(){
+  const m=metiers[cm];
+  const slide=document.getElementById('sc-slide');
+  slide.style.opacity='0';
+  setTimeout(()=>{
+    slide.style.display='none';
+    const quiz=document.getElementById('sc-quiz');
+    quiz.style.display='flex'; quiz.style.opacity='0';
+    setTimeout(()=>quiz.style.opacity='1',60);
+    qi=0; qs=0;
+    document.getElementById('qtitle').textContent=`🧩 Quiz — ${m.title}`;
+    document.getElementById('qbarf').style.background=C[m.ci];
+    showQ();
+  },280);
+}
+
+function showQ(){
+  const m=metiers[cm]; const q=m.quiz[qi]; qa=false;
+  document.getElementById('qnum').textContent=`Question ${qi+1} sur ${m.quiz.length}`;
+  document.getElementById('qq').textContent=q.q;
+  document.getElementById('qscore').textContent=`Score : ${qs}/${qi}`;
+  document.getElementById('qbarf').style.width=(qi/m.quiz.length*100)+'%';
+  const fb=document.getElementById('qfb');
+  fb.textContent=''; fb.className='qfb'; fb.style.opacity='0';
+  document.getElementById('btn-qnext').disabled=true;
+  const L=['A','B','C','D']; const opts=document.getElementById('qopts'); opts.innerHTML='';
+  q.options.forEach((opt,i)=>{
+    const b=document.createElement('button'); b.className='qopt';
+    b.innerHTML=`<span class="oletter">${L[i]}</span>${opt}`;
+    b.onclick=()=>ansQ(i); opts.appendChild(b);
+  });
+}
+
+function ansQ(idx){
+  if(qa)return; qa=true;
+  const m=metiers[cm]; const q=m.quiz[qi]; const ok=idx===q.correct;
+  const optsEl=document.getElementById('qopts');
+  const btns=optsEl.querySelectorAll('.qopt');
+  // Toutes les réponses restent visibles : bonne en vert, mauvaises en rouge
+  btns.forEach((b,i)=>{
+    b.disabled=true;
+    b.style.opacity='1';
+    b.style.transform='none';
+    b.style.animation='none';
+    if(i===q.correct) b.classList.add('correct');
+    else b.classList.add('wrong');
+  });
+  if(ok){ qs++; tot++; spawnMiniConfetti(btns[idx]); }
+  totQ++;
+  const fb=document.getElementById('qfb');
+  fb.className='qfb '+(ok?'ok':'ko');
+  fb.textContent=(ok?'✅ ':'❌ ')+q.explication;
+  fb.style.opacity='1';
+  document.getElementById('btn-qnext').disabled=false;
+  document.getElementById('qscore').textContent=`Score : ${qs}/${qi+1}`;
+}
+
+function nextQ(){
+  qi++;
+  const m=metiers[cm];
+  if(qi<m.quiz.length){ showQ(); }
+  else {
+    metiers[cm].status='done';
+    const quiz=document.getElementById('sc-quiz');
+    quiz.style.opacity='0';
+    setTimeout(()=>{
+      quiz.style.display='none';
+      showQuizScore();
+    },280);
+  }
+}
+
+function showQuizScore(){
+  const m=metiers[cm];
+  const sc=document.getElementById('sc-score-quiz');
+  sc.style.display='flex';
+  sc.style.opacity='0';
+  setTimeout(()=>sc.style.opacity='1',60);
+  const pct=Math.round(qs/m.quiz.length*100);
+  let emoji,msg;
+  if(pct===100){emoji='🏆';msg="Parfait ! Tu as tout bon !";}
+  else if(pct>=66){emoji='👍';msg="Bien joué ! Tu as bien suivi.";}
+  else if(pct>=33){emoji='💪';msg="Pas mal ! Tu progresses.";}
+  else{emoji='📚';msg="Continue, tu vas y arriver !";}
+  document.getElementById('sqz-emoji').textContent=emoji;
+  document.getElementById('sqz-val').textContent=`${qs}/${m.quiz.length}`;
+  document.getElementById('sqz-label').textContent=`Quiz — ${m.title}`;
+  document.getElementById('sqz-msg').textContent=msg;
+  if(pct===100) spawnConfetti();
+}
+
+function afterQuizScore(){
+  isMystere=false;
+  // Marquer le métier comme révélé
+  if(metiers[cm]) metiers[cm].status='done';
+  const sc=document.getElementById('sc-score-quiz');
+  sc.style.opacity='0';
+  setTimeout(()=>{sc.style.display='none'; goHome();},280);
+}
+
+// ══ SCORE ══
+function showScore(){
+  const sc=document.getElementById('sc-score');
+  sc.style.display='flex'; sc.style.opacity='0';
+  setTimeout(()=>sc.style.opacity='1',60);
+  const pct=totQ>0?Math.round(tot/totQ*100):0;
+  document.getElementById('sc-val').textContent=`${tot}/${totQ}`;
+  document.getElementById('sc-lbl').textContent=`soit ${pct}% de bonnes réponses`;
+  let emoji,msg;
+  if(pct>=80){emoji='🏆';msg="Excellent ! Tu as tout suivi. Ces métiers n'ont plus de secrets pour toi !";spawnConfetti();}
+  else if(pct>=50){emoji='👍';msg="Pas mal ! Tu as bien suivi. Encore un peu et tu es au top !";}
+  else{emoji='💪';msg="C'est un début ! Recommence pour mieux retenir les infos.";}
+  document.getElementById('sc-emoji').textContent=emoji;
+  document.getElementById('sc-msg').textContent=msg;
+}
+
+function spawnConfetti(){
+  const w=document.getElementById('cfw'); w.innerHTML='';
+  [...C,'#22C55E','#EC4899'].forEach(col=>{
+    for(let i=0;i<12;i++){
+      const p=document.createElement('div'); p.className='cfp';
+      p.style.left=Math.random()*100+'vw'; p.style.background=col;
+      p.style.animationDelay=Math.random()*2+'s';
+      p.style.animationDuration=(2+Math.random()*2)+'s';
+      p.style.width=p.style.height=(8+Math.random()*12)+'px';
+      w.appendChild(p);
+    }
+  });
+}
+
+// ══ TOGGLE BLOC ACCORDÉON ══
+function toggleBlock(el){
+  el.classList.toggle('collapsed');
+}
+
+
+// ══════════════════════════════════════════════════════
+// JEU — DEVINE LE MÉTIER
+// ══════════════════════════════════════════════════════
+const JEU_METIERS = [
+  {
+    id:'magasin', emoji:'🛒', ci:1,
+    sector:'Secteur · Économie',
+    title:'Auxiliaire de Magasin',
+    photo:'https://images.unsplash.com/photo-1753161029001-153c43be9eb7?w=900&q=80',
+    indices:[
+      "Chaque jour, des personnes passent là où je travaille pour acheter des choses.",
+      "Je range des produits sur des étagères et j'aide les clients à trouver ce qu'ils cherchent.",
+      "Sans moi, les rayons seraient vides et les clients ne sauraient pas où aller."
+    ]
+  },
+  {
+    id:'menuiserie', emoji:'🪵', ci:2,
+    sector:'Secteur · Construction',
+    title:"Monteur·Placeur d'Éléments Menuisés",
+    photo:'https://images.unsplash.com/photo-1615974679960-414c1c7f08ea?w=900&q=80',
+    indices:[
+      "Je travaille avec mes mains et je fabrique des choses solides qui durent longtemps.",
+      "Ma matière première vient des arbres. Je la coupe, je la mesure, je l'assemble.",
+      "Grâce à moi, les maisons ont des portes qui ferment et des fenêtres qui protègent du froid."
+    ]
+  },
+  {
+    id:'serigraphie', emoji:'🎨', ci:3,
+    sector:'Secteur · Arts Appliqués',
+    title:'Ouvrier·e en Sérigraphie',
+    photo:'https://images.unsplash.com/photo-1614494731690-53925976ea29?w=900&q=80',
+    indices:[
+      "J'imprime des objets qu'on porte ou qu'on accroche au mur.",
+      "J'utilise des encres et des écrans pour reproduire des dessins et des logos.",
+      "Le t-shirt avec un logo que tu portes, c'est peut-être moi qui l'ai fabriqué."
+    ]
+  },
+  {
+    id:'soins', emoji:'🏥', ci:4,
+    sector:'Secteur · Service aux Personnes',
+    title:'Assistant·e Logistique en Milieu de Soins et Collectivité',
+    photo:'https://plus.unsplash.com/premium_photo-1681995321209-b886246a2db8?w=900&q=80',
+    indices:[
+      "Je travaille avec des personnes qui ont besoin d'aide pour leur vie de tous les jours.",
+      "Je sers les repas, j'entretiens les locaux et je m'occupe du linge.",
+      "Je travaille dans des endroits où on prend soin des autres. Comme des bébés, personnes âgées ou malades."
+    ]
+  }
+];
+
+let jeuOrdre = [];
+let jeuIdx = 0;
+let jeuAfterCallback = null;      // métier en cours
+let jeuIndice = 0;   // indice en cours (0,1,2)
+let jeuPhase = 'indices'; // 'indices' | 'vote' | 'revelation'
+let jeuScore = 0;
+let jeuVoteCorrect = false;
+
+function shuffle(arr) {
+  const a = [...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+function startJeu() {
+  jeuOrdre = shuffle(JEU_METIERS);
+  jeuIdx = 0; jeuScore = 0;
+  document.getElementById('sc-home').style.display = 'none';
+  document.getElementById('sc-jeu').style.display = 'flex';
+  renderJeuMetier();
+}
+
+function stopJeu() {
+  if(jeuAfterCallback) { jeuAfterCallback(); jeuAfterCallback = null; }
+  ['sc-jeu','sc-jeu-score'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.style.display = 'none';
+  });
+  goHome();
+}
+
+function renderJeuMetier() {
+  const m = jeuOrdre[jeuIdx];
+  jeuIndice = 0;
+  jeuPhase = 'indices';
+  jeuVoteCorrect = false;
+
+  // Reset gauche
+  document.getElementById('jeu-emoji').textContent = '❓';
+  document.getElementById('jeu-photo-bg').style.backgroundImage = '';
+  document.getElementById('jeu-photo-bg').style.opacity = '0';
+  document.getElementById('jeu-overlay').style.opacity = '0';
+  document.getElementById('jeu-metier-nom').style.opacity = '0';
+  document.getElementById('jeu-metier-sector').style.opacity = '0';
+  document.getElementById('jeu-metier-nom').textContent = m.title;
+  document.getElementById('jeu-metier-sector').textContent = m.sector;
+  document.getElementById('jeu-left').style.background = '#1A1A2E';
+
+  // Reset droite
+  document.getElementById('jeu-right').innerHTML = '';
+
+  // Header
+  document.getElementById('jeu-score-hdr').textContent = `Score : ${jeuScore}/${jeuIdx}`;
+  document.getElementById('jeu-titre').textContent = `🎯 Métier ${jeuIdx+1} sur ${jeuOrdre.length}`;
+  document.getElementById('jeu-hint').textContent = 'Les indices arrivent un par un';
+  document.getElementById('btn-jeu-next').textContent = 'Indice suivant →';
+  document.getElementById('btn-jeu-next').disabled = false;
+
+  // Afficher le premier indice
+  afficherIndice();
+}
+
+function afficherIndice() {
+  const m = jeuOrdre[jeuIdx];
+  const right = document.getElementById('jeu-right');
+  const el = document.createElement('div');
+  el.className = 'reveal-block';
+  el.style.borderLeftColor = C[m.ci];
+  el.innerHTML = `
+    <div class="blabel">Indice ${jeuIndice + 1}</div>
+    <div style="font-size:1.15rem;font-weight:700;color:var(--text);line-height:1.5">${m.indices[jeuIndice]}</div>`;
+  right.appendChild(el);
+  setTimeout(() => {
+    el.classList.add('visible');
+    setTimeout(() => el.scrollIntoView({behavior:'smooth', block:'nearest'}), 100);
+  }, 80);
+  jeuIndice++;
+
+  if(jeuIndice >= m.indices.length) {
+    // Tous les indices montrés → passer au vote
+    document.getElementById('btn-jeu-next').textContent = 'Voter maintenant →';
+    document.getElementById('jeu-hint').textContent = 'Tous les indices sont affichés !';
+    jeuPhase = 'vote_ready';
+  }
+}
+
+function afficherVote() {
+  const m = jeuOrdre[jeuIdx];
+  const right = document.getElementById('jeu-right');
+  jeuPhase = 'vote';
+
+  const voteEl = document.createElement('div');
+  voteEl.className = 'reveal-block';
+  voteEl.style.borderLeftColor = C[m.ci];
+
+  // Mélanger les 4 choix
+  const choix = shuffle(JEU_METIERS.map(mt => mt.title));
+
+  voteEl.innerHTML = `
+    <div class="blabel">🗳️ La classe vote — Qui suis-je ?</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;margin-top:0.5rem;">
+      ${choix.map((titre, i) => `
+        <button class="btn-choice" id="jvote-${i}" onclick="jeuVoter('${titre.replace(/'/g,"\'")}', ${i})"
+          style="padding:0.9rem 1rem;font-size:0.92rem;border-radius:12px;border:2px solid var(--border);background:var(--bg);font-family:'Nunito',sans-serif;font-weight:700;cursor:pointer;transition:all 0.2s;text-align:left;">
+          ${titre}
+        </button>`).join('')}
+    </div>
+    <div id="jeu-vote-fb" style="margin-top:0.8rem;font-size:0.92rem;font-weight:600;padding:0.7rem 1rem;border-radius:10px;display:none;line-height:1.5;"></div>`;
+
+  right.appendChild(voteEl);
+  setTimeout(() => {
+    voteEl.classList.add('visible');
+    setTimeout(() => voteEl.scrollIntoView({behavior:'smooth', block:'nearest'}), 100);
+  }, 80);
+
+  document.getElementById('btn-jeu-next').textContent = 'Révéler le métier →';
+  document.getElementById('btn-jeu-next').disabled = true;
+  document.getElementById('jeu-hint').textContent = 'Clique sur la réponse de la classe';
+}
+
+function jeuVoter(titre, btnIdx) {
+  const m = jeuOrdre[jeuIdx];
+  jeuVoteCorrect = titre === m.title;
+
+  // Colorer tous les boutons
+  JEU_METIERS.forEach((mt, i) => {
+    const btn = document.getElementById(`jvote-${i}`);
+    if(!btn) return;
+  });
+  // Retrouver les boutons par contenu
+  const btns = document.querySelectorAll('[id^="jvote-"]');
+  btns.forEach(b => {
+    b.disabled = true;
+    const isCorrect = b.textContent.trim() === m.title;
+    b.style.background = isCorrect ? '#DCFCE7' : '#FEE2E2';
+    b.style.borderColor = isCorrect ? '#22C55E' : '#EF4444';
+    b.style.color = isCorrect ? '#15803D' : '#B91C1C';
+  });
+
+  const fb = document.getElementById('jeu-vote-fb');
+  fb.style.display = 'block';
+  if(jeuVoteCorrect) {
+    fb.style.background = '#DCFCE7'; fb.style.color = '#15803D';
+    fb.textContent = '🎉 Bravo la classe ! Vous avez trouvé !';
+    jeuScore++;
+  } else {
+    fb.style.background = '#FEE2E2'; fb.style.color = '#B91C1C';
+    fb.textContent = `❌ Pas tout à fait ! C'était : ${m.title}`;
+  }
+
+  document.getElementById('btn-jeu-next').disabled = false;
+  jeuPhase = 'revelation_ready';
+}
+
+function revelerMetier() {
+  const m = jeuOrdre[jeuIdx];
+  jeuPhase = 'revelation';
+
+  // Révéler la photo côté gauche
+  document.getElementById('jeu-photo-bg').style.backgroundImage = `url('${m.photo}')`;
+  document.getElementById('jeu-photo-bg').style.opacity = '1';
+  document.getElementById('jeu-overlay').style.opacity = '1';
+  document.getElementById('jeu-emoji').textContent = m.emoji;
+  document.getElementById('jeu-metier-nom').style.opacity = '1';
+  document.getElementById('jeu-metier-sector').style.opacity = '1';
+  document.getElementById('jeu-left').style.background = 'transparent';
+
+  if(jeuVoteCorrect) spawnConfettiJeu();
+  // Marquer ce métier comme révélé
+  const mFound = metiers.find(mt => mt.id === jeuOrdre[jeuIdx].id);
+  if(mFound) mFound.status = 'done';
+
+  document.getElementById('btn-jeu-next').textContent = 'Découvrir ce métier →';
+  document.getElementById('jeu-hint').textContent = jeuVoteCorrect ? '✨ Bien joué ! Maintenant, découvre ce métier en détail.' : '💪 Pas de souci ! Découvre ce métier en détail.';
+  document.getElementById('jeu-score-hdr').textContent = `Score : ${jeuScore}/${jeuIdx+1}`;
+}
+
+function jeuNext() {
+  if(jeuPhase === 'indices') {
+    afficherIndice();
+  } else if(jeuPhase === 'vote_ready') {
+    afficherVote();
+  } else if(jeuPhase === 'revelation_ready') {
+    revelerMetier();
+  } else if(jeuPhase === 'revelation') {
+    // Mode carte individuelle → on enchaîne sur les slides du métier
+    if(jeuOrdre.length === 1) {
+      const m = jeuOrdre[jeuIdx];
+      const metierIdx = metiers.findIndex(mt => mt.id === m.id);
+      document.getElementById('sc-jeu').style.opacity = '0';
+      setTimeout(() => {
+        document.getElementById('sc-jeu').style.display = 'none';
+        document.getElementById('slide-right').innerHTML = '';
+        cm = metierIdx;
+        cs = STEPS.indexOf('accroche');
+        const slide = document.getElementById('sc-slide');
+        slide.style.display = 'flex';
+        slide.style.opacity = '0';
+        document.getElementById('slide-left').classList.remove('slide-active');
+        renderSlide();
+        setTimeout(() => {
+          slide.style.opacity = '1';
+          document.getElementById('slide-left').classList.add('slide-active');
+        }, 60);
+      }, 280);
+    } else {
+      // Mode tout découvrir → métier suivant ou score final
+      jeuIdx++;
+      if(jeuIdx < jeuOrdre.length) {
+        renderJeuMetier();
+      } else {
+        showScoreJeu();
+      }
+    }
+  }
+}
+
+function showScoreJeu() {
+  // Marquer tous les métiers joués comme révélés
+  jeuOrdre.forEach(jm => {
+    const m = metiers.find(mt => mt.id === jm.id);
+    if(m) m.status = 'done';
+  });
+  if(jeuAfterCallback) { jeuAfterCallback(); jeuAfterCallback = null; }
+
+  document.getElementById('sc-jeu').style.display = 'none';
+  const sc = document.getElementById('sc-jeu-score');
+  sc.style.display = 'flex';
+  const total = jeuOrdre.length;
+  const pct = total > 0 ? Math.round(jeuScore / total * 100) : 0;
+  let emoji, msg;
+  if(pct === 100){ emoji='🏆'; msg="Incroyable ! La classe a tout trouvé !"; spawnConfettiJeu(); }
+  else if(pct >= 75){ emoji='🎉'; msg="Très bien ! La classe a l'œil !"; }
+  else if(pct >= 50){ emoji='👍'; msg="Pas mal ! Vous progressez !"; }
+  else { emoji='💪'; msg="On recommence ? Vous allez y arriver !"; }
+  document.getElementById('jsc-emoji').textContent = emoji;
+  document.getElementById('jsc-val').textContent = `${jeuScore}/${total}`;
+  document.getElementById('jsc-label').textContent = 'métiers devinés par la classe';
+  document.getElementById('jsc-msg').textContent = msg;
+}
+
+function spawnConfettiJeu() {
+  const w = document.getElementById('cfw2') || document.getElementById('cfw');
+  if(!w) return;
+  [...C,'#22C55E','#EC4899'].forEach(col => {
+    for(let i=0;i<8;i++){
+      const p=document.createElement('div'); p.className='cfp';
+      p.style.left=Math.random()*100+'vw'; p.style.background=col;
+      p.style.animationDelay=Math.random()*1.5+'s';
+      p.style.animationDuration=(2+Math.random()*1.5)+'s';
+      p.style.width=p.style.height=(8+Math.random()*10)+'px';
+      w.appendChild(p);
+    }
+  });
+}
+
+// Init
+initHome();
+</script>
+
+<!-- JEU DEVINE LE MÉTIER -->
+<div id="sc-jeu" style="display:none;height:100vh;flex-direction:column;background:var(--bg);position:relative;z-index:5;">
+  <!-- Header -->
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:0.9rem 1.8rem;background:rgba(255,255,255,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);">
+    <button class="btn-home" onclick="stopJeu()">🏠 Accueil</button>
+    <div style="font-family:'Baloo 2',cursive;font-weight:800;font-size:1.1rem;" id="jeu-titre">🎯 Devine le métier !</div>
+    <div style="font-weight:700;color:var(--soft);font-size:0.9rem;" id="jeu-score-hdr">Score : 0/0</div>
+  </div>
+
+  <!-- Corps -->
+  <div style="flex:1;display:flex;overflow:hidden;">
+    <!-- Gauche : point d'interrogation -->
+    <div id="jeu-left" style="width:42%;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#1A1A2E;flex-direction:column;gap:1rem;padding:2rem;">
+      <div id="jeu-photo-bg" style="position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 0.8s;"></div>
+      <div id="jeu-overlay" style="position:absolute;inset:0;background:rgba(0,0,0,0.55);opacity:0;transition:opacity 0.8s;"></div>
+      <div id="jeu-left-content" style="position:relative;z-index:2;text-align:center;color:white;">
+        <div id="jeu-emoji" style="font-size:6rem;margin-bottom:1rem;">❓</div>
+        <div id="jeu-metier-nom" style="font-family:'Baloo 2',cursive;font-size:2rem;font-weight:800;opacity:0;transition:opacity 0.6s;text-shadow:0 2px 12px rgba(0,0,0,0.5);"></div>
+        <div id="jeu-metier-sector" style="font-size:0.85rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;opacity:0;transition:opacity 0.6s;margin-top:0.4rem;"></div>
+      </div>
+    </div>
+
+    <!-- Droite : indices + réponses -->
+    <div id="jeu-right" style="flex:1;background:var(--white);display:flex;flex-direction:column;padding:1.8rem 2rem;overflow-y:auto;gap:1rem;box-shadow:-8px 0 24px rgba(0,0,0,0.05);">
+    </div>
+  </div>
+
+  <!-- Nav -->
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem 1.8rem;background:rgba(255,255,255,0.92);backdrop-filter:blur(12px);border-top:1px solid var(--border);">
+    <span style="font-size:0.78rem;color:var(--soft);font-style:italic;" id="jeu-hint">Les indices arrivent un par un</span>
+    <button class="btn-nav pri" id="btn-jeu-next" onclick="jeuNext()">Indice suivant →</button>
+  </div>
+</div>
+
+<!-- SCORE FINAL JEU -->
+<div id="sc-jeu-score" style="display:none;height:100vh;flex-direction:column;align-items:center;justify-content:center;background:var(--white);text-align:center;gap:1.4rem;padding:2rem;z-index:10;">
+  <div class="cfw" id="cfw2"></div>
+  <div id="jsc-emoji" style="font-size:5rem;"></div>
+  <div id="jsc-val" style="font-family:'Baloo 2',cursive;font-size:5rem;font-weight:800;color:var(--text);"></div>
+  <div id="jsc-label" style="font-size:1rem;color:var(--soft);font-weight:600;"></div>
+  <div id="jsc-msg" style="font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:700;max-width:440px;line-height:1.4;color:var(--text);"></div>
+  <button class="btn-nav pri" onclick="stopJeu()">🏠 Retour à l'accueil</button>
+</div>
+</body>
+</html>
