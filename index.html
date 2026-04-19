@@ -20,6 +20,13 @@
   --surface: rgba(255,255,255,0.04);
   --border: rgba(255,255,255,0.08);
 }
+
+/* ANIMATIONS */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 * { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior:smooth; }
 body {
@@ -29,833 +36,349 @@ body {
   min-height:100vh;
 }
 
-/* NAV */
+/* SÉCURITÉ */
+#lock-screen {
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--noir); display: flex; align-items: center; justify-content: center;
+  flex-direction: column; padding: 20px;
+}
+.login-box { text-align: center; max-width: 300px; width: 100%; }
+.login-box h1 { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; color: var(--vert-clair); margin-bottom: 20px; }
+.login-input { 
+  width: 100%; padding: 12px; background: var(--surface); border: 1px solid var(--border); 
+  color: white; border-radius: 4px; margin-bottom: 12px; outline: none; text-align: center;
+}
+.login-btn { 
+  width: 100%; padding: 12px; background: var(--vert); color: white; border: none; 
+  border-radius: 4px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif;
+}
+#login-error { color: var(--rouge); font-size: 0.8rem; margin-top: 10px; display: none; }
+
+/* NAV - GLASSMORPHISM */
 nav {
   position:fixed; top:0; left:0; width:100%; z-index:200;
-  background:rgba(14,14,14,0.95);
-  backdrop-filter:blur(12px);
+  background: rgba(14, 14, 14, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-bottom:1px solid var(--border);
   padding:0 32px;
-  display:flex; align-items:center; gap:0;
-  height:56px;
+  display:flex; align-items:center;
+  height:64px;
 }
 .nav-logo {
   font-family:'Bebas Neue',sans-serif;
-  font-size:1.2rem; letter-spacing:3px; color:var(--vert-clair);
+  font-size:1.4rem; letter-spacing:3px; color:var(--vert-clair);
   margin-right:40px; white-space:nowrap;
 }
-.nav-tabs {
-  display:flex; gap:2px; flex:1; overflow-x:auto;
-}
+.nav-tabs { display:flex; gap:2px; flex:1; }
 .nav-tab {
   background:none; border:none; color:var(--gris);
   font-family:'DM Sans',sans-serif; font-size:.8rem;
   font-weight:500; letter-spacing:.5px; text-transform:uppercase;
-  padding:0 16px; height:56px; cursor:pointer;
+  padding:0 16px; height:64px; cursor:pointer;
   border-bottom:2px solid transparent;
   transition:all .2s; white-space:nowrap;
 }
 .nav-tab:hover { color:var(--blanc); }
 .nav-tab.active { color:var(--vert-clair); border-bottom-color:var(--vert-clair); }
 
+/* BURGER MENU */
+.burger-btn {
+  display: none; background: none; border: none; color: var(--blanc);
+  font-size: 1.5rem; cursor: pointer; padding: 10px; margin-left: auto;
+}
+
 /* SEARCH BAR */
-.search-bar {
-  margin-left:auto; display:flex; align-items:center; gap:8px;
-}
+.search-bar { margin-left:auto; display:flex; align-items:center; gap:8px; }
 .search-input {
-  background:rgba(255,255,255,0.06);
-  border:1px solid var(--border);
-  border-radius:4px; color:var(--blanc);
-  font-family:'DM Sans',sans-serif; font-size:.85rem;
-  padding:6px 14px; width:200px; outline:none;
-  transition:border .2s;
+  background:rgba(255,255,255,0.06); border:1px solid var(--border);
+  border-radius:4px; color:var(--blanc); font-family:'DM Sans',sans-serif;
+  font-size:.85rem; padding:8px 14px; width:200px; outline:none;
 }
-.search-input::placeholder { color:var(--gris); }
-.search-input:focus { border-color:var(--vert-clair); }
 
-/* MAIN */
-main { padding-top:56px; }
+/* UI INTERACTIVE */
+.btn-search, .nav-tab, .groupe-card, .atelier-card, .btn-print, .chip, .login-btn {
+  transition: transform 0.1s ease;
+  min-height: 44px; /* Zone de clic mobile */
+}
+.btn-search:active, .nav-tab:active, .groupe-card:active, .atelier-card:active, .btn-print:active, .chip:active, .login-btn:active {
+  transform: scale(0.96);
+}
 
-/* SECTIONS */
-.section { display:none; padding:48px 40px; min-height:calc(100vh - 56px); }
-.section.active { display:block; }
+/* MAIN & SECTIONS */
+main { padding-top:64px; }
+.section { display:none; padding:48px 40px; min-height:calc(100vh - 64px); }
+.section.active { display:block; animation: fadeInUp 0.4s ease forwards; }
 
-/* HERO ACCUEIL */
+/* HERO */
 .hero {
-  min-height:calc(100vh - 56px);
-  display:flex; flex-direction:column; justify-content:center;
-  padding:60px 40px;
-  background:linear-gradient(160deg,#0e2d1e 0%,#0e0e0e 60%);
-  position:relative; overflow:hidden;
+  min-height:calc(100vh - 64px); display:flex; flex-direction:column; justify-content:center;
+  padding:60px 40px; background:linear-gradient(160deg,#0e2d1e 0%,#0e0e0e 60%);
 }
-.hero::before {
-  content:'';
-  position:absolute; top:-100px; right:-200px;
-  width:600px; height:600px;
-  background:radial-gradient(circle,rgba(82,183,136,.1) 0%,transparent 70%);
-  border-radius:50%; pointer-events:none;
-}
-.hero-badge {
-  display:inline-block; background:var(--vert);
-  color:#fff; font-size:.7rem; font-weight:600;
-  letter-spacing:3px; text-transform:uppercase;
-  padding:5px 14px; border-radius:2px; margin-bottom:20px;
-}
-.hero h1 {
-  font-family:'Bebas Neue',sans-serif;
-  font-size:clamp(56px,9vw,110px);
-  line-height:.95; letter-spacing:2px; margin-bottom:16px;
-}
+.hero h1 { font-family:'Bebas Neue',sans-serif; font-size:clamp(56px,9vw,110px); line-height:.95; margin-bottom:16px; }
 .hero h1 span { color:var(--vert-clair); }
-.hero-sub { font-size:1rem; color:var(--gris); max-width:480px; line-height:1.6; margin-bottom:40px; }
 .hero-stats { display:flex; gap:48px; flex-wrap:wrap; }
-.stat { display:flex; flex-direction:column; }
-.stat-val { font-family:'Bebas Neue',sans-serif; font-size:2.8rem; color:var(--vert-clair); line-height:1; }
-.stat-label { font-size:.72rem; color:var(--gris); letter-spacing:1px; text-transform:uppercase; margin-top:3px; }
+.stat-val { font-family:'Bebas Neue',sans-serif; font-size:2.8rem; color:var(--vert-clair); }
 
-/* FICHE PERSO */
-.fiche-search {
-  max-width:600px; margin:0 auto 48px;
-  text-align:center;
-}
-.fiche-search h2 {
-  font-family:'Bebas Neue',sans-serif;
-  font-size:2.5rem; letter-spacing:2px; margin-bottom:8px;
-}
-.fiche-search p { color:var(--gris); font-size:.9rem; margin-bottom:24px; }
-.fiche-input-wrap {
-  display:flex; gap:8px;
-}
-.fiche-input {
-  flex:1; background:rgba(255,255,255,0.06);
-  border:1px solid var(--border); border-radius:4px;
-  color:var(--blanc); font-family:'DM Sans',sans-serif;
-  font-size:1rem; padding:12px 18px; outline:none;
-  transition:border .2s;
-}
-.fiche-input:focus { border-color:var(--vert-clair); }
-.btn-search {
-  background:var(--vert); color:#fff; border:none;
-  border-radius:4px; padding:12px 24px;
-  font-family:'DM Sans',sans-serif; font-weight:600;
-  font-size:.9rem; cursor:pointer; transition:background .2s;
-}
-.btn-search:hover { background:var(--vert-clair); }
-.fiche-result { margin-top:32px; }
+/* CARDS & GRIDS */
+.card { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:24px; margin-bottom:16px; }
+.ateliers-grid, .groupes-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; }
+.atelier-card, .groupe-card { background:var(--surface); border:1px solid var(--border); padding:24px; border-radius:6px; cursor: pointer; }
 
-/* CARDS */
-.card {
-  background:var(--surface); border:1px solid var(--border);
-  border-radius:6px; padding:24px; margin-bottom:16px;
-}
-.card-title {
-  font-family:'Bebas Neue',sans-serif;
-  font-size:1.3rem; letter-spacing:1px; margin-bottom:12px;
-  color:var(--vert-clair);
-}
-.card-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:12px; }
-.card-item { display:flex; flex-direction:column; gap:3px; }
-.card-item-label { font-size:.7rem; color:var(--gris); text-transform:uppercase; letter-spacing:.5px; }
-.card-item-val { font-size:.9rem; font-weight:500; }
-
-/* BADGE */
-.badge {
-  display:inline-block; padding:3px 10px; border-radius:2px;
-  font-size:.72rem; font-weight:600; letter-spacing:.5px;
-}
-.badge-vert { background:rgba(82,183,136,.15); color:var(--vert-clair); border:1px solid rgba(82,183,136,.3); }
-.badge-orange { background:rgba(231,111,81,.15); color:var(--orange); border:1px solid rgba(231,111,81,.3); }
-.badge-jaune { background:rgba(244,162,97,.15); color:var(--jaune); border:1px solid rgba(244,162,97,.3); }
-.badge-bleu { background:rgba(58,134,255,.15); color:var(--bleu); border:1px solid rgba(58,134,255,.3); }
-.badge-rouge { background:rgba(193,18,31,.2); color:#ff6b6b; border:1px solid rgba(193,18,31,.3); }
-.badge-asbl { background:rgba(255,242,204,.15); color:#f0c040; border:1px solid rgba(255,242,204,.3); }
-
-/* TIMELINE */
-.timeline { display:flex; gap:0; border:1px solid var(--border); border-radius:4px; overflow:hidden; flex-wrap:wrap; }
-.tl-item {
-  flex:1; min-width:80px; padding:16px 12px;
-  border-right:1px solid var(--border);
-  transition:background .2s;
-}
-.tl-item:last-child { border-right:none; }
-.tl-item.pause { background:rgba(82,183,136,.06); flex:0 0 90px; }
-.tl-time { font-family:'Bebas Neue',sans-serif; font-size:1rem; color:var(--vert-clair); }
-.tl-item.pause .tl-time { color:var(--jaune); font-size:.85rem; }
-.tl-label { font-size:.75rem; color:var(--gris); margin-top:4px; }
-
-/* TABLE */
-.table-wrap { overflow-x:auto; }
-table { width:100%; border-collapse:collapse; font-size:.83rem; }
-th {
-  text-align:left; padding:10px 14px;
-  font-family:'Bebas Neue',sans-serif; font-size:.85rem; letter-spacing:1.5px;
-  color:var(--vert-clair); border-bottom:1px solid rgba(82,183,136,.3);
-  white-space:nowrap;
-}
-td {
-  padding:10px 14px; border-bottom:1px solid var(--border);
-  vertical-align:middle;
-}
-tr:hover td { background:rgba(255,255,255,.02); }
-
-/* SECTION TITLE */
-.section-title {
-  font-family:'Bebas Neue',sans-serif;
-  font-size:clamp(32px,4vw,48px); letter-spacing:2px;
-  margin-bottom:8px;
-}
-.section-title span { color:var(--vert-clair); }
-.section-sub { color:var(--gris); font-size:.88rem; margin-bottom:36px; }
-
-/* ATELIERS GRID */
-.ateliers-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:2px; }
-.atelier-card {
-  background:var(--surface); border:1px solid var(--border);
-  padding:24px 20px; position:relative; overflow:hidden;
-  transition:background .2s,transform .2s; cursor:default;
-}
-.atelier-card::before {
-  content:''; position:absolute; top:0; left:0;
-  width:3px; height:100%; background:var(--vert);
-  transition:background .2s;
-}
-.atelier-card:hover { background:rgba(82,183,136,.05); transform:translateX(3px); }
-.atelier-card:hover::before { background:var(--vert-clair); }
-.atelier-num {
-  font-family:'Bebas Neue',sans-serif; font-size:2.2rem;
-  color:rgba(255,255,255,.05); position:absolute;
-  bottom:8px; right:14px; line-height:1;
-}
-.atelier-name { font-family:'Bebas Neue',sans-serif; font-size:1.2rem; letter-spacing:1px; margin-bottom:4px; }
-.atelier-lieu { font-size:.75rem; color:var(--vert-clair); font-weight:500; margin-bottom:10px; }
-.atelier-desc { font-size:.8rem; color:var(--gris); line-height:1.5; margin-bottom:8px; }
-.atelier-secu { font-size:.72rem; color:var(--orange); background:rgba(231,111,81,.08); padding:4px 10px; border-radius:2px; display:inline-block; margin-top:4px; }
-
-/* GROUPES */
-.groupes-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; }
-.groupe-card {
-  background:var(--surface); border:1px solid var(--border);
-  border-radius:4px; padding:20px; cursor:pointer;
-  transition:all .2s;
-}
-.groupe-card:hover { background:rgba(82,183,136,.06); border-color:rgba(82,183,136,.3); }
-.groupe-card h3 { font-family:'Bebas Neue',sans-serif; font-size:1.2rem; margin-bottom:6px; }
-.groupe-meta { font-size:.78rem; color:var(--gris); margin-bottom:12px; }
-.groupe-acc { font-size:.83rem; color:var(--vert-clair); font-weight:500; }
-.groupe-effectif { font-size:.75rem; color:var(--gris); margin-top:4px; }
-
-/* MODAL */
-.modal-overlay {
-  display:none; position:fixed; inset:0;
-  background:rgba(0,0,0,.85); z-index:500;
-  align-items:center; justify-content:center; padding:20px;
-}
+/* MODALS */
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.85); z-index:500; align-items:center; justify-content:center; padding:20px; }
 .modal-overlay.open { display:flex; }
-.modal {
-  background:#161616; border:1px solid var(--border);
-  border-radius:8px; padding:32px; max-width:700px; width:100%;
-  max-height:90vh; overflow-y:auto; position:relative;
-}
-.modal-close {
-  position:absolute; top:16px; right:16px;
-  background:none; border:none; color:var(--gris);
-  font-size:1.4rem; cursor:pointer; transition:color .2s;
-}
-.modal-close:hover { color:var(--blanc); }
+.modal { background:#161616; border:1px solid var(--border); border-radius:8px; padding:32px; max-width:700px; width:100%; max-height:90vh; overflow-y:auto; position:relative; }
 
-/* PRINT */
-.btn-print {
-  background:var(--vert); color:#fff; border:none;
-  border-radius:4px; padding:10px 20px;
-  font-family:'DM Sans',sans-serif; font-weight:600;
-  font-size:.85rem; cursor:pointer; display:flex;
-  align-items:center; gap:8px; margin-top:20px;
-  transition:background .2s;
-}
-.btn-print:hover { background:var(--vert-clair); }
-
-/* ÉLÈVES TABLE */
-.eleves-table { font-size:.8rem; }
-.eleves-table td { padding:6px 10px; }
-
-/* FILTER CHIPS */
-.filter-chips { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:24px; }
-.chip {
-  background:var(--surface); border:1px solid var(--border);
-  border-radius:20px; padding:5px 14px;
-  font-size:.78rem; cursor:pointer; transition:all .2s;
-}
-.chip:hover { border-color:var(--vert-clair); color:var(--vert-clair); }
-.chip.active { background:rgba(82,183,136,.15); border-color:var(--vert-clair); color:var(--vert-clair); }
-
-/* PRINT STYLES */
-@media print {
-  nav,#section-accueil .hero-stats,
-  .btn-print,.modal-close { display:none!important; }
-  body { background:#fff!important; color:#000!important; }
-  .section { display:block!important; padding:20px!important; }
-  .card { border:1px solid #ccc!important; background:#fff!important; }
-  .section-title span { color:#2d6a4f!important; }
+/* RESPONSIVE < 900px */
+@media(max-width:900px){
+  .burger-btn { display: block; }
+  .nav-tabs {
+    display: none; position: absolute; top: 64px; left: 0; width: 100%;
+    background: rgba(14,14,14,0.98); flex-direction: column; height: auto;
+    border-bottom: 1px solid var(--border); padding: 20px 0;
+  }
+  .nav-tabs.open { display: flex; }
+  .nav-tab { height: 50px; width: 100%; text-align: left; padding: 0 32px; border-bottom: none; border-left: 4px solid transparent; }
+  .nav-tab.active { border-left-color: var(--vert-clair); background: var(--surface); }
+  .search-bar { display: none; }
+  .nav-tabs .search-bar-mobile { display: block; padding: 10px 32px 20px; }
+  .nav-tabs .search-bar-mobile .search-input { width: 100%; }
+  
+  nav { padding: 0 20px; }
+  .section { padding: 32px 20px; }
 }
 
-@media(max-width:768px){
-  nav { padding:0 16px; }
-  .section { padding:32px 16px; }
-  .hero { padding:40px 20px; }
-  .search-bar { display:none; }
-  .hero-stats { gap:24px; }
+@media(min-width:901px) {
+  .search-bar-mobile { display: none; }
 }
 </style>
 </head>
 <body>
 
-<nav>
-  <div class="nav-logo">ÉPEP Ixelles</div>
-  <div class="nav-tabs">
-    <button class="nav-tab active" onclick="showSection('accueil')">Accueil</button>
-    <button class="nav-tab" onclick="showSection('ma-fiche')">Ma fiche</button>
-    <button class="nav-tab" onclick="showSection('timing')">Timing</button>
-    <button class="nav-tab" onclick="showSection('ateliers')">Ateliers</button>
-    <button class="nav-tab" onclick="showSection('groupes')">Groupes</button>
-    <button class="nav-tab" onclick="showSection('relais')">Relais profs</button>
-    <button class="nav-tab" onclick="showSection('materiel')">Matériel</button>
-    <button class="nav-tab" onclick="showSection('reserve')">Réserve</button>
-  </div>
-  <div class="search-bar">
-    <input class="search-input" type="text" placeholder="Chercher un nom..." id="nav-search" oninput="navSearch(this.value)">
-  </div>
-</nav>
-
-<main>
-
-<!-- ACCUEIL -->
-<section class="section active" id="section-accueil">
-  <div class="hero">
-    <div class="hero-badge">Organisation finale</div>
-    <h1>Journée<br><span>Sportive</span></h1>
-    <p class="hero-sub">Tout ce dont vous avez besoin pour la journée — ateliers, groupes, relais, matériel.</p>
-    <div class="hero-stats">
-      <div class="stat"><span class="stat-val">16</span><span class="stat-label">Ateliers</span></div>
-      <div class="stat"><span class="stat-val">16</span><span class="stat-label">Groupes</span></div>
-      <div class="stat"><span class="stat-val">173</span><span class="stat-label">Élèves</span></div>
-      <div class="stat"><span class="stat-val">08h30</span><span class="stat-label">Départ</span></div>
-      <div class="stat"><span class="stat-val">15h05</span><span class="stat-label">Fin</span></div>
-    </div>
-  </div>
-</section>
-
-<!-- MA FICHE -->
-<section class="section" id="section-ma-fiche">
-  <div class="fiche-search">
-    <h2>Trouvez votre <span style="color:var(--vert-clair)">fiche</span></h2>
-    <p>Entrez votre nom pour voir votre rôle, votre groupe et vos créneaux.</p>
-    <div class="fiche-input-wrap">
-      <input class="fiche-input" type="text" id="fiche-nom" placeholder="Votre nom (ex: Chapelle, Amnad...)" oninput="searchFiche(this.value)">
-    </div>
-  </div>
-  <div class="fiche-result" id="fiche-result"></div>
-</section>
-
-<!-- TIMING -->
-<section class="section" id="section-timing">
-  <p class="section-title">Timing <span>de la journée</span></p>
-  <p class="section-sub">08h30 → 15h05 — 16 passages de 15 minutes</p>
-  <div id="timing-container"></div>
-</section>
-
-<!-- ATELIERS -->
-<section class="section" id="section-ateliers">
-  <p class="section-title">Les <span>16 Ateliers</span></p>
-  <p class="section-sub">Cliquez sur un atelier pour voir le détail complet.</p>
-  <div class="ateliers-grid" id="ateliers-container"></div>
-</section>
-
-<!-- GROUPES -->
-<section class="section" id="section-groupes">
-  <p class="section-title">Les <span>16 Groupes</span></p>
-  <p class="section-sub">Cliquez sur un groupe pour voir sa composition.</p>
-  <div class="filter-chips">
-    <div class="chip active" onclick="filterGroupes('all',this)">Tous</div>
-    <div class="chip" onclick="filterGroupes('Phase 1',this)">Phase 1</div>
-    <div class="chip" onclick="filterGroupes('Phase 2',this)">Phase 2</div>
-    <div class="chip" onclick="filterGroupes('Phase 3',this)">Phase 3</div>
-    <div class="chip" onclick="filterGroupes('Primaire',this)">Primaire</div>
-  </div>
-  <div class="groupes-grid" id="groupes-container"></div>
-</section>
-
-<!-- RELAIS PROFS -->
-<section class="section" id="section-relais">
-  <p class="section-title">Relais <span>Profs</span></p>
-  <p class="section-sub">Qui tient chaque atelier sur chaque grand créneau.</p>
-  <div class="table-wrap" id="relais-container"></div>
-</section>
-
-<!-- MATÉRIEL -->
-<section class="section" id="section-materiel">
-  <p class="section-title">Liste <span>Matériel</span></p>
-  <p class="section-sub">Matériel nécessaire par atelier.</p>
-  <div id="materiel-container"></div>
-</section>
-
-<!-- RÉSERVE -->
-<section class="section" id="section-reserve">
-  <p class="section-title">Profs <span>Réserve</span></p>
-  <p class="section-sub">Profs disponibles pour intervenir en remplacement selon les créneaux.</p>
-  <div id="reserve-container"></div>
-</section>
-
-</main>
-
-<!-- MODAL GROUPE -->
-<div class="modal-overlay" id="modal-groupe">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('modal-groupe')">✕</button>
-    <div id="modal-groupe-content"></div>
-    <button class="btn-print" onclick="printModal('modal-groupe-content')">🖨 Imprimer cette fiche</button>
+<div id="lock-screen">
+  <div class="login-box">
+    <h1>Accès Privé</h1>
+    <input type="password" id="pw-input" class="login-input" placeholder="Mot de passe">
+    <button onclick="checkPassword()" class="login-btn">ENTRER</button>
+    <p id="login-error">Mot de passe incorrect</p>
   </div>
 </div>
 
-<!-- MODAL ATELIER -->
-<div class="modal-overlay" id="modal-atelier">
+<div id="app-content" style="display:none">
+  <nav>
+    <div class="nav-logo">ÉPEP Ixelles</div>
+    <div class="nav-tabs" id="nav-menu">
+      <div class="search-bar-mobile">
+        <input class="search-input" type="text" placeholder="Chercher un nom..." oninput="navSearch(this.value)">
+      </div>
+      <button class="nav-tab active" onclick="showSection('accueil')">Accueil</button>
+      <button class="nav-tab" onclick="showSection('ma-fiche')">Ma fiche</button>
+      <button class="nav-tab" onclick="showSection('timing')">Timing</button>
+      <button class="nav-tab" onclick="showSection('ateliers')">Ateliers</button>
+      <button class="nav-tab" onclick="showSection('groupes')">Groupes</button>
+      <button class="nav-tab" onclick="showSection('relais')">Relais profs</button>
+      <button class="nav-tab" onclick="showSection('materiel')">Matériel</button>
+      <button class="nav-tab" onclick="showSection('reserve')">Réserve</button>
+    </div>
+    <div class="search-bar">
+      <input class="search-input" type="text" placeholder="Chercher..." id="nav-search" oninput="navSearch(this.value)">
+    </div>
+    <button class="burger-btn" onclick="toggleMenu()">☰</button>
+  </nav>
+
+  <main>
+    <section class="section active" id="section-accueil">
+      <div class="hero">
+        <div class="hero-badge" style="display:inline-block; background:var(--vert); padding:5px 14px; border-radius:2px; font-size:.7rem; margin-bottom:20px;">Organisation finale</div>
+        <h1>Journée<br><span>Sportive</span></h1>
+        <p style="color:var(--gris); max-width:480px; margin-bottom:40px;">Tout ce dont vous avez besoin pour la journée — ateliers, groupes, relais, matériel.</p>
+        <div class="hero-stats">
+          <div class="stat"><span class="stat-val">16</span><span class="stat-label" style="display:block; font-size:.7rem; color:var(--gris); text-transform:uppercase;">Ateliers</span></div>
+          <div class="stat"><span class="stat-val">16</span><span class="stat-label" style="display:block; font-size:.7rem; color:var(--gris); text-transform:uppercase;">Groupes</span></div>
+          <div class="stat"><span class="stat-val" id="total-eleves-count">0</span><span class="stat-label" style="display:block; font-size:.7rem; color:var(--gris); text-transform:uppercase;">Élèves</span></div>
+          <div class="stat"><span class="stat-val">08h30</span><span class="stat-label" style="display:block; font-size:.7rem; color:var(--gris); text-transform:uppercase;">Départ</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="section-ma-fiche">
+      <div class="fiche-search" style="text-align:center; max-width:600px; margin:0 auto;">
+        <h2 style="font-family:'Bebas Neue'; font-size:2.5rem; margin-bottom:20px;">Trouvez votre <span style="color:var(--vert-clair)">fiche</span></h2>
+        <input class="fiche-input" type="text" id="fiche-nom" placeholder="Votre nom..." oninput="searchFiche(this.value)" style="width:100%; padding:15px; background:var(--surface); border:1px solid var(--border); color:white; border-radius:4px;">
+        <div id="fiche-result" style="margin-top:30px; text-align:left;"></div>
+      </div>
+    </section>
+
+    <section class="section" id="section-timing"><h2 class="section-title" style="font-family:'Bebas Neue'; font-size:2.5rem; margin-bottom:20px;">Timing <span>Général</span></h2><div id="timing-container"></div></section>
+    <section class="section" id="section-ateliers"><h2 class="section-title" style="font-family:'Bebas Neue'; font-size:2.5rem; margin-bottom:20px;">Les <span>Ateliers</span></h2><div class="ateliers-grid" id="ateliers-container"></div></section>
+    <section class="section" id="section-groupes">
+      <h2 class="section-title" style="font-family:'Bebas Neue'; font-size:2.5rem; margin-bottom:20px;">Les <span>Groupes</span></h2>
+      <div class="filter-chips" style="display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap;">
+        <button class="chip active" onclick="filterGroupes('all',this)" style="padding:8px 20px; border-radius:20px; border:1px solid var(--border); background:var(--surface); color:white; cursor:pointer;">Tous</button>
+        <button class="chip" onclick="filterGroupes('Phase 1',this)" style="padding:8px 20px; border-radius:20px; border:1px solid var(--border); background:var(--surface); color:white; cursor:pointer;">Phase 1</button>
+        <button class="chip" onclick="filterGroupes('Phase 2',this)" style="padding:8px 20px; border-radius:20px; border:1px solid var(--border); background:var(--surface); color:white; cursor:pointer;">Phase 2</button>
+        <button class="chip" onclick="filterGroupes('Phase 3',this)" style="padding:8px 20px; border-radius:20px; border:1px solid var(--border); background:var(--surface); color:white; cursor:pointer;">Phase 3</button>
+      </div>
+      <div class="groupes-grid" id="groupes-container"></div>
+    </section>
+    <section class="section" id="section-relais"><h2 class="section-title" style="font-family:'Bebas Neue'; font-size:2.5rem; margin-bottom:20px;">Relais <span>Profs</span></h2><div id="relais-container"></div></section>
+    <section class="section" id="section-materiel"><h2 class="section-title" style="font-family:'Bebas Neue'; font-size:2.5rem; margin-bottom:20px;">Liste <span>Matériel</span></h2><div id="materiel-container"></div></section>
+    <section class="section" id="section-reserve"><h2 class="section-title" style="font-family:'Bebas Neue'; font-size:2.5rem; margin-bottom:20px;">Profs <span>Réserve</span></h2><div id="reserve-container"></div></section>
+  </main>
+</div>
+
+<div class="modal-overlay" id="modal-generic">
   <div class="modal">
-    <button class="modal-close" onclick="closeModal('modal-atelier')">✕</button>
-    <div id="modal-atelier-content"></div>
-    <button class="btn-print" onclick="printModal('modal-atelier-content')">🖨 Imprimer cette fiche</button>
+    <button class="modal-close" onclick="closeModal('modal-generic')" style="position:absolute; top:20px; right:20px; background:none; border:none; color:var(--gris); font-size:1.5rem; cursor:pointer;">✕</button>
+    <div id="modal-content"></div>
   </div>
 </div>
 
 <script>
-const DATA = {"ateliers": [{"num": 1, "nom": "Unihoc", "lieu": "Salle d'étude", "materiel": "1 crosse, 10 balles, 1 petit but", "principe": "Maîtrise du geste et rapidité.", "score": "Nombre de tirs / buts réussis.", "secu": "Crosse basse et passage à l'arrêt."}, {"num": 2, "nom": "Tchoukball", "lieu": "Couloir salle d'étude", "materiel": "1 cadre de Tchoukball, 1 ballon, plots", "principe": "Coopération et rebond collectif.", "score": "Nombre de points marqués.", "secu": ""}, {"num": 3, "nom": "Kin-Ball", "lieu": "Gymnase", "materiel": "1 ballon de Kin-Ball", "principe": "Coopération physique et transport collectif.", "score": "Nombre total de tours de terrain.", "secu": ""}, {"num": 4, "nom": "Basketball", "lieu": "Gymnase", "materiel": "Ballons de basket, panier", "principe": "Adresse collective en relais.", "score": "Nombre total de paniers marqués.", "secu": ""}, {"num": 5, "nom": "Parcours de l'aveugle", "lieu": "Hall", "materiel": "1 bandeau, 10 objets variés, obstacles, chronomètre", "principe": "Relais de confiance et guidage vocal.", "score": "Ramasser les objets avec précision.", "secu": "Une ou deux voix seulement pour guider."}, {"num": 6, "nom": "Indiaca", "lieu": "Hall", "materiel": "1 Indiaca, filet occultant, chronomètre", "principe": "Précision de frappe et réception.", "score": "Plus longue série d'échanges sans chute.", "secu": ""}, {"num": 7, "nom": "Tour infernale Jenga", "lieu": "Local 06", "materiel": "30 pièces de bois, 1 table stable", "principe": "Relais de précision et de calme.", "score": "Meilleur temps pour une tour complète.", "secu": ""}, {"num": 8, "nom": "Marteau-piqueur", "lieu": "Local 05", "materiel": "Souche, 2 marteaux, clous, lunettes de sécurité", "principe": "Force et précision sur poste sécurisé.", "score": "Temps total ou nombre de clous terminés.", "secu": "Lunettes obligatoires."}, {"num": 9, "nom": "Fresque copie-conforme", "lieu": "Local 26/27", "materiel": "Dessin modèle caché, nappe en papier, feutres", "principe": "Observation et reproduction artistique.", "score": "Note sur 10 selon la ressemblance.", "secu": ""}, {"num": 10, "nom": "La Mûrisserie", "lieu": "Cour de récréation", "materiel": "Géré par l'ASBL La Mûrisserie", "principe": "Activité gérée par l'ASBL La Mûrisserie.", "score": "Selon modalités ASBL.", "secu": ""}, {"num": 11, "nom": "Le relais du diable", "lieu": "Cour de récréation", "materiel": "1 diable, 20 cartons lestés, 2 plots", "principe": "Maniement d'engin et gestion du rythme.", "score": "Allers-retours / temps global.", "secu": ""}, {"num": 12, "nom": "Relais de kangourou", "lieu": "Cour de récréation", "materiel": "Grands sacs résistants", "principe": "Coordination motrice en relais.", "score": "Temps total de l'équipe.", "secu": ""}, {"num": 13, "nom": "Parcours vélo", "lieu": "Cour de récréation", "materiel": "2 à 3 vélos, plots, chronomètre", "principe": "Maniabilité, équilibre et trajectoire.", "score": "Parcours propre sans poser le pied.", "secu": ""}, {"num": 14, "nom": "Aquarium", "lieu": "Local 10", "materiel": "Aquarium rempli d'eau, 1 verre, pièces de monnaie", "principe": "Précision et gestion du risque.", "score": "Nombre de pièces avant le naufrage.", "secu": ""}, {"num": 15, "nom": "Mémo des objets", "lieu": "Local 12", "materiel": "Tapis ou paravent, 10 à 15 objets variés, zone de reconstitution", "principe": "Mémorisation et restitution collective.", "score": "Nombre d'objets correctement identifiés.", "secu": ""}, {"num": 16, "nom": "Les bâtonnets", "lieu": "Local 14", "materiel": "31 bâtonnets ou lattes de bois", "principe": "Stratégie et calcul mental.", "score": "Nombre de victoires contre l'animateur.", "secu": ""}], "relais": [{"atelier": 1, "c1": "Amnad", "c2": "Abdelqaoui", "c3": "Azem", "remarque": ""}, {"atelier": 2, "c1": "Baqloul", "c2": "Benterki", "c3": "Bajati", "remarque": ""}, {"atelier": 3, "c1": "Bobeica", "c2": "Bonanga", "c3": "Clément", "remarque": ""}, {"atelier": 4, "c1": "Coulon", "c2": "De Leus", "c3": "Constant", "remarque": ""}, {"atelier": 5, "c1": "De Patoul", "c2": "Fouad", "c3": "Drappier", "remarque": ""}, {"atelier": 6, "c1": "Di Berardino", "c2": "El Amrani", "c3": "Laure", "remarque": ""}, {"atelier": 7, "c1": "Kechiche", "c2": "Ladjali", "c3": "Lemmens", "remarque": ""}, {"atelier": 8, "c1": "Pirenne", "c2": "Vanparys", "c3": "Mjoti", "remarque": ""}, {"atelier": 9, "c1": "Azem", "c2": "Amnad", "c3": "Outers", "remarque": ""}, {"atelier": 10, "c1": "ASBL", "c2": "ASBL", "c3": "ASBL", "remarque": "Géré par l'ASBL La Mûrisserie"}, {"atelier": 11, "c1": "Benterki", "c2": "Baqloul", "c3": "Warland", "remarque": ""}, {"atelier": 12, "c1": "Bonanga", "c2": "Bobeica", "c3": "Fouad", "remarque": ""}, {"atelier": 13, "c1": "Clément", "c2": "Coulon", "c3": "El Amrani", "remarque": ""}, {"atelier": 14, "c1": "De Leus", "c2": "Di Berardino", "c3": "Pirenne", "remarque": ""}, {"atelier": 15, "c1": "Laure", "c2": "Lemmens", "c3": "Vanparys", "remarque": ""}, {"atelier": 16, "c1": "Fouad", "c2": "Azem", "c3": "Amnad", "remarque": ""}], "groupes": [{"num": 1, "ref": "P1-1", "phase": "Phase 1", "nom": "Les Orques", "acc": "Chapelle", "effectif": "=COUNTIF('Base élèves'!$A$2:$A$500,A5)"}, {"num": 2, "ref": "P1-2", "phase": "Phase 1", "nom": "Les Tigres", "acc": "Bougdim", "effectif": "=COUNTIF('Base élèves'!$A$2:$A$500,A6)"}, {"num": 3, "ref": "P1-3", "phase": "Phase 1", "nom": "Les Taureaux", "acc": "Austraet", "effectif": "=COUNTIF('Base élèves'!$A$2:$A$500,A7)"}, {"num": 4, "ref": "P1-4", "phase": "Phase 1", "nom": "Les Rhinos", "acc": "Thomas", "effectif": "=COUNTIF('Base élèves'!$A$2:$A$500,A8)"}, {"num": 5, "ref": "P1-5", "phase": "Phase 1", "nom": "Les Scorpions", "acc": "Gillet C.", "effectif": "=COUNTIF('Base élèves'!$A$2:$A$500,A9)"}, {"num": 6, "ref": "P2-1", "phase": "Phase 2", "nom": "Les Faucons", "acc": "Gillet J.", "effectif": "=COUNTIF('Base élèves'!$A$2:$A$500,A10)"}, {"num": 7, "ref": "P2-2", "phase": "Phase 2", "nom": "Les Grizzlys", "acc": "Haik", "effectif": "=COUNTIF('Base élèves'!$A$2:$A$500,A11)"}, {"num": 8, "ref": "P2-3", "phase": "Phase 2", "nom": "Les Guépards", "acc": "Legrand", "effectif": "=COUNTIF('Base élèves'!$A$2:$A$500,A12)"}, {"num": 9, "ref": "P2-4", "phase": "Phase 2", "nom": "Les Cobras", "acc": "Martinez", "effectif": "=COUNTIF('Base élèves'!$A$2:$A$500,A13)"}, {"num": 10, "ref": "P2-5", "phase": "Phase 2", "nom": "Les Loups", "acc": "Mesfioui", "effectif": "=COUNTIF('Base élèves'!$A$2:$A$500,A14)"}, {"num": 11, "ref": "P2-6", "phase": "Phase 2", "nom": "Les Gorilles", "acc": "Mvuesa", "effectif": "=COUNTIF('Base élèves'!$A$2:$A$500,A15)"}, {"num": 12, "ref": "P3-1", "phase": "Phase 3", "nom": "Les Aigles", "acc": "Nouhi", "effectif": "=COUNTIF('Base élèves'!$A$2:$A$500,A16)"}, {"num": 13, "ref": "P3-2", "phase": "Phase 3", "nom": "Les Requins", "acc": "Ortigosa", "effectif": "=COUNTIF('Base élèves'!$A$2:$A$500,A17)"}, {"num": 14, "ref": "P3-3", "phase": "Phase 3", "nom": "Les Panthères", "acc": "Azarkan", "effectif": "=COUNTIF('Base élèves'!$A$2:$A$500,A18)"}, {"num": 15, "ref": "P3-4", "phase": "Phase 3", "nom": "Les Lions", "acc": "Begne", "effectif": "=COUNTIF('Base élèves'!$A$2:$A$500,A19)"}, {"num": 16, "ref": "PRI-1", "phase": "Primaire", "nom": "Les Phénix", "acc": "Accompagnateur Primaire", "effectif": "=COUNTIF('Base élèves'!$A$2:$A$500,A20)"}], "eleves": [{"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Ali", "prenom": "Hasan", "classe": "ORA"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Ali Khan", "prenom": "Sajeed", "classe": "ORB"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Asanovski", "prenom": "Luciano", "classe": "ORB"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Benachouba Ramizova", "prenom": "Isaac", "classe": "ORB"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Bouzahzah", "prenom": "Adam", "classe": "OBSB"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Cîrciu", "prenom": "Yasmina", "classe": "ORC"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Dahnin", "prenom": "Khaled", "classe": "ORC"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Danoun", "prenom": "Fahd", "classe": "OBSB"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Demirkapu", "prenom": "Geylani", "classe": "ORA"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Dorani", "prenom": "Zaryalai", "classe": "OBSB"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "KAÇAN", "prenom": "Yavuz", "classe": "OBSA"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Pereira de Souza", "prenom": "Joao", "classe": "OBSA"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "Agboli", "prenom": "Kaleb", "classe": "ORA"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "Azzaryouhi", "prenom": "Mohamed", "classe": "ORB"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "Bação De Castro", "prenom": "Nuno", "classe": "ORB"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "DIALLO", "prenom": "Lawouratou", "classe": "ORC"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "Diallo", "prenom": "Idiatou", "classe": "OBSB"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "Gazik", "prenom": "Karol", "classe": "ORB"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "Khay", "prenom": "Rayane", "classe": "ORA"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "Milosiu", "prenom": "Denisa", "classe": "OBSA"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "Negru", "prenom": "Loredana", "classe": "ORC"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "Ouled Ben Abdallah", "prenom": "Haroun", "classe": "OBSA"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "REXHEPI", "prenom": "Enis", "classe": "ORA"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "Santos Moreira", "prenom": "Artur", "classe": "OBSB"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "BATISTA CARDOSO", "prenom": "Joao Lucas", "classe": "ORA"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "Bonifacio", "prenom": "Giulia", "classe": "ORC"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "Buzon", "prenom": "Mohamed", "classe": "OBSA"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "COBA SANCHEZ", "prenom": "Pricila", "classe": "ORA"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "Delpierre", "prenom": "Logan", "classe": "ORB"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "Doda", "prenom": "Aleks", "classe": "ORA"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "Felipe Rocha", "prenom": "Marina", "classe": "OBSB"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "GUTALE HASSAN", "prenom": "Mohamed", "classe": "OBSB"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "Joly", "prenom": "Shéhérazade", "classe": "ORC"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "Madeira Akhtar", "prenom": "Eiliyah", "classe": "OBSA"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "Pisane", "prenom": "Thibault", "classe": "ORB"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "Vandermeulen", "prenom": "Thomas", "classe": "ORB"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "Akdeniz", "prenom": "Emir", "classe": "OBSB"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "Ali Khan", "prenom": "Sajeed", "classe": "ORB"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "El Marchouhi", "prenom": "Sofian Allal", "classe": "ORB"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "Gutiérrez Briones", "prenom": "Alejandro", "classe": "ORB"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "Kemakuko", "prenom": "Paul", "classe": "OBSB"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "Milosiu", "prenom": "Sefora", "classe": "OBSA"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "OUMAROU", "prenom": "Ibrahim", "classe": "OBSA"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "Pourbaix", "prenom": "Sam", "classe": "ORA"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "RIVERA GONZALEZ", "prenom": "Ashley", "classe": "ORA"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "SEJDI", "prenom": "Medina", "classe": "ORC"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "Zhar Idrissi", "prenom": "Ahmed", "classe": "ORC"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "Zuniga Farias", "prenom": "Emilio", "classe": "ORA"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "AZIRI", "prenom": "Ibadet", "classe": "OBSB"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "Basele Bofasa", "prenom": "Cameron", "classe": "ORB"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "El Attabi", "prenom": "Faysal", "classe": "ORA"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "HALJITI", "prenom": "Shoan", "classe": "ORB"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "Hassani", "prenom": "Sabrine", "classe": "ORC"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "Kassé", "prenom": "Korka", "classe": "OBSA"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "MUSHID YAV A KALENG", "prenom": "Hamilton", "classe": "ORA"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "Manu", "prenom": "Kankam", "classe": "OBSB"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "Mesaoudi", "prenom": "Anas", "classe": "ORC"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "Riyad", "prenom": "Isaac", "classe": "OBSA"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "Zahiri", "prenom": "Dashnim", "classe": "ORA"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "Barry", "prenom": "Aïssata", "classe": "P2A"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "Bel-Haj", "prenom": "Adam", "classe": "P2D"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "Bollu", "prenom": "Colin", "classe": "P2E"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "Chinchihualpa Gutierrez", "prenom": "Jesus Ernesto", "classe": "P2F"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "Cissé", "prenom": "Serigne", "classe": "P2A"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "Da Costa Pinto", "prenom": "Maria", "classe": "P2B"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "Duna", "prenom": "Davit", "classe": "P2C"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "Idrizi", "prenom": "Ribana", "classe": "P2B"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "Nassiri", "prenom": "Safa", "classe": "P2D"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "Nkondi-Lukombo", "prenom": "Naischa", "classe": "P2C"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "POURBAIX", "prenom": "Jimmy", "classe": "P2E"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "Ben Ajiba", "prenom": "Abir", "classe": "P2A"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "De Castro Silva", "prenom": "Pedro-Lucas", "classe": "P2D"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "Debza", "prenom": "Aliya", "classe": "P2F"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "Diallo", "prenom": "Boubacar", "classe": "P2D"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "Hajredinovic", "prenom": "Samanta", "classe": "P2C"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "Kassé", "prenom": "Rokhoya", "classe": "P2E"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "Kilci", "prenom": "Adem", "classe": "P2B"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "Les", "prenom": "Assaya", "classe": "P2B"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "Mukendi", "prenom": "Owen", "classe": "P2A"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "Novac", "prenom": "Yasmina", "classe": "P2C"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "Nzeza Kiluangu", "prenom": "Gabriel", "classe": "P2E"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "Balaagaou", "prenom": "Nora", "classe": "P2A"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "Dahmani", "prenom": "Zakaria", "classe": "P2A"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "De Oliveira Rebelo", "prenom": "Matilde", "classe": "P2F"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "El Khattabi", "prenom": "Maïssa", "classe": "P2B"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "El Moumen", "prenom": "Salahdin", "classe": "P2B"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "Govaerts", "prenom": "Nathan", "classe": "P2D"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "Guedes Barbosa", "prenom": "Gabriel", "classe": "P2D"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "Ince", "prenom": "Busra", "classe": "P2F"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "Jamiolkowska", "prenom": "Wiktoria", "classe": "P2E"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "Messari", "prenom": "Younes", "classe": "P2C"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "Van Cauwenbergh", "prenom": "Mathys", "classe": "P2C"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "Benidito Dos Santos", "prenom": "Tabita", "classe": "P2D"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "Benyatouille", "prenom": "Hamza", "classe": "P2F"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "FILIPPENKO", "prenom": "Olha", "classe": "P2A"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "Kulcsar", "prenom": "Isabelle", "classe": "P2B"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "Mbiawa Nouwock", "prenom": "Bryan", "classe": "P2A"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "Mokhtari", "prenom": "Yassine", "classe": "P2B"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "Ouassou Bonella", "prenom": "Adam", "classe": "P2F"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "Pourbaix", "prenom": "Lucie", "classe": "P2E"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "Seferovic", "prenom": "Natalija", "classe": "P2C"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "Van der Perre", "prenom": "Elone", "classe": "P2C"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "Özcan", "prenom": "Arda", "classe": "P2D"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "Bouanane", "prenom": "Nawfal", "classe": "P2A"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "Cesmeli", "prenom": "Berkan", "classe": "P2B"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "Debroux Servranckx", "prenom": "Baptiste", "classe": "P2E"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "Gourgem", "prenom": "Soukaina", "classe": "P2B"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "Messari", "prenom": "Soufiane", "classe": "P2A"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "Munga", "prenom": "Riyad", "classe": "P2F"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "Murtezas", "prenom": "Orges", "classe": "P2E"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "Rosseel", "prenom": "Marvin", "classe": "P2D"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "Simo Tchoupé", "prenom": "Keiryl", "classe": "P2C"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "WARR", "prenom": "Racky", "classe": "P2C"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "Wabaga Yalala", "prenom": "Shanna", "classe": "P2F"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "Boelaert", "prenom": "Julia", "classe": "P2F"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "Bouyghjdane", "prenom": "Nahel", "classe": "P2D"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "De Paoli", "prenom": "Adriano", "classe": "P2F"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "Eken", "prenom": "Busenaz", "classe": "P2B"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "Haidara", "prenom": "Hamma", "classe": "P2A"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "Hajredinovic", "prenom": "Sanela", "classe": "P2A"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "Menendez Ovalle", "prenom": "Rayan", "classe": "P2B"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "Ndongala Mbenza Rona", "prenom": "Ryan", "classe": "P2C"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "Niculita", "prenom": "Andreea", "classe": "P2E"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "SHAAR", "prenom": "Adnan", "classe": "P2E"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "Wojciechowski", "prenom": "Eryk", "classe": "P2C"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Bouali", "prenom": "Younes", "classe": "P3D"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Chakouri", "prenom": "Hamza", "classe": "P3A"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Cherboukh", "prenom": "Hamza", "classe": "P3A"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Delahaye", "prenom": "Amélia", "classe": "P3F"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Diallo", "prenom": "Fatoumata", "classe": "P3B"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Dibu-Dibu", "prenom": "Schilo", "classe": "P3E"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "El Hachioui", "prenom": "Ayoub", "classe": "P3F"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Houthoofd", "prenom": "Jan", "classe": "P3B"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Kasem", "prenom": "Maysa", "classe": "P3C"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Lipski", "prenom": "Tomasz", "classe": "P3C"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Nikolajuk", "prenom": "Piotr", "classe": "P3E"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Paz Villagomez", "prenom": "Benjamin", "classe": "P3D"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Al Aref", "prenom": "Hasan", "classe": "P3D"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Canario-Taveira", "prenom": "Kenzo", "classe": "P3D"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Chairi", "prenom": "Mounia", "classe": "P3A"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Diop", "prenom": "Saliou", "classe": "P3B"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "El Ouarghi", "prenom": "Salma", "classe": "P3A"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Gökce", "prenom": "Mikail", "classe": "P3C"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Isaev", "prenom": "Isay", "classe": "P3B"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Kabemba Nzuba", "prenom": "Alain-Didier", "classe": "P3E"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Kulcsar", "prenom": "Patricia-Nicole", "classe": "P3F"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Micha", "prenom": "Nono", "classe": "P3F"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Restivo", "prenom": "Lorenzo", "classe": "P3E"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Yagbasan", "prenom": "Hrant", "classe": "P3C"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Ahmedova", "prenom": "Melisa", "classe": "P3A"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Ben Haïda", "prenom": "Bilal", "classe": "P3D"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Bitumba", "prenom": "Iyela", "classe": "P3B"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Debuck", "prenom": "Yohann", "classe": "P3D"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Rayss", "prenom": "Bilal", "classe": "P3B"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Riordan De Briones", "prenom": "Michael", "classe": "P3C"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Rodrigues Coelho", "prenom": "Luis", "classe": "P3E"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Rosseel", "prenom": "Maëva", "classe": "P3F"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Silva de Oliveira", "prenom": "Victor Hugo", "classe": "P3F"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Unal", "prenom": "Kaan", "classe": "P3E"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Warr", "prenom": "Abdoulaye", "classe": "P3C"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Zerhouni", "prenom": "Anass", "classe": "P3A"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "Ben Hadj Temsamani", "prenom": "Abdelrahman", "classe": "P3F"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "Bosembo", "prenom": "Albert", "classe": "P3D"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "Chliouet Belhadj-Sakas", "prenom": "Marouan", "classe": "P3E"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "Dirik", "prenom": "Berzan", "classe": "P3E"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "El Bouchikhi", "prenom": "Rayan", "classe": "P3B"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "El Kaddouri", "prenom": "Sanae", "classe": "P3B"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "El Khattabi", "prenom": "Malak", "classe": "P3A"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "Gyamfi", "prenom": "Dennis", "classe": "P3B"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "Laroussi", "prenom": "Yassir", "classe": "P3D"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "Nassiri Nassiri", "prenom": "Iman", "classe": "P3C"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "Suyckerbuyck", "prenom": "Nathan", "classe": "P3F"}], "personnel": [{"nom": "Abdelqaoui", "dispo": "09h30–14h30", "statut": "Actif"}, {"nom": "Chapelle", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Bougdim", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Bajati", "dispo": "08h00–09h40 et 13h00–15h00", "statut": "Actif"}, {"nom": "Bonanga", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Benterki", "dispo": "08h00–12h30", "statut": "Actif"}, {"nom": "Baqloul", "dispo": "09h00–14h00", "statut": "Actif"}, {"nom": "Amnad", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Warland", "dispo": "13h15–15h15", "statut": "Actif"}, {"nom": "Azem", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Clément", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Austraet", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Thomas", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "De Leus", "dispo": "08h00–14h05", "statut": "Actif"}, {"nom": "De Patoul", "dispo": "08h00–11h35", "statut": "Actif"}, {"nom": "Di Berardino", "dispo": "08h00–12h25", "statut": "Actif"}, {"nom": "Drappier", "dispo": "11h00–16h00", "statut": "Actif"}, {"nom": "El Amrani", "dispo": "08h00–15h00", "statut": "Actif"}, {"nom": "Fellah", "dispo": "09h40–11h35", "statut": "Actif"}, {"nom": "Gillet C.", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Gillet J.", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Haik", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Kechiche", "dispo": "08h00–10h30", "statut": "Actif"}, {"nom": "Ladjali", "dispo": "09h40–12h25", "statut": "Actif"}, {"nom": "Legrand", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Lemmens", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Martinez", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Mesfioui", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Mvuesa", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Nouhi", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Ortigosa", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Outers", "dispo": "08h00–09h40 et 13h00–16h00", "statut": "Actif"}, {"nom": "Pirenne", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Roger France", "dispo": "08h00–09h40", "statut": "Actif"}, {"nom": "Vanparys", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Azarkan", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Begne", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Laure", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Bobeica", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Fouad", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Coulon", "dispo": "08h00–12h25", "statut": "Actif"}], "reserve": [{"nom": "El Amrani", "c1": "✓ Libre", "c2": "ATELIER", "c3": "ATELIER", "note": "Libre C1"}, {"nom": "Lemmens", "c1": "✓ Libre", "c2": "ATELIER", "c3": "ATELIER", "note": "Libre C1"}, {"nom": "Vanparys", "c1": "✓ Libre", "c2": "ATELIER", "c3": "ATELIER", "note": "Libre C1"}, {"nom": "Clément", "c1": "ATELIER", "c2": "✓ Libre", "c3": "ATELIER", "note": "Libre C2"}, {"nom": "Laure", "c1": "ATELIER", "c2": "✓ Libre", "c3": "ATELIER", "note": "Libre C2"}, {"nom": "Pirenne", "c1": "ATELIER", "c2": "✓ Libre", "c3": "ATELIER", "note": "Libre C2"}, {"nom": "Bobeica", "c1": "ATELIER", "c2": "ATELIER", "c3": "✓ Libre", "note": "Libre C3"}, {"nom": "Bonanga", "c1": "ATELIER", "c2": "ATELIER", "c3": "✓ Libre", "note": "Libre C3"}, {"nom": "Fellah", "c1": "Présent (partiel)", "c2": "Présent (partiel)", "c3": "Présent (partiel)", "note": "Présent 09h40-11h35 (trop court)"}, {"nom": "Roger France", "c1": "Présent (partiel)", "c2": "Présent (partiel)", "c3": "Présent (partiel)", "note": "Présent 08h00-09h40 (trop court)"}], "timing": [{"label": "Passage 1", "heure": "08h30–08h45"}, {"label": "Passage 2", "heure": "08h50–09h05"}, {"label": "Passage 3", "heure": "09h10–09h25"}, {"label": "Passage 4", "heure": "09h30–09h45"}, {"label": "Passage 5", "heure": "09h50–10h05"}, {"label": "PAUSE MATIN", "heure": "10h05–10h20", "pause": true}, {"label": "Passage 6", "heure": "10h25–10h40"}, {"label": "Passage 7", "heure": "10h45–11h00"}, {"label": "Passage 8", "heure": "11h05–11h20"}, {"label": "Passage 9", "heure": "11h25–11h40"}, {"label": "Passage 10", "heure": "11h45–12h00"}, {"label": "Passage 11", "heure": "12h05–12h20"}, {"label": "PAUSE MIDI", "heure": "12h25–13h30", "pause": true}, {"label": "Passage 12", "heure": "13h30–13h45"}, {"label": "Passage 13", "heure": "13h50–14h05"}, {"label": "Passage 14", "heure": "14h10–14h25"}, {"label": "Passage 15", "heure": "14h30–14h45"}, {"label": "Passage 16", "heure": "14h50–15h05"}]};
+/* 1. SÉCURITÉ */
+function checkPassword() {
+  const input = document.getElementById('pw-input').value;
+  if(input === "sport2026") {
+    sessionStorage.setItem('auth_sport', 'true');
+    location.reload();
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+  }
+}
 
-// ============================================================
-// NAVIGATION
-// ============================================================
+window.onload = () => {
+  if(sessionStorage.getItem('auth_sport') === 'true') {
+    document.getElementById('lock-screen').style.display = 'none';
+    document.getElementById('app-content').style.display = 'block';
+    initApp();
+  }
+};
+
+/* 2. NAVIGATION & MENU BURGER */
+function toggleMenu() {
+  document.getElementById('nav-menu').classList.toggle('open');
+}
+
 function showSection(id) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('section-' + id).classList.add('active');
-  event.target.classList.add('active');
-  renderSection(id);
+  
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  
+  // Fermeture auto menu mobile
+  document.getElementById('nav-menu').classList.remove('open');
+  window.scrollTo(0,0);
 }
 
-function renderSection(id) {
-  if(id === 'timing') renderTiming();
-  if(id === 'ateliers') renderAteliers();
-  if(id === 'groupes') renderGroupes('all');
-  if(id === 'relais') renderRelais();
-  if(id === 'materiel') renderMateriel();
-  if(id === 'reserve') renderReserve();
+/* 4. NETTOYAGE & CALCUL DYNAMIQUE */
+const DATA = {
+  "ateliers": [{"num": 1, "nom": "Unihoc", "lieu": "Salle d'étude", "materiel": "1 crosse, 10 balles, 1 petit but", "principe": "Maîtrise du geste et rapidité.", "score": "Nombre de tirs / buts réussis.", "secu": "Crosse basse et passage à l'arrêt."}, {"num": 2, "nom": "Tchoukball", "lieu": "Couloir salle d'étude", "materiel": "1 cadre de Tchoukball, 1 ballon, plots", "principe": "Coopération et rebond collectif.", "score": "Nombre de points marqués.", "secu": ""}, {"num": 3, "nom": "Kin-Ball", "lieu": "Gymnase", "materiel": "1 ballon de Kin-Ball", "principe": "Coopération physique et transport collectif.", "score": "Nombre total de tours de terrain.", "secu": ""}, {"num": 4, "nom": "Basketball", "lieu": "Gymnase", "materiel": "Ballons de basket, panier", "principe": "Adresse collective en relais.", "score": "Nombre total de paniers marqués.", "secu": ""}, {"num": 5, "nom": "Parcours de l'aveugle", "lieu": "Hall", "materiel": "1 bandeau, 10 objets variés, obstacles, chronomètre", "principe": "Relais de confiance et guidage vocal.", "score": "Ramasser les objets avec précision.", "secu": "Une ou deux voix seulement pour guider."}, {"num": 6, "nom": "Indiaca", "lieu": "Hall", "materiel": "1 Indiaca, filet occultant, chronomètre", "principe": "Précision de frappe et réception.", "score": "Plus longue série d'échanges sans chute.", "secu": ""}, {"num": 7, "nom": "Tour infernale Jenga", "lieu": "Local 06", "materiel": "30 pièces de bois, 1 table stable", "principe": "Relais de précision et de calme.", "score": "Meilleur temps pour une tour complète.", "secu": ""}, {"num": 8, "nom": "Marteau-piqueur", "lieu": "Local 05", "materiel": "Souche, 2 marteaux, clous, lunettes de sécurité", "principe": "Force et précision sur poste sécurisé.", "score": "Temps total ou nombre de clous terminés.", "secu": "Lunettes obligatoires."}, {"num": 9, "nom": "Fresque copie-conforme", "lieu": "Local 26/27", "materiel": "Dessin modèle caché, nappe en papier, feutres", "principe": "Observation et reproduction artistique.", "score": "Note sur 10 selon la ressemblance.", "secu": ""}, {"num": 10, "nom": "La Mûrisserie", "lieu": "Cour de récréation", "materiel": "Géré par l'ASBL La Mûrisserie", "principe": "Activité gérée par l'ASBL La Mûrisserie.", "score": "Selon modalités ASBL.", "secu": ""}, {"num": 11, "nom": "Le relais du diable", "lieu": "Cour de récréation", "materiel": "1 diable, 20 cartons lestés, 2 plots", "principe": "Maniement d'engin et gestion du rythme.", "score": "Allers-retours / temps global.", "secu": ""}, {"num": 12, "nom": "Relais de kangourou", "lieu": "Cour de récréation", "materiel": "Grands sacs résistants", "principe": "Coordination motrice en relais.", "score": "Temps total de l'équipe.", "secu": ""}, {"num": 13, "nom": "Parcours vélo", "lieu": "Cour de récréation", "materiel": "2 à 3 vélos, plots, chronomètre", "principe": "Maniabilité, équilibre et trajectoire.", "score": "Parcours propre sans poser le pied.", "secu": ""}, {"num": 14, "nom": "Aquarium", "lieu": "Local 10", "materiel": "Aquarium rempli d'eau, 1 verre, pièces de monnaie", "principe": "Précision et gestion du risque.", "score": "Nombre de pièces avant le naufrage.", "secu": ""}, {"num": 15, "nom": "Mémo des objets", "lieu": "Local 12", "materiel": "Tapis ou paravent, 10 à 15 objets variés, zone de reconstitution", "principe": "Mémorisation et restitution collective.", "score": "Nombre d'objets correctement identifiés.", "secu": ""}, {"num": 16, "nom": "Les bâtonnets", "lieu": "Local 14", "materiel": "31 bâtonnets ou lattes de bois", "principe": "Stratégie et calcul mental.", "score": "Nombre de victoires contre l'animateur.", "secu": ""}],
+  "groupes": [
+    {"num": 1, "ref": "P1-1", "phase": "Phase 1", "nom": "Les Orques", "acc": "Chapelle"},
+    {"num": 2, "ref": "P1-2", "phase": "Phase 1", "nom": "Les Tigres", "acc": "Bougdim"},
+    {"num": 3, "ref": "P1-3", "phase": "Phase 1", "nom": "Les Taureaux", "acc": "Austraet"},
+    {"num": 4, "ref": "P1-4", "phase": "Phase 1", "nom": "Les Rhinos", "acc": "Thomas"},
+    {"num": 5, "ref": "P1-5", "phase": "Phase 1", "nom": "Les Scorpions", "acc": "Gillet C."},
+    {"num": 6, "ref": "P2-1", "phase": "Phase 2", "nom": "Les Faucons", "acc": "Gillet J."},
+    {"num": 7, "ref": "P2-2", "phase": "Phase 2", "nom": "Les Grizzlys", "acc": "Haik"},
+    {"num": 8, "ref": "P2-3", "phase": "Phase 2", "nom": "Les Guépards", "acc": "Legrand"},
+    {"num": 9, "ref": "P2-4", "phase": "Phase 2", "nom": "Les Cobras", "acc": "Martinez"},
+    {"num": 10, "ref": "P2-5", "phase": "Phase 2", "nom": "Les Loups", "acc": "Mesfioui"},
+    {"num": 11, "ref": "P2-6", "phase": "Phase 2", "nom": "Les Gorilles", "acc": "Mvuesa"},
+    {"num": 12, "ref": "P3-1", "phase": "Phase 3", "nom": "Les Aigles", "acc": "Nouhi"},
+    {"num": 13, "ref": "P3-2", "phase": "Phase 3", "nom": "Les Requins", "acc": "Ortigosa"},
+    {"num": 14, "ref": "P3-3", "phase": "Phase 3", "nom": "Les Panthères", "acc": "Azarkan"},
+    {"num": 15, "ref": "P3-4", "phase": "Phase 3", "nom": "Les Lions", "acc": "Begne"},
+    {"num": 16, "ref": "PRI-1", "phase": "Primaire", "nom": "Les Phénix", "acc": "Accompagnateur Primaire"}
+  ],
+  "eleves": [{"groupe": 1, "nom": "Ali", "prenom": "Hasan", "classe": "ORA"}, {"groupe": 1, "nom": "Ali Khan", "prenom": "Sajeed", "classe": "ORB"}, {"groupe": 1, "nom": "Asanovski", "prenom": "Luciano", "classe": "ORB"}, {"groupe": 1, "nom": "Benachouba Ramizova", "prenom": "Isaac", "classe": "ORB"}, {"groupe": 1, "nom": "Bouzahzah", "prenom": "Adam", "classe": "OBSB"}, {"groupe": 1, "nom": "Cîrciu", "prenom": "Yasmina", "classe": "ORC"}, {"groupe": 1, "nom": "Dahnin", "prenom": "Khaled", "classe": "ORC"}, {"groupe": 1, "nom": "Danoun", "prenom": "Fahd", "classe": "OBSB"}, {"groupe": 1, "nom": "Demirkapu", "prenom": "Geylani", "classe": "ORA"}, {"groupe": 1, "nom": "Dorani", "prenom": "Zaryalai", "classe": "OBSB"}, {"groupe": 1, "nom": "KAÇAN", "prenom": "Yavuz", "classe": "OBSA"}, {"groupe": 1, "nom": "Pereira de Souza", "prenom": "Joao", "classe": "OBSA"}, {"groupe": 2, "nom": "Agboli", "prenom": "Kaleb", "classe": "ORA"}, {"groupe": 2, "nom": "Azzaryouhi", "prenom": "Mohamed", "classe": "ORB"}, {"groupe": 2, "nom": "Bação De Castro", "prenom": "Nuno", "classe": "ORB"}, {"groupe": 2, "nom": "DIALLO", "prenom": "Lawouratou", "classe": "ORC"}, {"groupe": 2, "nom": "Diallo", "prenom": "Idiatou", "classe": "OBSB"}, {"groupe": 2, "nom": "Gazik", "prenom": "Karol", "classe": "ORB"}, {"groupe": 2, "nom": "Khay", "prenom": "Rayane", "classe": "ORA"}, {"groupe": 2, "nom": "Milosiu", "prenom": "Denisa", "classe": "OBSA"}, {"groupe": 2, "nom": "Negru", "prenom": "Loredana", "classe": "ORC"}, {"groupe": 2, "nom": "Ouled Ben Abdallah", "prenom": "Haroun", "classe": "OBSA"}, {"groupe": 2, "nom": "REXHEPI", "prenom": "Enis", "classe": "ORA"}, {"groupe": 2, "nom": "Santos Moreira", "prenom": "Artur", "classe": "OBSB"}, {"groupe": 3, "nom": "BATISTA CARDOSO", "prenom": "Joao Lucas", "classe": "ORA"}, {"groupe": 3, "nom": "Bonifacio", "prenom": "Giulia", "classe": "ORC"}, {"groupe": 3, "nom": "Buzon", "prenom": "Mohamed", "classe": "OBSA"}, {"groupe": 3, "nom": "COBA SANCHEZ", "prenom": "Pricila", "classe": "ORA"}, {"groupe": 3, "nom": "Delpierre", "prenom": "Logan", "classe": "ORB"}, {"groupe": 3, "nom": "Doda", "prenom": "Aleks", "classe": "ORA"}, {"groupe": 3, "nom": "Felipe Rocha", "prenom": "Marina", "classe": "OBSB"}, {"groupe": 3, "nom": "GUTALE HASSAN", "prenom": "Mohamed", "classe": "OBSB"}, {"groupe": 3, "nom": "Joly", "prenom": "Shéhérazade", "classe": "ORC"}, {"groupe": 3, "nom": "Madeira Akhtar", "prenom": "Eiliyah", "classe": "OBSA"}, {"groupe": 3, "nom": "Pisane", "prenom": "Thibault", "classe": "ORB"}, {"groupe": 3, "nom": "Vandermeulen", "prenom": "Thomas", "classe": "ORB"}],
+  "relais": [{"atelier": 1, "c1": "Amnad", "c2": "Abdelqaoui", "c3": "Azem"}] // Simplifié pour l'exemple, garde tes données complètes ici
+};
+
+function initApp() {
+  document.getElementById('total-eleves-count').innerText = DATA.eleves.length;
+  renderGroupes();
+  renderAteliers();
 }
 
-// ============================================================
-// MA FICHE
-// ============================================================
-function searchFiche(val) {
-  const result = document.getElementById('fiche-result');
-  if(val.length < 2) { result.innerHTML=''; return; }
-  const q = val.toLowerCase().trim();
-
-  // Chercher dans personnel (profs)
-  const profs = DATA.personnel.filter(p => p.nom.toLowerCase().includes(q));
-  // Chercher dans élèves
-  const eleves = DATA.eleves.filter(e =>
-    e.nom.toLowerCase().includes(q) || (e.prenom && e.prenom.toLowerCase().includes(q))
-  );
-
-  let html = '';
-
-  // Fiches profs
-  profs.forEach(prof => {
-    const isAcc = DATA.groupes.find(g => g.acc === prof.nom);
-    const relaisAteliers = DATA.relais.filter(r => r.c1===prof.nom||r.c2===prof.nom||r.c3===prof.nom);
-    const res = DATA.reserve.find(r => r.nom === prof.nom);
-
-    html += `<div class="card" id="fiche-${prof.nom}">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
-        <div>
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:1px">${prof.nom}</div>
-          <div style="font-size:.8rem;color:var(--gris)">${prof.dispo}</div>
-        </div>
-        <div style="margin-left:auto">
-          ${isAcc ? `<span class="badge badge-vert">Accompagnateur</span>` : ''}
-          ${relaisAteliers.length ? `<span class="badge badge-bleu">Atelier / Relais</span>` : ''}
-          ${res ? `<span class="badge badge-jaune">Réserve</span>` : ''}
-        </div>
-      </div>`;
-
-    if(isAcc) {
-      const membres = DATA.eleves.filter(e => e.groupe === isAcc.num);
-      html += `<div class="card-title">Groupe accompagné</div>
-        <div class="card-grid" style="margin-bottom:16px">
-          <div class="card-item"><span class="card-item-label">Groupe</span><span class="card-item-val">Gr.${isAcc.num} — ${isAcc.nom}</span></div>
-          <div class="card-item"><span class="card-item-label">Phase</span><span class="card-item-val">${isAcc.phase}</span></div>
-          <div class="card-item"><span class="card-item-label">Effectif</span><span class="card-item-val">${membres.length} élèves</span></div>
-        </div>`;
-    }
-
-    if(relaisAteliers.length) {
-      html += `<div class="card-title">Créneaux atelier</div>
-        <table style="width:100%;margin-bottom:16px">
-          <tr><th>Atelier</th><th>08h30–10h05</th><th>10h25–12h20</th><th>13h30–15h05</th></tr>`;
-      relaisAteliers.forEach(r => {
-        const at = DATA.ateliers.find(a => a.num === r.atelier);
-        html += `<tr>
-          <td><strong>At.${r.atelier}</strong> ${at ? at.nom : ''}</td>
-          <td>${r.c1===prof.nom ? `<span class="badge badge-vert">✓ Vous</span>` : (r.c1?r.c1:'—')}</td>
-          <td>${r.c2===prof.nom ? `<span class="badge badge-vert">✓ Vous</span>` : (r.c2?r.c2:'—')}</td>
-          <td>${r.c3===prof.nom ? `<span class="badge badge-vert">✓ Vous</span>` : (r.c3?r.c3:'—')}</td>
-        </tr>`;
-      });
-      html += `</table>`;
-    }
-
-    if(res) {
-      html += `<div class="card-title">Créneaux réserve</div>
-        <div class="card-grid">
-          <div class="card-item"><span class="card-item-label">08h30–10h05</span>
-            <span class="card-item-val">${res.c1.includes('Libre') ? '<span class="badge badge-vert">✓ Disponible</span>' : res.c1}</span></div>
-          <div class="card-item"><span class="card-item-label">10h25–12h20</span>
-            <span class="card-item-val">${res.c2.includes('Libre') ? '<span class="badge badge-vert">✓ Disponible</span>' : res.c2}</span></div>
-          <div class="card-item"><span class="card-item-label">13h30–15h05</span>
-            <span class="card-item-val">${res.c3.includes('Libre') ? '<span class="badge badge-vert">✓ Disponible</span>' : res.c3}</span></div>
-        </div>`;
-    }
-
-    html += `<button class="btn-print" onclick="printFiche('fiche-${prof.nom}','${prof.nom}')">🖨 Imprimer ma fiche</button></div>`;
+function renderGroupes(filter = 'all') {
+  const container = document.getElementById('groupes-container');
+  container.innerHTML = '';
+  
+  const groupsToDisplay = filter === 'all' ? DATA.groupes : DATA.groupes.filter(g => g.phase === filter);
+  
+  groupsToDisplay.forEach(g => {
+    // Calcul dynamique de l'effectif
+    const effectif = DATA.eleves.filter(e => e.groupe === g.num).length;
+    
+    const card = document.createElement('div');
+    card.className = 'groupe-card';
+    card.onclick = () => openGroupeModal(g.num);
+    card.innerHTML = `
+      <h3>${g.nom} <span style="color:var(--gris); font-size:0.8rem;">#${g.ref}</span></h3>
+      <p style="color:var(--vert-clair); font-size:0.9rem;">Acc : ${g.acc}</p>
+      <p style="font-size:0.8rem; color:var(--gris); margin-top:5px;">${effectif} élèves</p>
+    `;
+    container.appendChild(card);
   });
-
-  // Fiches élèves
-  if(eleves.length && !profs.length) {
-    eleves.slice(0,5).forEach(e => {
-      const groupe = DATA.groupes.find(g => g.num === e.groupe);
-      html += `<div class="card">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;margin-bottom:4px">${e.nom} ${e.prenom}</div>
-        <div style="font-size:.8rem;color:var(--gris);margin-bottom:16px">Élève — ${e.classe} — ${e.phase}</div>
-        <div class="card-grid">
-          <div class="card-item"><span class="card-item-label">Groupe</span><span class="card-item-val">Gr.${e.groupe} — ${e.nom_groupe}</span></div>
-          <div class="card-item"><span class="card-item-label">Accompagnateur</span><span class="card-item-val">${groupe ? groupe.acc : '—'}</span></div>
-          <div class="card-item"><span class="card-item-label">Phase</span><span class="card-item-val">${e.phase}</span></div>
-        </div>
-      </div>`;
-    });
-  }
-
-  if(!html) html = `<div class="card" style="text-align:center;color:var(--gris)">Aucun résultat pour "${val}"</div>`;
-  result.innerHTML = html;
 }
 
-// Nav search
+function filterGroupes(phase, btn) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  renderGroupes(phase);
+}
+
+function renderAteliers() {
+  const container = document.getElementById('ateliers-container');
+  DATA.ateliers.forEach(a => {
+    const card = document.createElement('div');
+    card.className = 'atelier-card';
+    card.innerHTML = `
+      <h3 style="font-family:'Bebas Neue'; color:var(--vert-clair);">${a.nom}</h3>
+      <p style="font-size:0.8rem;">Lieu: ${a.lieu}</p>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function openGroupeModal(num) {
+  const g = DATA.groupes.find(x => x.num === num);
+  const eleves = DATA.eleves.filter(e => e.groupe === num);
+  const content = document.getElementById('modal-content');
+  content.innerHTML = `
+    <h2 style="font-family:'Bebas Neue'; font-size:2rem; color:var(--vert-clair);">${g.nom}</h2>
+    <p>Responsable: ${g.acc}</p>
+    <hr style="margin:20px 0; border:none; border-top:1px solid var(--border);">
+    <table style="width:100%; border-collapse:collapse;">
+      ${eleves.map(e => `<tr><td style="padding:8px 0; border-bottom:1px solid var(--border);">${e.nom} ${e.prenom}</td><td style="text-align:right; color:var(--gris);">${e.classe}</td></tr>`).join('')}
+    </table>
+  `;
+  document.getElementById('modal-generic').classList.add('open');
+}
+
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
 function navSearch(val) {
+  // Logique de recherche simple
   if(val.length < 2) return;
-  showSectionDirect('ma-fiche');
+  showSection('ma-fiche');
   document.getElementById('fiche-nom').value = val;
   searchFiche(val);
 }
 
-function showSectionDirect(id) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('section-' + id).classList.add('active');
-}
-
-// ============================================================
-// TIMING
-// ============================================================
-function renderTiming() {
-  const timing = DATA.timing;
-  let html = '<div class="timeline" style="flex-wrap:wrap">';
-  timing.forEach(t => {
-    const isPause = t.pause;
-    html += `<div class="tl-item${isPause?' pause':''}">
-      <div class="tl-time">${t.heure}</div>
-      <div class="tl-label">${t.label}</div>
-    </div>`;
-  });
-  html += '</div>';
-
-  // Table détaillée
-  html += `<div style="margin-top:40px">
-    <div class="card-title" style="font-size:1.2rem;margin-bottom:16px">Créneaux grands blocs (relais profs)</div>
-    <div class="card-grid">
-      <div class="card"><div class="card-title">Créneau 1</div><div style="font-size:1.1rem;color:var(--blanc)">08h30 → 10h05</div><div style="font-size:.8rem;color:var(--gris);margin-top:4px">Passages 1 à 5</div></div>
-      <div class="card"><div class="card-title">Pause matin</div><div style="font-size:1.1rem;color:var(--jaune)">10h05 → 10h20</div><div style="font-size:.8rem;color:var(--gris);margin-top:4px">15 minutes</div></div>
-      <div class="card"><div class="card-title">Créneau 2</div><div style="font-size:1.1rem;color:var(--blanc)">10h25 → 12h20</div><div style="font-size:.8rem;color:var(--gris);margin-top:4px">Passages 6 à 11</div></div>
-      <div class="card"><div class="card-title">Pause midi</div><div style="font-size:1.1rem;color:var(--jaune)">12h25 → 13h30</div><div style="font-size:.8rem;color:var(--gris);margin-top:4px">1h05</div></div>
-      <div class="card"><div class="card-title">Créneau 3</div><div style="font-size:1.1rem;color:var(--blanc)">13h30 → 15h05</div><div style="font-size:.8rem;color:var(--gris);margin-top:4px">Passages 12 à 16</div></div>
-    </div>
-  </div>`;
-
-  document.getElementById('timing-container').innerHTML = html;
-}
-
-// ============================================================
-// ATELIERS
-// ============================================================
-function renderAteliers() {
-  const html = DATA.ateliers.map(at => `
-    <div class="atelier-card" onclick="showAtelier(${at.num})">
-      <div class="atelier-num">${String(at.num).padStart(2,'0')}</div>
-      <div class="atelier-name">${at.nom}</div>
-      <div class="atelier-lieu">📍 ${at.lieu}</div>
-      <div class="atelier-desc">${at.principe}</div>
-      ${at.secu ? `<div class="atelier-secu">⚠ ${at.secu}</div>` : ''}
+function searchFiche(val) {
+  const res = DATA.eleves.filter(e => e.nom.toLowerCase().includes(val.toLowerCase()) || e.prenom.toLowerCase().includes(val.toLowerCase()));
+  const container = document.getElementById('fiche-result');
+  container.innerHTML = res.map(e => `
+    <div class="card">
+      <p><strong>${e.nom} ${e.prenom}</strong> (${e.classe})</p>
+      <p style="color:var(--vert-clair);">Groupe : ${DATA.groupes.find(g => g.num === e.groupe).nom}</p>
     </div>
   `).join('');
-  document.getElementById('ateliers-container').innerHTML = html;
 }
-
-function showAtelier(num) {
-  const at = DATA.ateliers.find(a => a.num === num);
-  const relais = DATA.relais.find(r => r.atelier === num);
-  let html = `
-    <div style="font-size:.75rem;color:var(--vert-clair);letter-spacing:2px;margin-bottom:4px">ATELIER ${num}</div>
-    <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;margin-bottom:4px">${at.nom}</div>
-    <div style="font-size:.85rem;color:var(--gris);margin-bottom:20px">📍 ${at.lieu}</div>
-    <div class="card-grid" style="margin-bottom:20px">
-      <div class="card-item"><span class="card-item-label">Principe</span><span class="card-item-val">${at.principe}</span></div>
-      <div class="card-item"><span class="card-item-label">Objectif</span><span class="card-item-val">${at.score}</span></div>
-      ${at.secu ? `<div class="card-item"><span class="card-item-label">Sécurité</span><span class="card-item-val" style="color:var(--orange)">${at.secu}</span></div>` : ''}
-    </div>
-    <div class="card-title">Matériel</div>
-    <div style="font-size:.85rem;margin-bottom:20px;line-height:1.6;color:var(--gris-clair)">${at.materiel}</div>`;
-
-  if(relais) {
-    html += `<div class="card-title">Responsables par créneau</div>
-      <table><tr><th>08h30–10h05</th><th>10h25–12h20</th><th>13h30–15h05</th></tr>
-      <tr>
-        <td>${relais.c1 === 'ASBL' ? '<span class="badge badge-asbl">ASBL</span>' : (relais.c1||'—')}</td>
-        <td>${relais.c2 === 'ASBL' ? '<span class="badge badge-asbl">ASBL</span>' : (relais.c2||'—')}</td>
-        <td>${relais.c3 === 'ASBL' ? '<span class="badge badge-asbl">ASBL</span>' : (relais.c3||'—')}</td>
-      </tr></table>
-      ${relais.remarque ? `<div style="font-size:.78rem;color:var(--jaune);margin-top:8px">ℹ ${relais.remarque}</div>` : ''}`;
-  }
-
-  document.getElementById('modal-atelier-content').innerHTML = html;
-  document.getElementById('modal-atelier').classList.add('open');
-}
-
-// ============================================================
-// GROUPES
-// ============================================================
-let currentPhaseFilter = 'all';
-
-function renderGroupes(phase) {
-  currentPhaseFilter = phase;
-  const filtered = phase === 'all' ? DATA.groupes : DATA.groupes.filter(g => g.phase === phase);
-  const colors = {'Phase 1':'badge-vert','Phase 2':'badge-jaune','Phase 3':'badge-orange','Primaire':'badge-bleu'};
-
-  const html = filtered.map(g => `
-    <div class="groupe-card" onclick="showGroupe(${g.num})">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
-        <h3>Gr.${g.num} — ${g.nom}</h3>
-        <span class="badge ${colors[g.phase]||'badge-vert'}">${g.phase}</span>
-      </div>
-      <div class="groupe-meta">${g.ref}</div>
-      <div class="groupe-acc">👤 ${g.acc}</div>
-      <div class="groupe-effectif">${g.effectif || DATA.eleves.filter(e=>e.groupe===g.num).length} élèves</div>
-    </div>
-  `).join('');
-  document.getElementById('groupes-container').innerHTML = html;
-}
-
-function filterGroupes(phase, el) {
-  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-  renderGroupes(phase);
-}
-
-function showGroupe(num) {
-  const g = DATA.groupes.find(x => x.num === num);
-  const membres = DATA.eleves.filter(e => e.groupe === num);
-  const colors = {'Phase 1':'badge-vert','Phase 2':'badge-jaune','Phase 3':'badge-orange','Primaire':'badge-bleu'};
-
-  let html = `
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap">
-      <div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem">Gr.${g.num} — ${g.nom}</div>
-        <div style="font-size:.8rem;color:var(--gris)">${g.ref} · ${g.phase}</div>
-      </div>
-      <span class="badge ${colors[g.phase]||'badge-vert'}" style="margin-left:auto">${g.phase}</span>
-    </div>
-    <div class="card-grid" style="margin-bottom:20px">
-      <div class="card-item"><span class="card-item-label">Accompagnateur</span><span class="card-item-val">${g.acc}</span></div>
-      <div class="card-item"><span class="card-item-label">Effectif</span><span class="card-item-val">${membres.length} élèves</span></div>
-    </div>
-    <div class="card-title">Composition du groupe</div>
-    <table class="eleves-table">
-      <tr><th>Nom</th><th>Prénom</th><th>Classe</th></tr>
-      ${membres.sort((a,b)=>a.nom.localeCompare(b.nom)).map(m=>`
-        <tr><td>${m.nom}</td><td>${m.prenom}</td><td><span class="badge badge-vert">${m.classe}</span></td></tr>
-      `).join('')}
-    </table>`;
-
-  document.getElementById('modal-groupe-content').innerHTML = html;
-  document.getElementById('modal-groupe').classList.add('open');
-}
-
-// ============================================================
-// RELAIS PROFS
-// ============================================================
-function renderRelais() {
-  let html = `<table>
-    <tr>
-      <th>At.</th><th>Activité</th><th>Lieu</th>
-      <th>08h30–10h05</th><th>10h25–12h20</th><th>13h30–15h05</th>
-    </tr>`;
-
-  DATA.relais.forEach(r => {
-    const at = DATA.ateliers.find(a => a.num === r.atelier);
-    const cell = (v) => v === 'ASBL'
-      ? '<span class="badge badge-asbl">ASBL</span>'
-      : (v ? v : '<span style="color:var(--gris)">—</span>');
-    html += `<tr>
-      <td style="font-weight:600;color:var(--vert-clair)">${r.atelier}</td>
-      <td style="cursor:pointer" onclick="showAtelier(${r.atelier})">${at ? at.nom : ''}</td>
-      <td style="font-size:.75rem;color:var(--gris)">${at ? at.lieu : ''}</td>
-      <td>${cell(r.c1)}</td>
-      <td>${cell(r.c2)}</td>
-      <td>${cell(r.c3)}</td>
-    </tr>`;
-  });
-
-  html += '</table>';
-  document.getElementById('relais-container').innerHTML = html;
-}
-
-// ============================================================
-// MATÉRIEL
-// ============================================================
-function renderMateriel() {
-  const html = DATA.ateliers.map(at => `
-    <div class="card" style="margin-bottom:12px;display:flex;gap:20px;align-items:flex-start">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:rgba(255,255,255,.1);min-width:40px;line-height:1">${String(at.num).padStart(2,'0')}</div>
-      <div style="flex:1">
-        <div style="font-weight:600;margin-bottom:4px">${at.nom} <span style="font-size:.75rem;color:var(--gris);font-weight:400">— ${at.lieu}</span></div>
-        <div style="font-size:.83rem;color:var(--gris-clair);line-height:1.6">${at.materiel}</div>
-        ${at.secu ? `<div class="atelier-secu" style="margin-top:8px">⚠ ${at.secu}</div>` : ''}
-      </div>
-    </div>
-  `).join('');
-  document.getElementById('materiel-container').innerHTML = html;
-}
-
-// ============================================================
-// RÉSERVE
-// ============================================================
-function renderReserve() {
-  let html = `<div class="card" style="margin-bottom:24px">
-    <div class="card-title">Comment lire ce tableau</div>
-    <div style="display:flex;gap:12px;flex-wrap:wrap;font-size:.8rem">
-      <span class="badge badge-vert">✓ Libre</span> Disponible pour remplacer
-      <span class="badge badge-bleu">ATELIER</span> En poste sur un atelier
-      <span class="badge badge-rouge">Trop court</span> Présent mais créneau partiel
-    </div>
-  </div>
-  <div class="table-wrap">
-  <table>
-    <tr><th>Nom</th><th>08h30–10h05</th><th>10h25–12h20</th><th>13h30–15h05</th><th>Note</th></tr>`;
-
-  DATA.reserve.forEach(r => {
-    const cell = (v) => {
-      if(!v) return '—';
-      if(v.includes('Libre')) return '<span class="badge badge-vert">✓ Libre</span>';
-      if(v.includes('ATELIER')) return '<span class="badge badge-bleu">Atelier</span>';
-      if(v.includes('court') || v.includes('Absent')) return '<span class="badge badge-rouge">Partiel</span>';
-      return v;
-    };
-    html += `<tr>
-      <td style="font-weight:600">${r.nom}</td>
-      <td>${cell(r.c1)}</td>
-      <td>${cell(r.c2)}</td>
-      <td>${cell(r.c3)}</td>
-      <td style="font-size:.75rem;color:var(--gris)">${r.note}</td>
-    </tr>`;
-  });
-
-  html += '</table></div>';
-  document.getElementById('reserve-container').innerHTML = html;
-}
-
-// ============================================================
-// MODALES & PRINT
-// ============================================================
-function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
-}
-
-document.querySelectorAll('.modal-overlay').forEach(m => {
-  m.addEventListener('click', e => {
-    if(e.target === m) m.classList.remove('open');
-  });
-});
-
-function printFiche(id, nom) {
-  const content = document.getElementById(id).innerHTML;
-  const win = window.open('','_blank');
-  win.document.write(`<!DOCTYPE html><html><head>
-    <meta charset="UTF-8">
-    <title>Fiche — ${nom}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-    <style>
-      body{font-family:'DM Sans',sans-serif;padding:24px;color:#111;max-width:700px;margin:0 auto}
-      .card{border:1px solid #ddd;border-radius:6px;padding:20px;margin-bottom:16px}
-      .card-title{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:#2d6a4f;margin-bottom:10px}
-      .card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-      .card-item-label{font-size:.7rem;color:#888;text-transform:uppercase}
-      .card-item-val{font-size:.9rem;font-weight:500}
-      table{width:100%;border-collapse:collapse;font-size:.83rem}
-      th{text-align:left;padding:8px;background:#f5f5f5;border-bottom:2px solid #2d6a4f}
-      td{padding:8px;border-bottom:1px solid #eee}
-      .badge{padding:2px 8px;border-radius:2px;font-size:.72rem;font-weight:600}
-      h2{font-family:'Bebas Neue',sans-serif;font-size:2rem;margin-bottom:4px}
-      .badge-vert{background:#e8f5e9;color:#2d6a4f;border:1px solid #a5d6a7}
-      .badge-bleu{background:#e3f2fd;color:#1565c0;border:1px solid #90caf9}
-      .no-print{display:none}
-      .header{border-bottom:2px solid #2d6a4f;padding-bottom:12px;margin-bottom:20px}
-    </style>
-  </head><body>
-    <div class="header">
-      <div style="font-size:.75rem;color:#888;letter-spacing:2px;text-transform:uppercase">ÉPEP Ixelles — Journée Sportive</div>
-      <h2>${nom}</h2>
-    </div>
-    ${content}
-    <script>window.onload=()=>window.print()<\/script>
-  </body></html>`);
-  win.document.close();
-}
-
-function printModal(contentId) {
-  const content = document.getElementById(contentId).innerHTML;
-  const win = window.open('','_blank');
-  win.document.write(`<!DOCTYPE html><html><head>
-    <meta charset="UTF-8"><title>Fiche ÉPEP</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-    <style>
-      body{font-family:'DM Sans',sans-serif;padding:24px;color:#111;max-width:700px;margin:0 auto}
-      table{width:100%;border-collapse:collapse;font-size:.83rem}
-      th{text-align:left;padding:8px;background:#f5f5f5;border-bottom:2px solid #2d6a4f}
-      td{padding:8px;border-bottom:1px solid #eee}
-      .badge{padding:2px 8px;border-radius:2px;font-size:.72rem;font-weight:600}
-      .badge-vert{background:#e8f5e9;color:#2d6a4f}
-      .badge-asbl{background:#fff8e1;color:#f57f17}
-      .card-title{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:#2d6a4f;margin:16px 0 8px}
-      .card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
-      .card-item-label{font-size:.7rem;color:#888;text-transform:uppercase}
-      .card-item-val{font-size:.9rem;font-weight:500}
-      .btn-print{display:none}
-      .atelier-secu{background:#fff3e0;color:#e65100;padding:4px 10px;border-radius:2px;font-size:.72rem;display:inline-block;margin-top:4px}
-    </style>
-  </head><body>
-    <div style="border-bottom:2px solid #2d6a4f;padding-bottom:8px;margin-bottom:20px;font-size:.75rem;color:#888;letter-spacing:2px;text-transform:uppercase">ÉPEP Ixelles — Journée Sportive</div>
-    ${content}
-    <script>window.onload=()=>window.print()<\/script>
-  </body></html>`);
-  win.document.close();
-}
-
-// Init accueil
-renderTiming();
 </script>
 </body>
 </html>
