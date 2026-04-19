@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Journée Sportive — EPEP Ixelles</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script>
 (function () {
@@ -415,6 +414,161 @@ main { padding-top: 64px; }
   margin-top:3px;
 }
 
+.hero-stats {
+  margin-bottom: 30px;
+}
+.stat {
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 18px;
+  padding: 18px 18px 16px;
+  min-width: 128px;
+  backdrop-filter: blur(10px);
+}
+.hero-panels {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, .9fr);
+  gap: 22px;
+  width: min(100%, 1120px);
+}
+.hero-panel {
+  background: rgba(255,255,255,.045);
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 24px;
+  padding: 24px;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 22px 40px rgba(0,0,0,.18);
+}
+.hero-panel-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 1.5px;
+  color: var(--vert-clair);
+  margin-bottom: 16px;
+}
+.hero-steps {
+  display: grid;
+  gap: 14px;
+}
+.hero-step {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 14px;
+  align-items: flex-start;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+.hero-step:first-child {
+  padding-top: 0;
+  border-top: none;
+}
+.hero-step-num {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: rgba(82,183,136,.12);
+  border: 1px solid rgba(82,183,136,.25);
+  color: var(--vert-clair);
+  font-family:'Bebas Neue',sans-serif;
+  font-size: 1.3rem;
+  line-height: 1;
+}
+.hero-step strong {
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+.hero-step span {
+  display: block;
+  color: var(--gris-clair);
+  line-height: 1.6;
+  font-size: .93rem;
+}
+.live-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.live-pill {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.08);
+  color: var(--gris-clair);
+  font-size: .78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+}
+.live-time {
+  font-family:'Bebas Neue',sans-serif;
+  font-size: clamp(2.8rem, 5vw, 4.6rem);
+  line-height: .95;
+  color: var(--blanc);
+}
+.live-status {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--vert-clair);
+  line-height: 1.3;
+}
+.live-next {
+  color: var(--gris-clair);
+  line-height: 1.6;
+  font-size: .95rem;
+}
+.home-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 10px;
+}
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 18px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.04);
+  color: var(--blanc);
+  text-decoration: none;
+  font-family:'DM Sans',sans-serif;
+  font-size: .94rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform .16s ease, background .2s ease, border-color .2s ease;
+}
+.action-btn:hover {
+  background: rgba(255,255,255,.08);
+  border-color: rgba(255,255,255,.16);
+}
+.action-btn:active { transform: scale(.96); }
+.action-btn-call {
+  background: var(--vert);
+  border-color: rgba(82,183,136,.34);
+  color: #fff;
+}
+.action-btn-call:hover {
+  background: var(--vert-clair);
+  border-color: rgba(82,183,136,.5);
+}
+.action-btn-plain {
+  appearance: none;
+}
+.muted-note {
+  color: var(--gris);
+  font-size: .82rem;
+  line-height: 1.5;
+  margin-top: 2px;
+}
+
 .fiche-search {
   max-width:600px;
   margin:0 auto 48px;
@@ -802,6 +956,12 @@ button:active,
   .section-title span { color:#2d6a4f!important; }
 }
 
+@media (max-width: 1100px) {
+  .hero-panels {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 899px) {
   nav.site-nav { padding: 0 16px; }
   .nav-desktop-wrap { display: none; }
@@ -859,6 +1019,39 @@ button:active,
   .modal { padding: 24px 18px; border-radius: 16px; }
   .modal-close { top: 12px; right: 12px; }
   .search-input, .fiche-input { font-size: 16px; }
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .stat { min-width: 0; }
+  .hero-panels {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .hero-panel {
+    padding: 18px;
+    border-radius: 18px;
+  }
+  .hero-step {
+    grid-template-columns: 38px 1fr;
+    gap: 12px;
+  }
+  .hero-step-num {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+  }
+  .home-actions {
+    flex-direction: column;
+  }
+  .action-btn {
+    width: 100%;
+  }
+  .live-time {
+    font-size: 3.2rem;
+  }
+
 }
 
 @media(max-width:768px){
@@ -1026,7 +1219,7 @@ button:active,
   <div class="modal">
     <button class="modal-close" onclick="closeModal('modal-groupe')">✕</button>
     <div id="modal-groupe-content"></div>
-    <button class="btn-print" onclick="printModal('modal-groupe-content')">⬇ Télécharger cette fiche en PDF</button>
+    <button class="btn-print" onclick="printModal('modal-groupe-content')">🖨 Imprimer cette fiche</button>
   </div>
 </div>
 
@@ -1034,7 +1227,7 @@ button:active,
   <div class="modal">
     <button class="modal-close" onclick="closeModal('modal-atelier')">✕</button>
     <div id="modal-atelier-content"></div>
-    <button class="btn-print" onclick="printModal('modal-atelier-content')">⬇ Télécharger cette fiche en PDF</button>
+    <button class="btn-print" onclick="printModal('modal-atelier-content')">🖨 Imprimer cette fiche</button>
   </div>
 </div>
 
@@ -1394,7 +1587,7 @@ function searchFiche(val) {
         </div>`;
     }
 
-    html += `<button class="btn-print" onclick="printFiche('fiche-${prof.nom}','${prof.nom}')">⬇ Télécharger ma fiche en PDF</button></div>`;
+    html += `<button class="btn-print" onclick="printFiche('fiche-${prof.nom}','${prof.nom}')">🖨 Imprimer ma fiche</button></div>`;
   });
 
   if (eleves.length && !profs.length) {
@@ -1666,91 +1859,76 @@ function closeModal(id) {
 }
 
 
-function sanitizeFilename(name) {
-  return String(name || 'fiche')
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-zA-Z0-9_-]+/g, '_')
-    .replace(/^_+|_+$/g, '')
-    .toLowerCase() || 'fiche';
-}
 
-function buildPdfContent(title, content) {
-  return `
+function printFiche(id, nom) {
+  const content = document.getElementById(id).innerHTML;
+  const win = window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head>
+    <meta charset="UTF-8">
+    <title>Fiche — ${nom}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-      .pdf-sheet{font-family:'DM Sans',sans-serif;color:#111;background:#fff;padding:24px;max-width:780px;margin:0 auto}
-      .pdf-header{border-bottom:2px solid #2d6a4f;padding-bottom:10px;margin-bottom:18px}
-      .pdf-kicker{font-size:.75rem;color:#888;letter-spacing:2px;text-transform:uppercase}
-      .pdf-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;line-height:1;margin-top:6px}
-      .card-title{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:#2d6a4f;margin:16px 0 8px}
-      .card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+      body{font-family:'DM Sans',sans-serif;padding:24px;color:#111;max-width:700px;margin:0 auto}
+      .card{border:1px solid #ddd;border-radius:6px;padding:20px;margin-bottom:16px}
+      .card-title{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:#2d6a4f;margin-bottom:10px}
+      .card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
       .card-item-label{font-size:.7rem;color:#888;text-transform:uppercase}
       .card-item-val{font-size:.9rem;font-weight:500}
       table{width:100%;border-collapse:collapse;font-size:.83rem}
       th{text-align:left;padding:8px;background:#f5f5f5;border-bottom:2px solid #2d6a4f}
-      td{padding:8px;border-bottom:1px solid #eee;vertical-align:top}
-      .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.72rem;font-weight:600}
+      td{padding:8px;border-bottom:1px solid #eee}
+      .badge{padding:2px 8px;border-radius:2px;font-size:.72rem;font-weight:600}
+      h2{font-family:'Bebas Neue',sans-serif;font-size:2rem;margin-bottom:4px}
       .badge-vert{background:#e8f5e9;color:#2d6a4f;border:1px solid #a5d6a7}
       .badge-bleu{background:#e3f2fd;color:#1565c0;border:1px solid #90caf9}
-      .badge-jaune{background:#fff3e0;color:#e76f51;border:1px solid #f4c27b}
-      .badge-asbl{background:#fff8e1;color:#f57f17;border:1px solid #ffd54f}
-      .atelier-secu{background:#fff3e0;color:#e65100;padding:4px 10px;border-radius:999px;font-size:.72rem;display:inline-block;margin-top:4px}
-      .assignment-card{border:1px solid #e6e6e6;border-radius:12px;padding:14px;margin-bottom:12px}
-      .assignment-head{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px}
-      .assignment-title{font-weight:700}
-      .assignment-sub{font-size:.8rem;color:#777}
-      .table-wrap{overflow:visible}
+      .badge-jaune{background:#fff4dd;color:#a05b00;border:1px solid #f0d49c}
+      .badge-orange{background:#fff0ea;color:#b8542f;border:1px solid #f2b7a4}
+      .badge-asbl{background:#fff8e1;color:#f57f17;border:1px solid #eed28b}
+      .no-print{display:none}
+      .header{border-bottom:2px solid #2d6a4f;padding-bottom:12px;margin-bottom:20px}
       .btn-print{display:none!important}
     </style>
-    <div class="pdf-sheet">
-      <div class="pdf-header">
-        <div class="pdf-kicker">EPEP Ixelles — Journée Sportive</div>
-        <div class="pdf-title">${title}</div>
-      </div>
-      ${content}
+  </head><body>
+    <div class="header">
+      <div style="font-size:.75rem;color:#888;letter-spacing:2px;text-transform:uppercase">EPEP Ixelles — Journée Sportive</div>
+      <h2>${nom}</h2>
     </div>
-  `;
-}
-
-function downloadPdf(html, title, filename) {
-  if (!window.html2pdf) {
-    alert('Le module PDF n’a pas pu se charger. Réessayez avec une connexion internet active.');
-    return;
-  }
-
-  const host = document.createElement('div');
-  host.className = 'pdf-export-host';
-  host.innerHTML = buildPdfContent(title, html);
-  document.body.appendChild(host);
-
-  html2pdf()
-    .set({
-      margin: 8,
-      filename,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak: { mode: ['css', 'legacy'] }
-    })
-    .from(host)
-    .save()
-    .then(() => host.remove())
-    .catch(() => {
-      host.remove();
-      alert('Le PDF n’a pas pu être généré.');
-    });
-}
-
-function printFiche(id, nom) {
-  const content = document.getElementById(id).innerHTML;
-  downloadPdf(content, nom, `${sanitizeFilename(nom)}_fiche.pdf`);
+    ${content}
+    <script>window.onload=()=>window.print()<\/script>
+  </body></html>`);
+  win.document.close();
 }
 
 function printModal(contentId) {
   const content = document.getElementById(contentId).innerHTML;
-  const heading = document.querySelector(`#${contentId} [style*="font-size:2rem"]`);
-  const title = heading ? heading.textContent.trim() : 'Fiche';
-  downloadPdf(content, title, `${sanitizeFilename(title)}.pdf`);
+  const win = window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head>
+    <meta charset="UTF-8"><title>Fiche EPEP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+      body{font-family:'DM Sans',sans-serif;padding:24px;color:#111;max-width:700px;margin:0 auto}
+      table{width:100%;border-collapse:collapse;font-size:.83rem}
+      th{text-align:left;padding:8px;background:#f5f5f5;border-bottom:2px solid #2d6a4f}
+      td{padding:8px;border-bottom:1px solid #eee}
+      .badge{padding:2px 8px;border-radius:2px;font-size:.72rem;font-weight:600}
+      .badge-vert{background:#e8f5e9;color:#2d6a4f;border:1px solid #a5d6a7}
+      .badge-jaune{background:#fff4dd;color:#a05b00;border:1px solid #f0d49c}
+      .badge-orange{background:#fff0ea;color:#b8542f;border:1px solid #f2b7a4}
+      .badge-bleu{background:#e3f2fd;color:#1565c0;border:1px solid #90caf9}
+      .badge-asbl{background:#fff8e1;color:#f57f17;border:1px solid #eed28b}
+      .card-title{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:#2d6a4f;margin:16px 0 8px}
+      .card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+      .card-item-label{font-size:.7rem;color:#888;text-transform:uppercase}
+      .card-item-val{font-size:.9rem;font-weight:500}
+      .btn-print{display:none!important}
+      .atelier-secu{background:#fff3e0;color:#e65100;padding:4px 10px;border-radius:2px;font-size:.72rem;display:inline-block;margin-top:4px}
+    </style>
+  </head><body>
+    <div style="border-bottom:2px solid #2d6a4f;padding-bottom:8px;margin-bottom:20px;font-size:.75rem;color:#888;letter-spacing:2px;text-transform:uppercase">EPEP Ixelles — Journée Sportive</div>
+    ${content}
+    <script>window.onload=()=>window.print()<\/script>
+  </body></html>`);
+  win.document.close();
 }
 
 function initApp() {
