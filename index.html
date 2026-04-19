@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Journée Sportive — ÉPEP Ixelles</title>
+<title>Journée Sportive — EPEP Ixelles</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script>
 (function () {
@@ -20,7 +21,7 @@
       document.body.innerHTML = `
         <div class="login-screen">
           <div class="login-card">
-            <div class="login-kicker">ÉPEP Ixelles</div>
+            <div class="login-kicker">EPEP Ixelles</div>
             <h1>Journée <span>Sportive</span></h1>
             <p>Accès protégé. Entrez le mot de passe pour ouvrir l’application.</p>
 
@@ -871,7 +872,7 @@ button:active,
 
 <nav class="site-nav">
   <div class="nav-top">
-    <div class="nav-logo">ÉPEP Ixelles</div>
+    <div class="nav-logo">EPEP Ixelles</div>
 
     <div class="nav-desktop-wrap">
       <div class="nav-tabs nav-tabs-desktop">
@@ -920,13 +921,48 @@ button:active,
   <div class="hero">
     <div class="hero-badge">Organisation finale</div>
     <h1>Journée<br><span>Sportive</span></h1>
-    <p class="hero-sub">Tout ce dont vous avez besoin pour la journée — ateliers, groupes, relais, matériel.</p>
+    <p class="hero-sub">Tout ce dont vous avez besoin pour la journée — ateliers, groupes, relais, matériel, fiches individuelles et contact rapide en cas de souci.</p>
     <div class="hero-stats">
       <div class="stat"><span class="stat-val" id="stat-ateliers">16</span><span class="stat-label">Ateliers</span></div>
       <div class="stat"><span class="stat-val" id="stat-groupes">16</span><span class="stat-label">Groupes</span></div>
       <div class="stat"><span class="stat-val" id="stat-eleves">172</span><span class="stat-label">Élèves</span></div>
-      <div class="stat"><span class="stat-val">08h30</span><span class="stat-label">Départ</span></div>
-      <div class="stat"><span class="stat-val">15h05</span><span class="stat-label">Fin</span></div>
+      <div class="stat"><span class="stat-val">08h00</span><span class="stat-label">Début</span></div>
+      <div class="stat"><span class="stat-val">15h30</span><span class="stat-label">Fin</span></div>
+    </div>
+
+    <div class="hero-panels">
+      <div class="hero-panel">
+        <div class="hero-panel-title">Comment utiliser l’app</div>
+        <div class="hero-steps">
+          <div class="hero-step">
+            <div class="hero-step-num">1</div>
+            <div><strong>Retrouvez votre fiche</strong><span>Ouvrez <em>Ma fiche</em> et tapez votre nom pour voir votre rôle, votre groupe, vos horaires et vos informations utiles.</span></div>
+          </div>
+          <div class="hero-step">
+            <div class="hero-step-num">2</div>
+            <div><strong>Consultez les groupes et les ateliers</strong><span>Les pages <em>Groupes</em> et <em>Ateliers</em> permettent de voir la composition, la rotation et les détails pratiques.</span></div>
+          </div>
+          <div class="hero-step">
+            <div class="hero-step-num">3</div>
+            <div><strong>Préparez votre journée</strong><span>Utilisez aussi les pages <em>Timing</em>, <em>Matériel</em> et <em>Réserve</em> pour avoir l’essentiel sous la main.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-panel">
+        <div class="hero-panel-title">En direct</div>
+        <div class="live-card">
+          <div class="live-pill">Suivi de la journée</div>
+          <div class="live-time" id="live-current-time">--:--</div>
+          <div class="live-status" id="live-current-status">Chargement…</div>
+          <div class="live-next" id="live-next-status">Le prochain créneau s’affichera ici.</div>
+          <div class="home-actions">
+            <a class="action-btn action-btn-call" href="tel:+32484774678">Appeler Monsieur Hanchi</a>
+            <button class="action-btn action-btn-plain" type="button" onclick="showSection('ma-fiche')">Ouvrir ma fiche</button>
+          </div>
+          <div class="muted-note">Le suivi en direct se met à jour automatiquement selon l’heure actuelle de l’appareil.</div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -990,7 +1026,7 @@ button:active,
   <div class="modal">
     <button class="modal-close" onclick="closeModal('modal-groupe')">✕</button>
     <div id="modal-groupe-content"></div>
-    <button class="btn-print" onclick="printModal('modal-groupe-content')">🖨 Imprimer cette fiche</button>
+    <button class="btn-print" onclick="printModal('modal-groupe-content')">⬇ Télécharger cette fiche en PDF</button>
   </div>
 </div>
 
@@ -998,12 +1034,12 @@ button:active,
   <div class="modal">
     <button class="modal-close" onclick="closeModal('modal-atelier')">✕</button>
     <div id="modal-atelier-content"></div>
-    <button class="btn-print" onclick="printModal('modal-atelier-content')">🖨 Imprimer cette fiche</button>
+    <button class="btn-print" onclick="printModal('modal-atelier-content')">⬇ Télécharger cette fiche en PDF</button>
   </div>
 </div>
 
 <script>
-const DATA = {"ateliers": [{"num": 1, "nom": "Unihoc", "lieu": "Salle d'étude", "materiel": "1 crosse, 10 balles, 1 petit but", "principe": "Maîtrise du geste et rapidité.", "score": "Nombre de tirs / buts réussis.", "secu": "Crosse basse et passage à l'arrêt."}, {"num": 2, "nom": "Tchoukball", "lieu": "Couloir salle d'étude", "materiel": "1 cadre de Tchoukball, 1 ballon, plots", "principe": "Coopération et rebond collectif.", "score": "Nombre de points marqués.", "secu": ""}, {"num": 3, "nom": "Kin-Ball", "lieu": "Gymnase", "materiel": "1 ballon de Kin-Ball", "principe": "Coopération physique et transport collectif.", "score": "Nombre total de tours de terrain.", "secu": ""}, {"num": 4, "nom": "Basketball", "lieu": "Gymnase", "materiel": "Ballons de basket, panier", "principe": "Adresse collective en relais.", "score": "Nombre total de paniers marqués.", "secu": ""}, {"num": 5, "nom": "Parcours de l'aveugle", "lieu": "Hall", "materiel": "1 bandeau, 10 objets variés, obstacles, chronomètre", "principe": "Relais de confiance et guidage vocal.", "score": "Ramasser les objets avec précision.", "secu": "Une ou deux voix seulement pour guider."}, {"num": 6, "nom": "Indiaca", "lieu": "Hall", "materiel": "1 Indiaca, filet occultant, chronomètre", "principe": "Précision de frappe et réception.", "score": "Plus longue série d'échanges sans chute.", "secu": ""}, {"num": 7, "nom": "Tour infernale Jenga", "lieu": "Local 06", "materiel": "30 pièces de bois, 1 table stable", "principe": "Relais de précision et de calme.", "score": "Meilleur temps pour une tour complète.", "secu": ""}, {"num": 8, "nom": "Marteau-piqueur", "lieu": "Local 05", "materiel": "Souche, 2 marteaux, clous, lunettes de sécurité", "principe": "Force et précision sur poste sécurisé.", "score": "Temps total ou nombre de clous terminés.", "secu": "Lunettes obligatoires."}, {"num": 9, "nom": "Fresque copie-conforme", "lieu": "Local 26/27", "materiel": "Dessin modèle caché, nappe en papier, feutres", "principe": "Observation et reproduction artistique.", "score": "Note sur 10 selon la ressemblance.", "secu": ""}, {"num": 10, "nom": "La Mûrisserie", "lieu": "Cour de récréation", "materiel": "Géré par l'ASBL La Mûrisserie", "principe": "Activité gérée par l'ASBL La Mûrisserie.", "score": "Selon modalités ASBL.", "secu": ""}, {"num": 11, "nom": "Le relais du diable", "lieu": "Cour de récréation", "materiel": "1 diable, 20 cartons lestés, 2 plots", "principe": "Maniement d'engin et gestion du rythme.", "score": "Allers-retours / temps global.", "secu": ""}, {"num": 12, "nom": "Relais de kangourou", "lieu": "Cour de récréation", "materiel": "Grands sacs résistants", "principe": "Coordination motrice en relais.", "score": "Temps total de l'équipe.", "secu": ""}, {"num": 13, "nom": "Parcours vélo", "lieu": "Cour de récréation", "materiel": "2 à 3 vélos, plots, chronomètre", "principe": "Maniabilité, équilibre et trajectoire.", "score": "Parcours propre sans poser le pied.", "secu": ""}, {"num": 14, "nom": "Aquarium", "lieu": "Local 10", "materiel": "Aquarium rempli d'eau, 1 verre, pièces de monnaie", "principe": "Précision et gestion du risque.", "score": "Nombre de pièces avant le naufrage.", "secu": ""}, {"num": 15, "nom": "Mémo des objets", "lieu": "Local 12", "materiel": "Tapis ou paravent, 10 à 15 objets variés, zone de reconstitution", "principe": "Mémorisation et restitution collective.", "score": "Nombre d'objets correctement identifiés.", "secu": ""}, {"num": 16, "nom": "Les bâtonnets", "lieu": "Local 14", "materiel": "31 bâtonnets ou lattes de bois", "principe": "Stratégie et calcul mental.", "score": "Nombre de victoires contre l'animateur.", "secu": ""}], "relais": [{"atelier": 1, "c1": "Amnad", "c2": "Abdelqaoui", "c3": "Azem", "remarque": ""}, {"atelier": 2, "c1": "Baqloul", "c2": "Benterki", "c3": "Bajati", "remarque": ""}, {"atelier": 3, "c1": "Bobeica", "c2": "Bonanga", "c3": "Clément", "remarque": ""}, {"atelier": 4, "c1": "Coulon", "c2": "De Leus", "c3": "Constant", "remarque": ""}, {"atelier": 5, "c1": "De Patoul", "c2": "Defoy", "c3": "Drappier", "remarque": ""}, {"atelier": 6, "c1": "Di Berardino", "c2": "El Amrani", "c3": "Laure", "remarque": ""}, {"atelier": 7, "c1": "Kechiche", "c2": "Ladjali", "c3": "Lemmens", "remarque": ""}, {"atelier": 8, "c1": "Pirenne", "c2": "Vanparys", "c3": "Mjoti", "remarque": ""}, {"atelier": 9, "c1": "Azem", "c2": "Amnad", "c3": "Outers", "remarque": ""}, {"atelier": 10, "c1": "ASBL", "c2": "ASBL", "c3": "ASBL", "remarque": "Géré par l'ASBL La Mûrisserie"}, {"atelier": 11, "c1": "Benterki", "c2": "Baqloul", "c3": "Warland", "remarque": ""}, {"atelier": 12, "c1": "Bonanga", "c2": "Bobeica", "c3": "Defoy", "remarque": ""}, {"atelier": 13, "c1": "Clément", "c2": "Coulon", "c3": "El Amrani", "remarque": ""}, {"atelier": 14, "c1": "De Leus", "c2": "Di Berardino", "c3": "Pirenne", "remarque": ""}, {"atelier": 15, "c1": "Laure", "c2": "Lemmens", "c3": "Vanparys", "remarque": ""}, {"atelier": 16, "c1": "Defoy", "c2": "Azem", "c3": "Amnad", "remarque": ""}], "groupes": [{"num": 1, "ref": "P1-1", "phase": "Phase 1", "nom": "Les Orques", "acc": "Chapelle", "depart": 1}, {"num": 2, "ref": "P1-2", "phase": "Phase 1", "nom": "Les Tigres", "acc": "Bougdim", "depart": 2}, {"num": 3, "ref": "P1-3", "phase": "Phase 1", "nom": "Les Taureaux", "acc": "Austraet", "depart": 3}, {"num": 4, "ref": "P1-4", "phase": "Phase 1", "nom": "Les Rhinos", "acc": "Thomas", "depart": 4}, {"num": 5, "ref": "P1-5", "phase": "Phase 1", "nom": "Les Scorpions", "acc": "Gillet C.", "depart": 5}, {"num": 6, "ref": "P2-1", "phase": "Phase 2", "nom": "Les Faucons", "acc": "Gillet J.", "depart": 6}, {"num": 7, "ref": "P2-2", "phase": "Phase 2", "nom": "Les Grizzlys", "acc": "Haik", "depart": 7}, {"num": 8, "ref": "P2-3", "phase": "Phase 2", "nom": "Les Guépards", "acc": "Legrand", "depart": 8}, {"num": 9, "ref": "P2-4", "phase": "Phase 2", "nom": "Les Cobras", "acc": "Martinez", "depart": 9}, {"num": 10, "ref": "P2-5", "phase": "Phase 2", "nom": "Les Loups", "acc": "Mesfioui", "depart": 10}, {"num": 11, "ref": "P2-6", "phase": "Phase 2", "nom": "Les Gorilles", "acc": "Mvuesa", "depart": 11}, {"num": 12, "ref": "P3-1", "phase": "Phase 3", "nom": "Les Aigles", "acc": "Nouhi", "depart": 12}, {"num": 13, "ref": "P3-2", "phase": "Phase 3", "nom": "Les Requins", "acc": "Ortigosa", "depart": 13}, {"num": 14, "ref": "P3-3", "phase": "Phase 3", "nom": "Les Panthères", "acc": "Azarkan", "depart": 14}, {"num": 15, "ref": "P3-4", "phase": "Phase 3", "nom": "Les Lions", "acc": "Begne", "depart": 15}, {"num": 16, "ref": "PRI-1", "phase": "Primaire", "nom": "Les Phénix", "acc": "Accompagnateur Primaire", "depart": 16}], "eleves": [{"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Ali", "prenom": "Hasan", "classe": "ORA"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Ali Khan", "prenom": "Sajeed", "classe": "ORB"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Asanovski", "prenom": "Luciano", "classe": "ORB"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Benachouba Ramizova", "prenom": "Isaac", "classe": "ORB"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Bouzahzah", "prenom": "Adam", "classe": "OBSB"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Cîrciu", "prenom": "Yasmina", "classe": "ORC"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Dahnin", "prenom": "Khaled", "classe": "ORC"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Danoun", "prenom": "Fahd", "classe": "OBSB"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Demirkapu", "prenom": "Geylani", "classe": "ORA"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Dorani", "prenom": "Zaryalai", "classe": "OBSB"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "KAÇAN", "prenom": "Yavuz", "classe": "OBSA"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Pereira de Souza", "prenom": "Joao", "classe": "OBSA"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "Agboli", "prenom": "Kaleb", "classe": "ORA"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "Azzaryouhi", "prenom": "Mohamed", "classe": "ORB"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "Bação De Castro", "prenom": "Nuno", "classe": "ORB"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "DIALLO", "prenom": "Lawouratou", "classe": "ORC"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "Diallo", "prenom": "Idiatou", "classe": "OBSB"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "Gazik", "prenom": "Karol", "classe": "ORB"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "Khay", "prenom": "Rayane", "classe": "ORA"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "Milosiu", "prenom": "Denisa", "classe": "OBSA"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "Negru", "prenom": "Loredana", "classe": "ORC"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "Ouled Ben Abdallah", "prenom": "Haroun", "classe": "OBSA"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "REXHEPI", "prenom": "Enis", "classe": "ORA"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "Santos Moreira", "prenom": "Artur", "classe": "OBSB"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "BATISTA CARDOSO", "prenom": "Joao Lucas", "classe": "ORA"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "Bonifacio", "prenom": "Giulia", "classe": "ORC"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "Buzon", "prenom": "Mohamed", "classe": "OBSA"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "COBA SANCHEZ", "prenom": "Pricila", "classe": "ORA"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "Delpierre", "prenom": "Logan", "classe": "ORB"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "Doda", "prenom": "Aleks", "classe": "ORA"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "Felipe Rocha", "prenom": "Marina", "classe": "OBSB"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "GUTALE HASSAN", "prenom": "Mohamed", "classe": "OBSB"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "Joly", "prenom": "Shéhérazade", "classe": "ORC"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "Madeira Akhtar", "prenom": "Eiliyah", "classe": "OBSA"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "Pisane", "prenom": "Thibault", "classe": "ORB"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "Vandermeulen", "prenom": "Thomas", "classe": "ORB"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "Akdeniz", "prenom": "Emir", "classe": "OBSB"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "Ali Khan", "prenom": "Sajeed", "classe": "ORB"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "El Marchouhi", "prenom": "Sofian Allal", "classe": "ORB"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "Gutiérrez Briones", "prenom": "Alejandro", "classe": "ORB"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "Kemakuko", "prenom": "Paul", "classe": "OBSB"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "Milosiu", "prenom": "Sefora", "classe": "OBSA"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "OUMAROU", "prenom": "Ibrahim", "classe": "OBSA"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "Pourbaix", "prenom": "Sam", "classe": "ORA"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "RIVERA GONZALEZ", "prenom": "Ashley", "classe": "ORA"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "SEJDI", "prenom": "Medina", "classe": "ORC"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "Zhar Idrissi", "prenom": "Ahmed", "classe": "ORC"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "Zuniga Farias", "prenom": "Emilio", "classe": "ORA"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "AZIRI", "prenom": "Ibadet", "classe": "OBSB"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "Basele Bofasa", "prenom": "Cameron", "classe": "ORB"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "El Attabi", "prenom": "Faysal", "classe": "ORA"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "HALJITI", "prenom": "Shoan", "classe": "ORB"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "Hassani", "prenom": "Sabrine", "classe": "ORC"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "Kassé", "prenom": "Korka", "classe": "OBSA"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "MUSHID YAV A KALENG", "prenom": "Hamilton", "classe": "ORA"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "Manu", "prenom": "Kankam", "classe": "OBSB"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "Mesaoudi", "prenom": "Anas", "classe": "ORC"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "Riyad", "prenom": "Isaac", "classe": "OBSA"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "Zahiri", "prenom": "Dashnim", "classe": "ORA"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "Barry", "prenom": "Aïssata", "classe": "P2A"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "Bel-Haj", "prenom": "Adam", "classe": "P2D"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "Bollu", "prenom": "Colin", "classe": "P2E"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "Chinchihualpa Gutierrez", "prenom": "Jesus Ernesto", "classe": "P2F"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "Cissé", "prenom": "Serigne", "classe": "P2A"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "Da Costa Pinto", "prenom": "Maria", "classe": "P2B"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "Duna", "prenom": "Davit", "classe": "P2C"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "Idrizi", "prenom": "Ribana", "classe": "P2B"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "Nassiri", "prenom": "Safa", "classe": "P2D"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "Nkondi-Lukombo", "prenom": "Naischa", "classe": "P2C"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "POURBAIX", "prenom": "Jimmy", "classe": "P2E"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "Ben Ajiba", "prenom": "Abir", "classe": "P2A"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "De Castro Silva", "prenom": "Pedro-Lucas", "classe": "P2D"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "Debza", "prenom": "Aliya", "classe": "P2F"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "Diallo", "prenom": "Boubacar", "classe": "P2D"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "Hajredinovic", "prenom": "Samanta", "classe": "P2C"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "Kassé", "prenom": "Rokhoya", "classe": "P2E"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "Kilci", "prenom": "Adem", "classe": "P2B"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "Les", "prenom": "Assaya", "classe": "P2B"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "Mukendi", "prenom": "Owen", "classe": "P2A"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "Novac", "prenom": "Yasmina", "classe": "P2C"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "Nzeza Kiluangu", "prenom": "Gabriel", "classe": "P2E"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "Balaagaou", "prenom": "Nora", "classe": "P2A"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "Dahmani", "prenom": "Zakaria", "classe": "P2A"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "De Oliveira Rebelo", "prenom": "Matilde", "classe": "P2F"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "El Khattabi", "prenom": "Maïssa", "classe": "P2B"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "El Moumen", "prenom": "Salahdin", "classe": "P2B"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "Govaerts", "prenom": "Nathan", "classe": "P2D"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "Guedes Barbosa", "prenom": "Gabriel", "classe": "P2D"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "Ince", "prenom": "Busra", "classe": "P2F"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "Jamiolkowska", "prenom": "Wiktoria", "classe": "P2E"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "Messari", "prenom": "Younes", "classe": "P2C"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "Van Cauwenbergh", "prenom": "Mathys", "classe": "P2C"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "Benidito Dos Santos", "prenom": "Tabita", "classe": "P2D"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "Benyatouille", "prenom": "Hamza", "classe": "P2F"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "FILIPPENKO", "prenom": "Olha", "classe": "P2A"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "Kulcsar", "prenom": "Isabelle", "classe": "P2B"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "Mbiawa Nouwock", "prenom": "Bryan", "classe": "P2A"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "Mokhtari", "prenom": "Yassine", "classe": "P2B"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "Ouassou Bonella", "prenom": "Adam", "classe": "P2F"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "Pourbaix", "prenom": "Lucie", "classe": "P2E"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "Seferovic", "prenom": "Natalija", "classe": "P2C"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "Van der Perre", "prenom": "Elone", "classe": "P2C"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "Özcan", "prenom": "Arda", "classe": "P2D"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "Bouanane", "prenom": "Nawfal", "classe": "P2A"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "Cesmeli", "prenom": "Berkan", "classe": "P2B"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "Debroux Servranckx", "prenom": "Baptiste", "classe": "P2E"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "Gourgem", "prenom": "Soukaina", "classe": "P2B"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "Messari", "prenom": "Soufiane", "classe": "P2A"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "Munga", "prenom": "Riyad", "classe": "P2F"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "Murtezas", "prenom": "Orges", "classe": "P2E"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "Rosseel", "prenom": "Marvin", "classe": "P2D"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "Simo Tchoupé", "prenom": "Keiryl", "classe": "P2C"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "WARR", "prenom": "Racky", "classe": "P2C"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "Wabaga Yalala", "prenom": "Shanna", "classe": "P2F"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "Boelaert", "prenom": "Julia", "classe": "P2F"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "Bouyghjdane", "prenom": "Nahel", "classe": "P2D"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "De Paoli", "prenom": "Adriano", "classe": "P2F"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "Eken", "prenom": "Busenaz", "classe": "P2B"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "Haidara", "prenom": "Hamma", "classe": "P2A"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "Hajredinovic", "prenom": "Sanela", "classe": "P2A"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "Menendez Ovalle", "prenom": "Rayan", "classe": "P2B"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "Ndongala Mbenza Rona", "prenom": "Ryan", "classe": "P2C"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "Niculita", "prenom": "Andreea", "classe": "P2E"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "SHAAR", "prenom": "Adnan", "classe": "P2E"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "Wojciechowski", "prenom": "Eryk", "classe": "P2C"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Bouali", "prenom": "Younes", "classe": "P3D"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Chakouri", "prenom": "Hamza", "classe": "P3A"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Cherboukh", "prenom": "Hamza", "classe": "P3A"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Delahaye", "prenom": "Amélia", "classe": "P3F"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Diallo", "prenom": "Fatoumata", "classe": "P3B"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Dibu-Dibu", "prenom": "Schilo", "classe": "P3E"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "El Hachioui", "prenom": "Ayoub", "classe": "P3F"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Houthoofd", "prenom": "Jan", "classe": "P3B"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Kasem", "prenom": "Maysa", "classe": "P3C"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Lipski", "prenom": "Tomasz", "classe": "P3C"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Nikolajuk", "prenom": "Piotr", "classe": "P3E"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Paz Villagomez", "prenom": "Benjamin", "classe": "P3D"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Al Aref", "prenom": "Hasan", "classe": "P3D"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Canario-Taveira", "prenom": "Kenzo", "classe": "P3D"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Chairi", "prenom": "Mounia", "classe": "P3A"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Diop", "prenom": "Saliou", "classe": "P3B"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "El Ouarghi", "prenom": "Salma", "classe": "P3A"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Gökce", "prenom": "Mikail", "classe": "P3C"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Isaev", "prenom": "Isay", "classe": "P3B"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Kabemba Nzuba", "prenom": "Alain-Didier", "classe": "P3E"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Kulcsar", "prenom": "Patricia-Nicole", "classe": "P3F"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Micha", "prenom": "Nono", "classe": "P3F"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Restivo", "prenom": "Lorenzo", "classe": "P3E"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Yagbasan", "prenom": "Hrant", "classe": "P3C"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Ahmedova", "prenom": "Melisa", "classe": "P3A"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Ben Haïda", "prenom": "Bilal", "classe": "P3D"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Bitumba", "prenom": "Iyela", "classe": "P3B"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Debuck", "prenom": "Yohann", "classe": "P3D"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Rayss", "prenom": "Bilal", "classe": "P3B"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Riordan De Briones", "prenom": "Michael", "classe": "P3C"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Rodrigues Coelho", "prenom": "Luis", "classe": "P3E"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Rosseel", "prenom": "Maëva", "classe": "P3F"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Silva de Oliveira", "prenom": "Victor Hugo", "classe": "P3F"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Unal", "prenom": "Kaan", "classe": "P3E"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Warr", "prenom": "Abdoulaye", "classe": "P3C"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Zerhouni", "prenom": "Anass", "classe": "P3A"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "Ben Hadj Temsamani", "prenom": "Abdelrahman", "classe": "P3F"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "Bosembo", "prenom": "Albert", "classe": "P3D"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "Chliouet Belhadj-Sakas", "prenom": "Marouan", "classe": "P3E"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "Dirik", "prenom": "Berzan", "classe": "P3E"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "El Bouchikhi", "prenom": "Rayan", "classe": "P3B"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "El Kaddouri", "prenom": "Sanae", "classe": "P3B"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "El Khattabi", "prenom": "Malak", "classe": "P3A"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "Gyamfi", "prenom": "Dennis", "classe": "P3B"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "Laroussi", "prenom": "Yassir", "classe": "P3D"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "Nassiri Nassiri", "prenom": "Iman", "classe": "P3C"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "Suyckerbuyck", "prenom": "Nathan", "classe": "P3F"}], "personnel": [{"nom": "Abdelqaoui", "dispo": "09h30–14h30", "statut": "Actif"}, {"nom": "Chapelle", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Bougdim", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Bajati", "dispo": "08h00–09h40 et 13h00–15h00", "statut": "Actif"}, {"nom": "Bonanga", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Benterki", "dispo": "08h00–12h30", "statut": "Actif"}, {"nom": "Baqloul", "dispo": "09h00–14h00", "statut": "Actif"}, {"nom": "Amnad", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Warland", "dispo": "13h15–15h15", "statut": "Actif"}, {"nom": "Azem", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Clément", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Austraet", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Thomas", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "De Leus", "dispo": "08h00–14h05", "statut": "Actif"}, {"nom": "De Patoul", "dispo": "08h00–11h35", "statut": "Actif"}, {"nom": "Di Berardino", "dispo": "08h00–12h25", "statut": "Actif"}, {"nom": "Drappier", "dispo": "11h00–16h00", "statut": "Actif"}, {"nom": "El Amrani", "dispo": "08h00–15h00", "statut": "Actif"}, {"nom": "Fellah", "dispo": "09h40–11h35", "statut": "Actif"}, {"nom": "Gillet C.", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Gillet J.", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Haik", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Kechiche", "dispo": "08h00–10h30", "statut": "Actif"}, {"nom": "Ladjali", "dispo": "09h40–12h25", "statut": "Actif"}, {"nom": "Legrand", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Lemmens", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Martinez", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Mbatso", "dispo": "Toute la journée", "statut": "Retiré"}, {"nom": "Mesfioui", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Mvuesa", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Nouhi", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Ortigosa", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Outers", "dispo": "08h00–09h40 et 13h00–16h00", "statut": "Actif"}, {"nom": "Pirenne", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Roger France", "dispo": "08h00–09h40", "statut": "Actif"}, {"nom": "Vanparys", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Azarkan", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Begne", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Laure", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Bobeica", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Defoy", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Croisse", "dispo": "08h00–12h25", "statut": "Retiré"}, {"nom": "Rouissi", "dispo": "Toute la journée", "statut": "Retiré"}, {"nom": "El Bied", "dispo": "Toute la journée", "statut": "Retiré"}, {"nom": "Druart", "dispo": "Toute la journée", "statut": "Retiré"}, {"nom": "Hanchi", "dispo": "Toute la journée", "statut": "Retiré"}, {"nom": "Viglione", "dispo": "Toute la journée", "statut": "Retiré"}, {"nom": "Couvreur", "dispo": "Toute la journée", "statut": "Retiré"}, {"nom": "Goxhaj", "dispo": "Toute la journée", "statut": "Retiré"}, {"nom": "Bensalah", "dispo": "08h00–09h40 et 11h30–15h00", "statut": "Retiré"}, {"nom": "Coulon", "dispo": "08h00–12h25", "statut": "Actif"}], "reserve": [{"nom": "El Amrani", "c1": "✓ Libre", "c2": "ATELIER", "c3": "ATELIER", "note": "Libre C1"}, {"nom": "Lemmens", "c1": "✓ Libre", "c2": "ATELIER", "c3": "ATELIER", "note": "Libre C1"}, {"nom": "Vanparys", "c1": "✓ Libre", "c2": "ATELIER", "c3": "ATELIER", "note": "Libre C1"}, {"nom": "Clément", "c1": "ATELIER", "c2": "✓ Libre", "c3": "ATELIER", "note": "Libre C2"}, {"nom": "Laure", "c1": "ATELIER", "c2": "✓ Libre", "c3": "ATELIER", "note": "Libre C2"}, {"nom": "Pirenne", "c1": "ATELIER", "c2": "✓ Libre", "c3": "ATELIER", "note": "Libre C2"}, {"nom": "Bobeica", "c1": "ATELIER", "c2": "ATELIER", "c3": "✓ Libre", "note": "Libre C3"}, {"nom": "Bonanga", "c1": "ATELIER", "c2": "ATELIER", "c3": "✓ Libre", "note": "Libre C3"}, {"nom": "Fellah", "c1": "Présent (partiel)", "c2": "Présent (partiel)", "c3": "Présent (partiel)", "note": "Présent 09h40-11h35 (trop court)"}, {"nom": "Roger France", "c1": "Présent (partiel)", "c2": "Présent (partiel)", "c3": "Présent (partiel)", "note": "Présent 08h00-09h40 (trop court)"}], "timing": [{"label": "Passage 1", "heure": "08h30–08h45"}, {"label": "Passage 2", "heure": "08h50–09h05"}, {"label": "Passage 3", "heure": "09h10–09h25"}, {"label": "Passage 4", "heure": "09h30–09h45"}, {"label": "Passage 5", "heure": "09h50–10h05"}, {"label": "PAUSE MATIN", "heure": "10h05–10h20", "pause": true}, {"label": "Passage 6", "heure": "10h25–10h40"}, {"label": "Passage 7", "heure": "10h45–11h00"}, {"label": "Passage 8", "heure": "11h05–11h20"}, {"label": "Passage 9", "heure": "11h25–11h40"}, {"label": "Passage 10", "heure": "11h45–12h00"}, {"label": "Passage 11", "heure": "12h05–12h20"}, {"label": "PAUSE MIDI", "heure": "12h25–13h30", "pause": true}, {"label": "Passage 12", "heure": "13h30–13h45"}, {"label": "Passage 13", "heure": "13h50–14h05"}, {"label": "Passage 14", "heure": "14h10–14h25"}, {"label": "Passage 15", "heure": "14h30–14h45"}, {"label": "Passage 16", "heure": "14h50–15h05"}]};
+const DATA = {"ateliers": [{"num": 1, "nom": "Unihoc", "lieu": "Salle d'étude", "materiel": "1 crosse, 10 balles, 1 petit but", "principe": "Maîtrise du geste et rapidité.", "score": "Nombre de tirs / buts réussis.", "secu": "Crosse basse et passage à l'arrêt."}, {"num": 2, "nom": "Tchoukball", "lieu": "Couloir salle d'étude", "materiel": "1 cadre de Tchoukball, 1 ballon, plots", "principe": "Coopération et rebond collectif.", "score": "Nombre de points marqués.", "secu": ""}, {"num": 3, "nom": "Kin-Ball", "lieu": "Gymnase", "materiel": "1 ballon de Kin-Ball", "principe": "Coopération physique et transport collectif.", "score": "Nombre total de tours de terrain.", "secu": ""}, {"num": 4, "nom": "Basketball", "lieu": "Gymnase", "materiel": "Ballons de basket, panier", "principe": "Adresse collective en relais.", "score": "Nombre total de paniers marqués.", "secu": ""}, {"num": 5, "nom": "Parcours de l'aveugle", "lieu": "Hall", "materiel": "1 bandeau, 10 objets variés, obstacles, chronomètre", "principe": "Relais de confiance et guidage vocal.", "score": "Ramasser les objets avec précision.", "secu": "Une ou deux voix seulement pour guider."}, {"num": 6, "nom": "Indiaca", "lieu": "Hall", "materiel": "1 Indiaca, filet occultant, chronomètre", "principe": "Précision de frappe et réception.", "score": "Plus longue série d'échanges sans chute.", "secu": ""}, {"num": 7, "nom": "Tour infernale Jenga", "lieu": "Local 06", "materiel": "30 pièces de bois, 1 table stable", "principe": "Relais de précision et de calme.", "score": "Meilleur temps pour une tour complète.", "secu": ""}, {"num": 8, "nom": "Marteau-piqueur", "lieu": "Local 05", "materiel": "Souche, 2 marteaux, clous, lunettes de sécurité", "principe": "Force et précision sur poste sécurisé.", "score": "Temps total ou nombre de clous terminés.", "secu": "Lunettes obligatoires."}, {"num": 9, "nom": "Fresque copie-conforme", "lieu": "Local 26/27", "materiel": "Dessin modèle caché, nappe en papier, feutres", "principe": "Observation et reproduction artistique.", "score": "Note sur 10 selon la ressemblance.", "secu": ""}, {"num": 10, "nom": "La Mûrisserie", "lieu": "Cour de récréation", "materiel": "Géré par l'ASBL La Mûrisserie", "principe": "Activité gérée par l'ASBL La Mûrisserie.", "score": "Selon modalités ASBL.", "secu": ""}, {"num": 11, "nom": "Le relais du diable", "lieu": "Cour de récréation", "materiel": "1 diable, 20 cartons lestés, 2 plots", "principe": "Maniement d'engin et gestion du rythme.", "score": "Allers-retours / temps global.", "secu": ""}, {"num": 12, "nom": "Relais de kangourou", "lieu": "Cour de récréation", "materiel": "Grands sacs résistants", "principe": "Coordination motrice en relais.", "score": "Temps total de l'équipe.", "secu": ""}, {"num": 13, "nom": "Parcours vélo", "lieu": "Cour de récréation", "materiel": "2 à 3 vélos, plots, chronomètre", "principe": "Maniabilité, équilibre et trajectoire.", "score": "Parcours propre sans poser le pied.", "secu": ""}, {"num": 14, "nom": "Aquarium", "lieu": "Local 10", "materiel": "Aquarium rempli d'eau, 1 verre, pièces de monnaie", "principe": "Précision et gestion du risque.", "score": "Nombre de pièces avant le naufrage.", "secu": ""}, {"num": 15, "nom": "Mémo des objets", "lieu": "Local 12", "materiel": "Tapis ou paravent, 10 à 15 objets variés, zone de reconstitution", "principe": "Mémorisation et restitution collective.", "score": "Nombre d'objets correctement identifiés.", "secu": ""}, {"num": 16, "nom": "Les bâtonnets", "lieu": "Local 14", "materiel": "31 bâtonnets ou lattes de bois", "principe": "Stratégie et calcul mental.", "score": "Nombre de victoires contre l'animateur.", "secu": ""}], "relais": [{"atelier": 1, "c1": "Amnad", "c2": "Abdelqaoui", "c3": "Azem", "remarque": ""}, {"atelier": 2, "c1": "Baqloul", "c2": "Benterki", "c3": "Bajati", "remarque": ""}, {"atelier": 3, "c1": "Bobeica", "c2": "Bonanga", "c3": "Clément", "remarque": ""}, {"atelier": 4, "c1": "Coulon", "c2": "De Leus", "c3": "Constant", "remarque": ""}, {"atelier": 5, "c1": "De Patoul", "c2": "Fouad", "c3": "Drappier", "remarque": ""}, {"atelier": 6, "c1": "Di Berardino", "c2": "El Amrani", "c3": "Laure", "remarque": ""}, {"atelier": 7, "c1": "Kechiche", "c2": "Ladjali", "c3": "Lemmens", "remarque": ""}, {"atelier": 8, "c1": "Pirenne", "c2": "Vanparys", "c3": "Mjoti", "remarque": ""}, {"atelier": 9, "c1": "Azem", "c2": "Amnad", "c3": "Outers", "remarque": ""}, {"atelier": 10, "c1": "ASBL", "c2": "ASBL", "c3": "ASBL", "remarque": "Géré par l'ASBL La Mûrisserie"}, {"atelier": 11, "c1": "Benterki", "c2": "Baqloul", "c3": "Warland", "remarque": ""}, {"atelier": 12, "c1": "Bonanga", "c2": "Bobeica", "c3": "Fouad", "remarque": ""}, {"atelier": 13, "c1": "Clément", "c2": "Coulon", "c3": "El Amrani", "remarque": ""}, {"atelier": 14, "c1": "De Leus", "c2": "Di Berardino", "c3": "Pirenne", "remarque": ""}, {"atelier": 15, "c1": "Laure", "c2": "Lemmens", "c3": "Vanparys", "remarque": ""}, {"atelier": 16, "c1": "Fouad", "c2": "Azem", "c3": "Amnad", "remarque": ""}], "groupes": [{"num": 1, "ref": "P1-1", "phase": "Phase 1", "nom": "Les Orques", "acc": "Chapelle", "depart": 1}, {"num": 2, "ref": "P1-2", "phase": "Phase 1", "nom": "Les Tigres", "acc": "Bougdim", "depart": 2}, {"num": 3, "ref": "P1-3", "phase": "Phase 1", "nom": "Les Taureaux", "acc": "Austraet", "depart": 3}, {"num": 4, "ref": "P1-4", "phase": "Phase 1", "nom": "Les Rhinos", "acc": "Thomas", "depart": 4}, {"num": 5, "ref": "P1-5", "phase": "Phase 1", "nom": "Les Scorpions", "acc": "Gillet C.", "depart": 5}, {"num": 6, "ref": "P2-1", "phase": "Phase 2", "nom": "Les Faucons", "acc": "Gillet J.", "depart": 6}, {"num": 7, "ref": "P2-2", "phase": "Phase 2", "nom": "Les Grizzlys", "acc": "Haik", "depart": 7}, {"num": 8, "ref": "P2-3", "phase": "Phase 2", "nom": "Les Guépards", "acc": "Legrand", "depart": 8}, {"num": 9, "ref": "P2-4", "phase": "Phase 2", "nom": "Les Cobras", "acc": "Martinez", "depart": 9}, {"num": 10, "ref": "P2-5", "phase": "Phase 2", "nom": "Les Loups", "acc": "Mesfioui", "depart": 10}, {"num": 11, "ref": "P2-6", "phase": "Phase 2", "nom": "Les Gorilles", "acc": "Mvuesa", "depart": 11}, {"num": 12, "ref": "P3-1", "phase": "Phase 3", "nom": "Les Aigles", "acc": "Nouhi", "depart": 12}, {"num": 13, "ref": "P3-2", "phase": "Phase 3", "nom": "Les Requins", "acc": "Ortigosa", "depart": 13}, {"num": 14, "ref": "P3-3", "phase": "Phase 3", "nom": "Les Panthères", "acc": "Azarkan", "depart": 14}, {"num": 15, "ref": "P3-4", "phase": "Phase 3", "nom": "Les Lions", "acc": "Begne", "depart": 15}, {"num": 16, "ref": "PRI-1", "phase": "Primaire", "nom": "Les Phénix", "acc": "Accompagnateur Primaire", "depart": 16}], "eleves": [{"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Ali", "prenom": "Hasan", "classe": "ORA"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Ali Khan", "prenom": "Sajeed", "classe": "ORB"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Asanovski", "prenom": "Luciano", "classe": "ORB"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Benachouba Ramizova", "prenom": "Isaac", "classe": "ORB"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Bouzahzah", "prenom": "Adam", "classe": "OBSB"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Cîrciu", "prenom": "Yasmina", "classe": "ORC"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Dahnin", "prenom": "Khaled", "classe": "ORC"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Danoun", "prenom": "Fahd", "classe": "OBSB"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Demirkapu", "prenom": "Geylani", "classe": "ORA"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Dorani", "prenom": "Zaryalai", "classe": "OBSB"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "KAÇAN", "prenom": "Yavuz", "classe": "OBSA"}, {"groupe": 1, "phase": "Phase 1", "nom_groupe": "Les Orques", "nom": "Pereira de Souza", "prenom": "Joao", "classe": "OBSA"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "Agboli", "prenom": "Kaleb", "classe": "ORA"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "Azzaryouhi", "prenom": "Mohamed", "classe": "ORB"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "Bação De Castro", "prenom": "Nuno", "classe": "ORB"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "DIALLO", "prenom": "Lawouratou", "classe": "ORC"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "Diallo", "prenom": "Idiatou", "classe": "OBSB"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "Gazik", "prenom": "Karol", "classe": "ORB"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "Khay", "prenom": "Rayane", "classe": "ORA"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "Milosiu", "prenom": "Denisa", "classe": "OBSA"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "Negru", "prenom": "Loredana", "classe": "ORC"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "Ouled Ben Abdallah", "prenom": "Haroun", "classe": "OBSA"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "REXHEPI", "prenom": "Enis", "classe": "ORA"}, {"groupe": 2, "phase": "Phase 1", "nom_groupe": "Les Tigres", "nom": "Santos Moreira", "prenom": "Artur", "classe": "OBSB"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "BATISTA CARDOSO", "prenom": "Joao Lucas", "classe": "ORA"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "Bonifacio", "prenom": "Giulia", "classe": "ORC"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "Buzon", "prenom": "Mohamed", "classe": "OBSA"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "COBA SANCHEZ", "prenom": "Pricila", "classe": "ORA"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "Delpierre", "prenom": "Logan", "classe": "ORB"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "Doda", "prenom": "Aleks", "classe": "ORA"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "Felipe Rocha", "prenom": "Marina", "classe": "OBSB"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "GUTALE HASSAN", "prenom": "Mohamed", "classe": "OBSB"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "Joly", "prenom": "Shéhérazade", "classe": "ORC"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "Madeira Akhtar", "prenom": "Eiliyah", "classe": "OBSA"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "Pisane", "prenom": "Thibault", "classe": "ORB"}, {"groupe": 3, "phase": "Phase 1", "nom_groupe": "Les Taureaux", "nom": "Vandermeulen", "prenom": "Thomas", "classe": "ORB"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "Akdeniz", "prenom": "Emir", "classe": "OBSB"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "Ali Khan", "prenom": "Sajeed", "classe": "ORB"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "El Marchouhi", "prenom": "Sofian Allal", "classe": "ORB"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "Gutiérrez Briones", "prenom": "Alejandro", "classe": "ORB"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "Kemakuko", "prenom": "Paul", "classe": "OBSB"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "Milosiu", "prenom": "Sefora", "classe": "OBSA"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "OUMAROU", "prenom": "Ibrahim", "classe": "OBSA"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "Pourbaix", "prenom": "Sam", "classe": "ORA"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "RIVERA GONZALEZ", "prenom": "Ashley", "classe": "ORA"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "SEJDI", "prenom": "Medina", "classe": "ORC"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "Zhar Idrissi", "prenom": "Ahmed", "classe": "ORC"}, {"groupe": 4, "phase": "Phase 1", "nom_groupe": "Les Rhinos", "nom": "Zuniga Farias", "prenom": "Emilio", "classe": "ORA"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "AZIRI", "prenom": "Ibadet", "classe": "OBSB"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "Basele Bofasa", "prenom": "Cameron", "classe": "ORB"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "El Attabi", "prenom": "Faysal", "classe": "ORA"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "HALJITI", "prenom": "Shoan", "classe": "ORB"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "Hassani", "prenom": "Sabrine", "classe": "ORC"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "Kassé", "prenom": "Korka", "classe": "OBSA"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "MUSHID YAV A KALENG", "prenom": "Hamilton", "classe": "ORA"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "Manu", "prenom": "Kankam", "classe": "OBSB"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "Mesaoudi", "prenom": "Anas", "classe": "ORC"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "Riyad", "prenom": "Isaac", "classe": "OBSA"}, {"groupe": 5, "phase": "Phase 1", "nom_groupe": "Les Scorpions", "nom": "Zahiri", "prenom": "Dashnim", "classe": "ORA"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "Barry", "prenom": "Aïssata", "classe": "P2A"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "Bel-Haj", "prenom": "Adam", "classe": "P2D"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "Bollu", "prenom": "Colin", "classe": "P2E"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "Chinchihualpa Gutierrez", "prenom": "Jesus Ernesto", "classe": "P2F"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "Cissé", "prenom": "Serigne", "classe": "P2A"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "Da Costa Pinto", "prenom": "Maria", "classe": "P2B"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "Duna", "prenom": "Davit", "classe": "P2C"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "Idrizi", "prenom": "Ribana", "classe": "P2B"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "Nassiri", "prenom": "Safa", "classe": "P2D"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "Nkondi-Lukombo", "prenom": "Naischa", "classe": "P2C"}, {"groupe": 6, "phase": "Phase 2", "nom_groupe": "Les Faucons", "nom": "POURBAIX", "prenom": "Jimmy", "classe": "P2E"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "Ben Ajiba", "prenom": "Abir", "classe": "P2A"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "De Castro Silva", "prenom": "Pedro-Lucas", "classe": "P2D"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "Debza", "prenom": "Aliya", "classe": "P2F"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "Diallo", "prenom": "Boubacar", "classe": "P2D"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "Hajredinovic", "prenom": "Samanta", "classe": "P2C"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "Kassé", "prenom": "Rokhoya", "classe": "P2E"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "Kilci", "prenom": "Adem", "classe": "P2B"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "Les", "prenom": "Assaya", "classe": "P2B"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "Mukendi", "prenom": "Owen", "classe": "P2A"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "Novac", "prenom": "Yasmina", "classe": "P2C"}, {"groupe": 7, "phase": "Phase 2", "nom_groupe": "Les Grizzlys", "nom": "Nzeza Kiluangu", "prenom": "Gabriel", "classe": "P2E"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "Balaagaou", "prenom": "Nora", "classe": "P2A"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "Dahmani", "prenom": "Zakaria", "classe": "P2A"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "De Oliveira Rebelo", "prenom": "Matilde", "classe": "P2F"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "El Khattabi", "prenom": "Maïssa", "classe": "P2B"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "El Moumen", "prenom": "Salahdin", "classe": "P2B"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "Govaerts", "prenom": "Nathan", "classe": "P2D"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "Guedes Barbosa", "prenom": "Gabriel", "classe": "P2D"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "Ince", "prenom": "Busra", "classe": "P2F"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "Jamiolkowska", "prenom": "Wiktoria", "classe": "P2E"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "Messari", "prenom": "Younes", "classe": "P2C"}, {"groupe": 8, "phase": "Phase 2", "nom_groupe": "Les Guépards", "nom": "Van Cauwenbergh", "prenom": "Mathys", "classe": "P2C"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "Benidito Dos Santos", "prenom": "Tabita", "classe": "P2D"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "Benyatouille", "prenom": "Hamza", "classe": "P2F"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "FILIPPENKO", "prenom": "Olha", "classe": "P2A"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "Kulcsar", "prenom": "Isabelle", "classe": "P2B"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "Mbiawa Nouwock", "prenom": "Bryan", "classe": "P2A"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "Mokhtari", "prenom": "Yassine", "classe": "P2B"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "Ouassou Bonella", "prenom": "Adam", "classe": "P2F"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "Pourbaix", "prenom": "Lucie", "classe": "P2E"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "Seferovic", "prenom": "Natalija", "classe": "P2C"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "Van der Perre", "prenom": "Elone", "classe": "P2C"}, {"groupe": 9, "phase": "Phase 2", "nom_groupe": "Les Cobras", "nom": "Özcan", "prenom": "Arda", "classe": "P2D"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "Bouanane", "prenom": "Nawfal", "classe": "P2A"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "Cesmeli", "prenom": "Berkan", "classe": "P2B"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "Debroux Servranckx", "prenom": "Baptiste", "classe": "P2E"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "Gourgem", "prenom": "Soukaina", "classe": "P2B"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "Messari", "prenom": "Soufiane", "classe": "P2A"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "Munga", "prenom": "Riyad", "classe": "P2F"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "Murtezas", "prenom": "Orges", "classe": "P2E"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "Rosseel", "prenom": "Marvin", "classe": "P2D"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "Simo Tchoupé", "prenom": "Keiryl", "classe": "P2C"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "WARR", "prenom": "Racky", "classe": "P2C"}, {"groupe": 10, "phase": "Phase 2", "nom_groupe": "Les Loups", "nom": "Wabaga Yalala", "prenom": "Shanna", "classe": "P2F"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "Boelaert", "prenom": "Julia", "classe": "P2F"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "Bouyghjdane", "prenom": "Nahel", "classe": "P2D"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "De Paoli", "prenom": "Adriano", "classe": "P2F"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "Eken", "prenom": "Busenaz", "classe": "P2B"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "Haidara", "prenom": "Hamma", "classe": "P2A"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "Hajredinovic", "prenom": "Sanela", "classe": "P2A"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "Menendez Ovalle", "prenom": "Rayan", "classe": "P2B"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "Ndongala Mbenza Rona", "prenom": "Ryan", "classe": "P2C"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "Niculita", "prenom": "Andreea", "classe": "P2E"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "SHAAR", "prenom": "Adnan", "classe": "P2E"}, {"groupe": 11, "phase": "Phase 2", "nom_groupe": "Les Gorilles", "nom": "Wojciechowski", "prenom": "Eryk", "classe": "P2C"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Bouali", "prenom": "Younes", "classe": "P3D"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Chakouri", "prenom": "Hamza", "classe": "P3A"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Cherboukh", "prenom": "Hamza", "classe": "P3A"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Delahaye", "prenom": "Amélia", "classe": "P3F"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Diallo", "prenom": "Fatoumata", "classe": "P3B"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Dibu-Dibu", "prenom": "Schilo", "classe": "P3E"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "El Hachioui", "prenom": "Ayoub", "classe": "P3F"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Houthoofd", "prenom": "Jan", "classe": "P3B"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Kasem", "prenom": "Maysa", "classe": "P3C"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Lipski", "prenom": "Tomasz", "classe": "P3C"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Nikolajuk", "prenom": "Piotr", "classe": "P3E"}, {"groupe": 12, "phase": "Phase 3", "nom_groupe": "Les Aigles", "nom": "Paz Villagomez", "prenom": "Benjamin", "classe": "P3D"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Al Aref", "prenom": "Hasan", "classe": "P3D"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Canario-Taveira", "prenom": "Kenzo", "classe": "P3D"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Chairi", "prenom": "Mounia", "classe": "P3A"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Diop", "prenom": "Saliou", "classe": "P3B"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "El Ouarghi", "prenom": "Salma", "classe": "P3A"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Gökce", "prenom": "Mikail", "classe": "P3C"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Isaev", "prenom": "Isay", "classe": "P3B"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Kabemba Nzuba", "prenom": "Alain-Didier", "classe": "P3E"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Kulcsar", "prenom": "Patricia-Nicole", "classe": "P3F"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Micha", "prenom": "Nono", "classe": "P3F"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Restivo", "prenom": "Lorenzo", "classe": "P3E"}, {"groupe": 13, "phase": "Phase 3", "nom_groupe": "Les Requins", "nom": "Yagbasan", "prenom": "Hrant", "classe": "P3C"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Ahmedova", "prenom": "Melisa", "classe": "P3A"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Ben Haïda", "prenom": "Bilal", "classe": "P3D"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Bitumba", "prenom": "Iyela", "classe": "P3B"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Debuck", "prenom": "Yohann", "classe": "P3D"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Rayss", "prenom": "Bilal", "classe": "P3B"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Riordan De Briones", "prenom": "Michael", "classe": "P3C"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Rodrigues Coelho", "prenom": "Luis", "classe": "P3E"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Rosseel", "prenom": "Maëva", "classe": "P3F"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Silva de Oliveira", "prenom": "Victor Hugo", "classe": "P3F"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Unal", "prenom": "Kaan", "classe": "P3E"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Warr", "prenom": "Abdoulaye", "classe": "P3C"}, {"groupe": 14, "phase": "Phase 3", "nom_groupe": "Les Panthères", "nom": "Zerhouni", "prenom": "Anass", "classe": "P3A"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "Ben Hadj Temsamani", "prenom": "Abdelrahman", "classe": "P3F"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "Bosembo", "prenom": "Albert", "classe": "P3D"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "Chliouet Belhadj-Sakas", "prenom": "Marouan", "classe": "P3E"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "Dirik", "prenom": "Berzan", "classe": "P3E"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "El Bouchikhi", "prenom": "Rayan", "classe": "P3B"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "El Kaddouri", "prenom": "Sanae", "classe": "P3B"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "El Khattabi", "prenom": "Malak", "classe": "P3A"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "Gyamfi", "prenom": "Dennis", "classe": "P3B"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "Laroussi", "prenom": "Yassir", "classe": "P3D"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "Nassiri Nassiri", "prenom": "Iman", "classe": "P3C"}, {"groupe": 15, "phase": "Phase 3", "nom_groupe": "Les Lions", "nom": "Suyckerbuyck", "prenom": "Nathan", "classe": "P3F"}], "personnel": [{"nom": "Abdelqaoui", "dispo": "09h30–14h30", "statut": "Actif"}, {"nom": "Chapelle", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Bougdim", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Bajati", "dispo": "08h00–09h40 et 13h00–15h00", "statut": "Actif"}, {"nom": "Bonanga", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Benterki", "dispo": "08h00–12h30", "statut": "Actif"}, {"nom": "Baqloul", "dispo": "09h00–14h00", "statut": "Actif"}, {"nom": "Amnad", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Warland", "dispo": "13h15–15h15", "statut": "Actif"}, {"nom": "Azem", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Clément", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Austraet", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Thomas", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "De Leus", "dispo": "08h00–14h05", "statut": "Actif"}, {"nom": "De Patoul", "dispo": "08h00–11h35", "statut": "Actif"}, {"nom": "Di Berardino", "dispo": "08h00–12h25", "statut": "Actif"}, {"nom": "Drappier", "dispo": "11h00–16h00", "statut": "Actif"}, {"nom": "El Amrani", "dispo": "08h00–15h00", "statut": "Actif"}, {"nom": "Fellah", "dispo": "09h40–11h35", "statut": "Actif"}, {"nom": "Gillet C.", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Gillet J.", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Haik", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Kechiche", "dispo": "08h00–10h30", "statut": "Actif"}, {"nom": "Ladjali", "dispo": "09h40–12h25", "statut": "Actif"}, {"nom": "Legrand", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Lemmens", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Martinez", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Mbatso", "dispo": "Toute la journée", "statut": "Retiré"}, {"nom": "Mesfioui", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Mvuesa", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Nouhi", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Ortigosa", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Outers", "dispo": "08h00–09h40 et 13h00–16h00", "statut": "Actif"}, {"nom": "Pirenne", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Roger France", "dispo": "08h00–09h40", "statut": "Actif"}, {"nom": "Vanparys", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Azarkan", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Begne", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Laure", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Bobeica", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Fouad", "dispo": "Toute la journée", "statut": "Actif"}, {"nom": "Croisse", "dispo": "08h00–12h25", "statut": "Retiré"}, {"nom": "Rouissi", "dispo": "Toute la journée", "statut": "Retiré"}, {"nom": "El Bied", "dispo": "Toute la journée", "statut": "Retiré"}, {"nom": "Druart", "dispo": "Toute la journée", "statut": "Retiré"}, {"nom": "Hanchi", "dispo": "Toute la journée", "statut": "Retiré"}, {"nom": "Viglione", "dispo": "Toute la journée", "statut": "Retiré"}, {"nom": "Couvreur", "dispo": "Toute la journée", "statut": "Retiré"}, {"nom": "Goxhaj", "dispo": "Toute la journée", "statut": "Retiré"}, {"nom": "Bensalah", "dispo": "08h00–09h40 et 11h30–15h00", "statut": "Retiré"}, {"nom": "Coulon", "dispo": "08h00–12h25", "statut": "Actif"}], "reserve": [{"nom": "El Amrani", "c1": "✓ Libre", "c2": "ATELIER", "c3": "ATELIER", "note": "Libre C1"}, {"nom": "Lemmens", "c1": "✓ Libre", "c2": "ATELIER", "c3": "ATELIER", "note": "Libre C1"}, {"nom": "Vanparys", "c1": "✓ Libre", "c2": "ATELIER", "c3": "ATELIER", "note": "Libre C1"}, {"nom": "Clément", "c1": "ATELIER", "c2": "✓ Libre", "c3": "ATELIER", "note": "Libre C2"}, {"nom": "Laure", "c1": "ATELIER", "c2": "✓ Libre", "c3": "ATELIER", "note": "Libre C2"}, {"nom": "Pirenne", "c1": "ATELIER", "c2": "✓ Libre", "c3": "ATELIER", "note": "Libre C2"}, {"nom": "Bobeica", "c1": "ATELIER", "c2": "ATELIER", "c3": "✓ Libre", "note": "Libre C3"}, {"nom": "Bonanga", "c1": "ATELIER", "c2": "ATELIER", "c3": "✓ Libre", "note": "Libre C3"}, {"nom": "Fellah", "c1": "Présent (partiel)", "c2": "Présent (partiel)", "c3": "Présent (partiel)", "note": "Présent 09h40-11h35 (trop court)"}, {"nom": "Roger France", "c1": "Présent (partiel)", "c2": "Présent (partiel)", "c3": "Présent (partiel)", "note": "Présent 08h00-09h40 (trop court)"}], "timing": [{"label": "Passage 1", "heure": "08h30–08h45"}, {"label": "Passage 2", "heure": "08h50–09h05"}, {"label": "Passage 3", "heure": "09h10–09h25"}, {"label": "Passage 4", "heure": "09h30–09h45"}, {"label": "Passage 5", "heure": "09h50–10h05"}, {"label": "PAUSE MATIN", "heure": "10h05–10h20", "pause": true}, {"label": "Passage 6", "heure": "10h25–10h40"}, {"label": "Passage 7", "heure": "10h45–11h00"}, {"label": "Passage 8", "heure": "11h05–11h20"}, {"label": "Passage 9", "heure": "11h25–11h40"}, {"label": "Passage 10", "heure": "11h45–12h00"}, {"label": "Passage 11", "heure": "12h05–12h20"}, {"label": "PAUSE MIDI", "heure": "12h25–13h30", "pause": true}, {"label": "Passage 12", "heure": "13h30–13h45"}, {"label": "Passage 13", "heure": "13h50–14h05"}, {"label": "Passage 14", "heure": "14h10–14h25"}, {"label": "Passage 15", "heure": "14h30–14h45"}, {"label": "Passage 16", "heure": "14h50–15h05"}]};
 
 function getGroupCounts() {
   return DATA.eleves.reduce((acc, eleve) => {
@@ -1037,6 +1073,107 @@ function getPlanningForGroup(groupNum) {
       atelierLieu: atelier ? atelier.lieu : ''
     };
   });
+}
+
+const RELAY_BLOCKS = [
+  { key: 'c1', label: 'Créneau 1', heure: '08h30–10h05', passageStart: 1, passageEnd: 5 },
+  { key: 'c2', label: 'Créneau 2', heure: '10h25–12h20', passageStart: 6, passageEnd: 11 },
+  { key: 'c3', label: 'Créneau 3', heure: '13h30–15h05', passageStart: 12, passageEnd: 16 }
+];
+
+function getGroupsForAtelier(atelierNum) {
+  const passages = DATA.timing.filter(t => !t.pause);
+  return passages.map((passage, index) => {
+    const groupes = DATA.groupes
+      .filter(g => {
+        const planning = getPlanningForGroup(g.num);
+        return planning[index] && planning[index].atelierNum === atelierNum;
+      })
+      .map(g => `Gr.${g.num} — ${g.nom}`);
+    return {
+      index: index + 1,
+      label: passage.label,
+      heure: passage.heure,
+      groupes
+    };
+  });
+}
+
+function getRelayAssignmentsForProf(profName) {
+  const assignments = [];
+  DATA.relais.forEach(r => {
+    RELAY_BLOCKS.forEach(block => {
+      if (r[block.key] === profName) {
+        const atelier = DATA.ateliers.find(a => a.num === r.atelier);
+        const passages = getGroupsForAtelier(r.atelier).filter(p => p.index >= block.passageStart && p.index <= block.passageEnd);
+        assignments.push({
+          atelierNum: r.atelier,
+          atelierNom: atelier ? atelier.nom : '',
+          atelierLieu: atelier ? atelier.lieu : '',
+          blockLabel: block.label,
+          blockTime: block.heure,
+          passages
+        });
+      }
+    });
+  });
+  return assignments;
+}
+
+function getLiveStatusData(now = new Date()) {
+  const currentMinutes = now.getHours() * 60 + now.getMinutes();
+  const hhmm = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+
+  const slots = [
+    { start: '08:00', end: '08:30', status: 'Mise en place et accueil', next: 'Les ateliers commencent à 08h30.' },
+    ...DATA.timing.map(t => ({
+      start: t.heure.split('–')[0].replace('h', ':'),
+      end: t.heure.split('–')[1].replace('h', ':'),
+      status: t.pause ? (t.label === 'PAUSE MIDI' ? 'C’est le moment de manger.' : 'C’est le moment de la récréation.') : `${t.label} en cours`,
+      next: t.pause ? 'La reprise arrive juste après cette pause.' : 'Consultez votre fiche pour vérifier votre atelier ou votre groupe.'
+    })),
+    { start: '15:05', end: '15:30', status: 'Clôture et rangement', next: 'La journée se termine à 15h30.' }
+  ].map(slot => ({
+    ...slot,
+    startMin: parseInt(slot.start.slice(0,2),10) * 60 + parseInt(slot.start.slice(3,5),10),
+    endMin: parseInt(slot.end.slice(0,2),10) * 60 + parseInt(slot.end.slice(3,5),10)
+  }));
+
+  const currentSlot = slots.find(slot => currentMinutes >= slot.startMin && currentMinutes < slot.endMin);
+  const nextSlot = slots.find(slot => currentMinutes < slot.startMin);
+
+  if (currentSlot) {
+    return {
+      time: hhmm,
+      status: currentSlot.status,
+      next: nextSlot ? `Prochain temps : ${nextSlot.status.toLowerCase()} à ${nextSlot.start.replace(':', 'h')}.` : currentSlot.next
+    };
+  }
+
+  if (currentMinutes < slots[0].startMin) {
+    return {
+      time: hhmm,
+      status: 'La journée n’a pas encore commencé.',
+      next: 'Début général prévu à 08h00.'
+    };
+  }
+
+  return {
+    time: hhmm,
+    status: 'La journée est terminée.',
+    next: 'Fin générale prévue à 15h30.'
+  };
+}
+
+function updateLiveStatus() {
+  const timeEl = document.getElementById('live-current-time');
+  const statusEl = document.getElementById('live-current-status');
+  const nextEl = document.getElementById('live-next-status');
+  if (!timeEl || !statusEl || !nextEl) return;
+  const live = getLiveStatusData(new Date());
+  timeEl.textContent = live.time;
+  statusEl.textContent = live.status;
+  nextEl.textContent = live.next;
 }
 
 function updateHomeStats() {
@@ -1096,7 +1233,7 @@ function showSectionDirect(id) {
 }
 
 function renderSection(id) {
-  if (id === 'accueil') updateHomeStats();
+  if (id === 'accueil') { updateHomeStats(); updateLiveStatus(); }
   if (id === 'timing') renderTiming();
   if (id === 'ateliers') renderAteliers();
   if (id === 'groupes') renderGroupes(currentPhaseFilter || 'all');
@@ -1199,9 +1336,12 @@ function searchFiche(val) {
     }
 
     if (relaisAteliers.length) {
+      const assignments = getRelayAssignmentsForProf(prof.nom);
+
       html += `<div class="card-title">Créneaux atelier</div>
-        <table style="width:100%;margin-bottom:16px">
-          <tr><th>Atelier</th><th>08h30–10h05</th><th>10h25–12h20</th><th>13h30–15h05</th></tr>`;
+        <div class="table-wrap" style="margin-bottom:16px">
+          <table style="width:100%">
+            <tr><th>Atelier</th><th>08h30–10h05</th><th>10h25–12h20</th><th>13h30–15h05</th></tr>`;
       relaisAteliers.forEach(r => {
         const at = DATA.ateliers.find(a => a.num === r.atelier);
         html += `<tr>
@@ -1211,7 +1351,35 @@ function searchFiche(val) {
           <td>${r.c3===prof.nom ? `<span class="badge badge-vert">✓ Vous</span>` : (r.c3?r.c3:'—')}</td>
         </tr>`;
       });
-      html += `</table>`;
+      html += `</table>
+        </div>`;
+
+      if (assignments.length) {
+        html += `<div class="card-title">Groupes qui passent à vos ateliers</div>`;
+        assignments.forEach(assign => {
+          html += `<div class="assignment-card">
+            <div class="assignment-head">
+              <div>
+                <div class="assignment-title">Atelier ${assign.atelierNum} — ${assign.atelierNom}</div>
+                <div class="assignment-sub">📍 ${assign.atelierLieu} · ${assign.blockLabel} · ${assign.blockTime}</div>
+              </div>
+              <span class="badge badge-bleu">${assign.passages.length} passages</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <tr><th>Passage</th><th>Horaire</th><th>Groupe</th></tr>
+                ${assign.passages.map(p => `
+                  <tr>
+                    <td>${p.label}</td>
+                    <td>${p.heure}</td>
+                    <td>${p.groupes.length ? p.groupes.join('<br>') : '—'}</td>
+                  </tr>
+                `).join('')}
+              </table>
+            </div>
+          </div>`;
+        });
+      }
     }
 
     if (res) {
@@ -1226,7 +1394,7 @@ function searchFiche(val) {
         </div>`;
     }
 
-    html += `<button class="btn-print" onclick="printFiche('fiche-${prof.nom}','${prof.nom}')">🖨 Imprimer ma fiche</button></div>`;
+    html += `<button class="btn-print" onclick="printFiche('fiche-${prof.nom}','${prof.nom}')">⬇ Télécharger ma fiche en PDF</button></div>`;
   });
 
   if (eleves.length && !profs.length) {
@@ -1302,6 +1470,8 @@ function renderAteliers() {
 function showAtelier(num) {
   const at = DATA.ateliers.find(a => a.num === num);
   const relais = DATA.relais.find(r => r.atelier === num);
+  const passageGroups = getGroupsForAtelier(num);
+
   let html = `
     <div style="font-size:.75rem;color:var(--vert-clair);letter-spacing:2px;margin-bottom:4px">ATELIER ${num}</div>
     <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;margin-bottom:4px">${at.nom}</div>
@@ -1316,14 +1486,30 @@ function showAtelier(num) {
 
   if (relais) {
     html += `<div class="card-title">Responsables par créneau</div>
-      <table><tr><th>08h30–10h05</th><th>10h25–12h20</th><th>13h30–15h05</th></tr>
-      <tr>
-        <td>${relais.c1 === 'ASBL' ? '<span class="badge badge-asbl">ASBL</span>' : (relais.c1||'—')}</td>
-        <td>${relais.c2 === 'ASBL' ? '<span class="badge badge-asbl">ASBL</span>' : (relais.c2||'—')}</td>
-        <td>${relais.c3 === 'ASBL' ? '<span class="badge badge-asbl">ASBL</span>' : (relais.c3||'—')}</td>
-      </tr></table>
-      ${relais.remarque ? `<div style="font-size:.78rem;color:var(--jaune);margin-top:8px">ℹ ${relais.remarque}</div>` : ''}`;
+      <div class="table-wrap" style="margin-bottom:18px">
+        <table><tr><th>08h30–10h05</th><th>10h25–12h20</th><th>13h30–15h05</th></tr>
+        <tr>
+          <td>${relais.c1 === 'ASBL' ? '<span class="badge badge-asbl">ASBL</span>' : (relais.c1||'—')}</td>
+          <td>${relais.c2 === 'ASBL' ? '<span class="badge badge-asbl">ASBL</span>' : (relais.c2||'—')}</td>
+          <td>${relais.c3 === 'ASBL' ? '<span class="badge badge-asbl">ASBL</span>' : (relais.c3||'—')}</td>
+        </tr></table>
+      </div>
+      ${relais.remarque ? `<div style="font-size:.78rem;color:var(--jaune);margin-top:-4px;margin-bottom:16px">ℹ ${relais.remarque}</div>` : ''}`;
   }
+
+  html += `<div class="card-title">Groupes par passage</div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Passage</th><th>Horaire</th><th>Groupe</th></tr>
+        ${passageGroups.map(p => `
+          <tr>
+            <td>${p.label}</td>
+            <td>${p.heure}</td>
+            <td>${p.groupes.length ? p.groupes.join('<br>') : '—'}</td>
+          </tr>
+        `).join('')}
+      </table>
+    </div>`;
 
   document.getElementById('modal-atelier-content').innerHTML = html;
   document.getElementById('modal-atelier').classList.add('open');
@@ -1479,72 +1665,97 @@ function closeModal(id) {
   if (modal) modal.classList.remove('open');
 }
 
-function printFiche(id, nom) {
-  const content = document.getElementById(id).innerHTML;
-  const win = window.open('','_blank');
-  win.document.write(`<!DOCTYPE html><html><head>
-    <meta charset="UTF-8">
-    <title>Fiche — ${nom}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-    <style>
-      body{font-family:'DM Sans',sans-serif;padding:24px;color:#111;max-width:850px;margin:0 auto}
-      .card{border:1px solid #ddd;border-radius:6px;padding:20px;margin-bottom:16px}
-      .card-title{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:#2d6a4f;margin-bottom:10px}
-      .card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-      .card-item-label{font-size:.7rem;color:#888;text-transform:uppercase}
-      .card-item-val{font-size:.9rem;font-weight:500}
-      table{width:100%;border-collapse:collapse;font-size:.83rem}
-      th{text-align:left;padding:8px;background:#f5f5f5;border-bottom:2px solid #2d6a4f}
-      td{padding:8px;border-bottom:1px solid #eee}
-      .badge{padding:2px 8px;border-radius:2px;font-size:.72rem;font-weight:600}
-      h2{font-family:'Bebas Neue',sans-serif;font-size:2rem;margin-bottom:4px}
-      .badge-vert{background:#e8f5e9;color:#2d6a4f;border:1px solid #a5d6a7}
-      .badge-bleu{background:#e3f2fd;color:#1565c0;border:1px solid #90caf9}
-      .header{border-bottom:2px solid #2d6a4f;padding-bottom:12px;margin-bottom:20px}
-    </style>
-  </head><body>
-    <div class="header">
-      <div style="font-size:.75rem;color:#888;letter-spacing:2px;text-transform:uppercase">ÉPEP Ixelles — Journée Sportive</div>
-      <h2>${nom}</h2>
-    </div>
-    ${content}
-    <script>window.onload=()=>window.print()<\/script>
-  </body></html>`);
-  win.document.close();
+
+function sanitizeFilename(name) {
+  return String(name || 'fiche')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9_-]+/g, '_')
+    .replace(/^_+|_+$/g, '')
+    .toLowerCase() || 'fiche';
 }
 
-function printModal(contentId) {
-  const content = document.getElementById(contentId).innerHTML;
-  const win = window.open('','_blank');
-  win.document.write(`<!DOCTYPE html><html><head>
-    <meta charset="UTF-8"><title>Fiche ÉPEP</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+function buildPdfContent(title, content) {
+  return `
     <style>
-      body{font-family:'DM Sans',sans-serif;padding:24px;color:#111;max-width:850px;margin:0 auto}
-      table{width:100%;border-collapse:collapse;font-size:.83rem}
-      th{text-align:left;padding:8px;background:#f5f5f5;border-bottom:2px solid #2d6a4f}
-      td{padding:8px;border-bottom:1px solid #eee}
-      .badge{padding:2px 8px;border-radius:2px;font-size:.72rem;font-weight:600}
-      .badge-vert{background:#e8f5e9;color:#2d6a4f}
-      .badge-asbl{background:#fff8e1;color:#f57f17}
-      .badge-jaune{background:#fff3e0;color:#e76f51}
+      .pdf-sheet{font-family:'DM Sans',sans-serif;color:#111;background:#fff;padding:24px;max-width:780px;margin:0 auto}
+      .pdf-header{border-bottom:2px solid #2d6a4f;padding-bottom:10px;margin-bottom:18px}
+      .pdf-kicker{font-size:.75rem;color:#888;letter-spacing:2px;text-transform:uppercase}
+      .pdf-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;line-height:1;margin-top:6px}
       .card-title{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:#2d6a4f;margin:16px 0 8px}
       .card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
       .card-item-label{font-size:.7rem;color:#888;text-transform:uppercase}
       .card-item-val{font-size:.9rem;font-weight:500}
-      .btn-print{display:none}
-      .atelier-secu{background:#fff3e0;color:#e65100;padding:4px 10px;border-radius:2px;font-size:.72rem;display:inline-block;margin-top:4px}
+      table{width:100%;border-collapse:collapse;font-size:.83rem}
+      th{text-align:left;padding:8px;background:#f5f5f5;border-bottom:2px solid #2d6a4f}
+      td{padding:8px;border-bottom:1px solid #eee;vertical-align:top}
+      .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.72rem;font-weight:600}
+      .badge-vert{background:#e8f5e9;color:#2d6a4f;border:1px solid #a5d6a7}
+      .badge-bleu{background:#e3f2fd;color:#1565c0;border:1px solid #90caf9}
+      .badge-jaune{background:#fff3e0;color:#e76f51;border:1px solid #f4c27b}
+      .badge-asbl{background:#fff8e1;color:#f57f17;border:1px solid #ffd54f}
+      .atelier-secu{background:#fff3e0;color:#e65100;padding:4px 10px;border-radius:999px;font-size:.72rem;display:inline-block;margin-top:4px}
+      .assignment-card{border:1px solid #e6e6e6;border-radius:12px;padding:14px;margin-bottom:12px}
+      .assignment-head{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+      .assignment-title{font-weight:700}
+      .assignment-sub{font-size:.8rem;color:#777}
+      .table-wrap{overflow:visible}
+      .btn-print{display:none!important}
     </style>
-  </head><body>
-    <div style="border-bottom:2px solid #2d6a4f;padding-bottom:8px;margin-bottom:20px;font-size:.75rem;color:#888;letter-spacing:2px;text-transform:uppercase">ÉPEP Ixelles — Journée Sportive</div>
-    ${content}
-    <script>window.onload=()=>window.print()<\/script>
-  </body></html>`);
-  win.document.close();
+    <div class="pdf-sheet">
+      <div class="pdf-header">
+        <div class="pdf-kicker">EPEP Ixelles — Journée Sportive</div>
+        <div class="pdf-title">${title}</div>
+      </div>
+      ${content}
+    </div>
+  `;
+}
+
+function downloadPdf(html, title, filename) {
+  if (!window.html2pdf) {
+    alert('Le module PDF n’a pas pu se charger. Réessayez avec une connexion internet active.');
+    return;
+  }
+
+  const host = document.createElement('div');
+  host.className = 'pdf-export-host';
+  host.innerHTML = buildPdfContent(title, html);
+  document.body.appendChild(host);
+
+  html2pdf()
+    .set({
+      margin: 8,
+      filename,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak: { mode: ['css', 'legacy'] }
+    })
+    .from(host)
+    .save()
+    .then(() => host.remove())
+    .catch(() => {
+      host.remove();
+      alert('Le PDF n’a pas pu être généré.');
+    });
+}
+
+function printFiche(id, nom) {
+  const content = document.getElementById(id).innerHTML;
+  downloadPdf(content, nom, `${sanitizeFilename(nom)}_fiche.pdf`);
+}
+
+function printModal(contentId) {
+  const content = document.getElementById(contentId).innerHTML;
+  const heading = document.querySelector(`#${contentId} [style*="font-size:2rem"]`);
+  const title = heading ? heading.textContent.trim() : 'Fiche';
+  downloadPdf(content, title, `${sanitizeFilename(title)}.pdf`);
 }
 
 function initApp() {
   updateHomeStats();
+  updateLiveStatus();
 
   document.querySelectorAll('.modal-overlay').forEach(m => {
     m.addEventListener('click', e => {
@@ -1572,6 +1783,7 @@ function initApp() {
   });
 
   renderSection('accueil');
+  window.setInterval(updateLiveStatus, 30000);
 }
 
 if (!window.__SPORT_LOCKED__) {
