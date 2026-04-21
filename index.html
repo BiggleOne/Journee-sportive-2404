@@ -1071,7 +1071,6 @@ button:active,
       <div class="nav-tabs nav-tabs-desktop">
         <button class="nav-tab active" data-section="accueil" onclick="showSection('accueil')">Accueil</button>
         <button class="nav-tab" data-section="ma-fiche" onclick="showSection('ma-fiche')">Ma fiche</button>
-        <button class="nav-tab" data-section="timing" onclick="showSection('timing')">Timing</button>
         <button class="nav-tab" data-section="ateliers" onclick="showSection('ateliers')">Ateliers</button>
         <button class="nav-tab" data-section="groupes" onclick="showSection('groupes')">Groupes</button>
         <button class="nav-tab" data-section="relais" onclick="showSection('relais')">Relais profs</button>
@@ -1099,7 +1098,6 @@ button:active,
     <div class="nav-tabs nav-tabs-mobile">
       <button class="nav-tab active" data-section="accueil" onclick="showSection('accueil')">Accueil</button>
       <button class="nav-tab" data-section="ma-fiche" onclick="showSection('ma-fiche')">Ma fiche</button>
-      <button class="nav-tab" data-section="timing" onclick="showSection('timing')">Timing</button>
       <button class="nav-tab" data-section="ateliers" onclick="showSection('ateliers')">Ateliers</button>
       <button class="nav-tab" data-section="groupes" onclick="showSection('groupes')">Groupes</button>
       <button class="nav-tab" data-section="relais" onclick="showSection('relais')">Relais profs</button>
@@ -1137,7 +1135,7 @@ button:active,
           </div>
           <div class="hero-step">
             <div class="hero-step-num">3</div>
-            <div><strong>Préparez votre journée</strong><span>Utilisez aussi les pages <em>Timing</em>, <em>Matériel</em> et <em>Réserve</em> pour avoir l’essentiel sous la main.</span></div>
+            <div><strong>Préparez votre journée</strong><span>Utilisez aussi les pages <em>Matériel</em> et <em>Réserve</em> pour avoir l’essentiel sous la main.</span></div>
           </div>
         </div>
       </div>
@@ -1169,12 +1167,6 @@ button:active,
     </div>
   </div>
   <div class="fiche-result" id="fiche-result"></div>
-</section>
-
-<section class="section" id="section-timing">
-  <p class="section-title">Timing <span>de la journée</span></p>
-  <p class="section-sub">08h30 → 15h05 — 16 passages de 15 minutes</p>
-  <div id="timing-container"></div>
 </section>
 
 <section class="section" id="section-ateliers">
@@ -1427,7 +1419,6 @@ function showSectionDirect(id) {
 
 function renderSection(id) {
   if (id === 'accueil') { updateHomeStats(); updateLiveStatus(); }
-  if (id === 'timing') renderTiming();
   if (id === 'ateliers') renderAteliers();
   if (id === 'groupes') renderGroupes(currentPhaseFilter || 'all');
   if (id === 'relais') renderRelais();
@@ -1621,31 +1612,6 @@ function navSearch(val) {
   searchFiche(val);
 }
 
-function renderTiming() {
-  const timing = DATA.timing;
-  let html = '<div class="timeline" style="flex-wrap:wrap">';
-  timing.forEach(t => {
-    const isPause = t.pause;
-    html += `<div class="tl-item${isPause?' pause':''}">
-      <div class="tl-time">${t.heure}</div>
-      <div class="tl-label">${t.label}</div>
-    </div>`;
-  });
-  html += '</div>';
-
-  html += `<div style="margin-top:40px">
-    <div class="card-title" style="font-size:1.2rem;margin-bottom:16px">Créneaux grands blocs (relais profs)</div>
-    <div class="card-grid">
-      <div class="card"><div class="card-title">Créneau 1</div><div style="font-size:1.1rem;color:var(--blanc)">08h30 → 10h05</div><div style="font-size:.8rem;color:var(--gris);margin-top:4px">Passages 1 à 5</div></div>
-      <div class="card"><div class="card-title">Pause matin</div><div style="font-size:1.1rem;color:var(--jaune)">10h05 → 10h20</div><div style="font-size:.8rem;color:var(--gris);margin-top:4px">15 minutes</div></div>
-      <div class="card"><div class="card-title">Créneau 2</div><div style="font-size:1.1rem;color:var(--blanc)">10h25 → 12h20</div><div style="font-size:.8rem;color:var(--gris);margin-top:4px">Passages 6 à 11</div></div>
-      <div class="card"><div class="card-title">Pause midi</div><div style="font-size:1.1rem;color:var(--jaune)">12h25 → 13h30</div><div style="font-size:.8rem;color:var(--gris);margin-top:4px">1h05</div></div>
-      <div class="card"><div class="card-title">Créneau 3</div><div style="font-size:1.1rem;color:var(--blanc)">13h30 → 15h05</div><div style="font-size:.8rem;color:var(--gris);margin-top:4px">Passages 12 à 16</div></div>
-    </div>
-  </div>`;
-
-  document.getElementById('timing-container').innerHTML = html;
-}
 
 function renderAteliers() {
   const html = DATA.ateliers.map(at => `
