@@ -1098,6 +1098,31 @@ button:active,
   min-height: 48px;
   font-size: 16px;
 }
+
+/* ── Classement ── */
+.classement-toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+.classement-refresh { background: var(--vert); color: #000; border: none; border-radius: 10px; padding: 10px 20px; font-weight: 700; cursor: pointer; font-size: .85rem; letter-spacing: .5px; transition: opacity .2s; }
+.classement-refresh:disabled { opacity: .4; cursor: not-allowed; }
+.classement-update { font-size: .75rem; color: var(--gris); }
+.classement-table-wrap { overflow-x: auto; border-radius: 14px; border: 1px solid var(--border); }
+.classement-table { width: 100%; border-collapse: collapse; }
+.classement-table thead th { background: var(--surface-strong); color: var(--gris); font-size: .68rem; letter-spacing: 1px; text-transform: uppercase; padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+.classement-table tbody tr { transition: background .15s; }
+.classement-table tbody tr.main-row:hover { background: var(--surface-strong); }
+.classement-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.classement-table tr:last-child td { border-bottom: none; }
+.crank { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; color: var(--gris); line-height: 1; }
+.rank-1 .crank { color: #FFD700; }
+.rank-2 .crank { color: #C0C0C0; }
+.rank-3 .crank { color: #CD7F32; }
+.cgroupe { font-weight: 700; color: var(--blanc); font-size: 1rem; }
+.cpts { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; color: var(--vert-clair); }
+.cavancement { font-size: .75rem; color: var(--gris); }
+.cscore-chips { padding: 0 16px 10px !important; }
+.cscore-chip { display: inline-block; background: var(--surface-strong); border-radius: 6px; padding: 2px 8px; margin: 2px 2px 0; font-size: .68rem; cursor: default; }
+.cscore-chip strong { color: var(--blanc); }
+.classement-empty { text-align: center; padding: 50px 20px; color: var(--gris); font-size: .95rem; }
+.classement-note { font-size: .72rem; color: var(--gris); margin-top: 16px; text-align: center; }
 </style>
 </head>
 <body>
@@ -1115,6 +1140,7 @@ button:active,
         <button class="nav-tab" data-section="relais" onclick="showSection('relais')">Relais profs</button>
         <button class="nav-tab" data-section="materiel" onclick="showSection('materiel')">Matériel</button>
         <button class="nav-tab" data-section="reserve" onclick="showSection('reserve')">Réserve</button>
+        <button class="nav-tab" data-section="classement" onclick="showSection('classement')">Classement</button>
       </div>
 
       <div class="search-bar search-bar-desktop">
@@ -1142,6 +1168,7 @@ button:active,
       <button class="nav-tab" data-section="relais" onclick="showSection('relais')">Relais profs</button>
       <button class="nav-tab" data-section="materiel" onclick="showSection('materiel')">Matériel</button>
       <button class="nav-tab" data-section="reserve" onclick="showSection('reserve')">Réserve</button>
+      <button class="nav-tab" data-section="classement" onclick="showSection('classement')">Classement</button>
     </div>
   </div>
 </nav>
@@ -1245,6 +1272,16 @@ button:active,
   <p class="section-title">Profs <span>Réserve</span></p>
   <p class="section-sub">Profs disponibles pour intervenir en remplacement selon les créneaux.</p>
   <div id="reserve-container"></div>
+</section>
+
+<section class="section" id="section-classement">
+  <p class="section-title">Classement <span>en direct</span></p>
+  <p class="section-sub">Scores saisis dans Google Sheets, mis à jour automatiquement toutes les 60 secondes.</p>
+  <div class="classement-toolbar">
+    <span class="classement-update" id="classement-last-update">Pas encore chargé</span>
+    <button class="classement-refresh" onclick="loadClassement(true)">⟳ Actualiser</button>
+  </div>
+  <div id="classement-container"><p class="classement-empty">Chargement…</p></div>
 </section>
 </main>
 
@@ -1472,6 +1509,7 @@ function renderSection(id) {
   if (id === 'relais') renderRelais();
   if (id === 'materiel') renderMateriel();
   if (id === 'reserve') renderReserve();
+  if (id === 'classement') loadClassement();
 }
 
 function searchFiche(val) {
@@ -1959,6 +1997,136 @@ function printModal(contentId) {
   win.document.close();
 }
 
+// ── Classement en direct ──────────────────────────────────────────
+const SCORES_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRwqQlBHqDDzzvKdMJ7ahbmveCUduY8w4sjuqrsbEJ0gmumZc16xBnWWnSLcgYRyaNyOTkit0NzCWG1/pub?output=csv';
+
+const SCORE_COLS = [
+  { key: 'Unihoc',            unit: 'buts' },
+  { key: 'Tchoukball',        unit: 'balles' },
+  { key: 'Kin-Ball',          unit: 'tours' },
+  { key: 'Basketball',        unit: 'paniers' },
+  { key: 'Parcours aveugle',  unit: 'objets' },
+  { key: 'Indiaca',           unit: 'échanges' },
+  { key: 'Jenga',             unit: 'pièces' },
+  { key: 'Marteau-piqueur',   unit: 'clous' },
+  { key: 'Fresque',           unit: '/10' },
+  { key: 'Relais Diable',     unit: 'caisses' },
+  { key: 'Relais Kangourou',  unit: 'relais' },
+  { key: 'Parcours vélo',     unit: 'tours' },
+  { key: 'Aquarium',          unit: 'pièces' },
+  { key: 'Mémo objets',       unit: 'objets' },
+  { key: 'Bâtonnets',         unit: 'victoires' },
+];
+
+function parseScoreCSV(text) {
+  const lines = text.trim().split(/\r?\n/);
+  const rawHeaders = lines[0].split(',').map(h => h.replace(/^"|"$/g, '').trim());
+  return lines.slice(1).map(line => {
+    const cols = [];
+    let cur = '', inQ = false;
+    for (const ch of line) {
+      if (ch === '"') { inQ = !inQ; continue; }
+      if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ''; continue; }
+      cur += ch;
+    }
+    cols.push(cur.trim());
+    const obj = {};
+    rawHeaders.forEach((h, i) => { obj[h] = (cols[i] || '').replace(/^"|"$/g, '').trim(); });
+    return obj;
+  }).filter(r => r['Groupe'] && r['Groupe'].trim());
+}
+
+function computeClassement(rows) {
+  const pts = {};
+  rows.forEach(r => { pts[r['Groupe']] = { groupe: r['Groupe'], total: 0, played: 0, detail: {} }; });
+
+  SCORE_COLS.forEach(col => {
+    const withScore = rows
+      .map(r => ({ groupe: r['Groupe'], val: parseFloat(r[col.key]) }))
+      .filter(r => !isNaN(r.val));
+    if (!withScore.length) return;
+
+    withScore.sort((a, b) => b.val - a.val);
+    const n = withScore.length;
+    let i = 0;
+    while (i < n) {
+      let j = i;
+      while (j < n && withScore[j].val === withScore[i].val) j++;
+      const avgRankPts = n - (i + j - 1) / 2;
+      for (let k = i; k < j; k++) {
+        const g = withScore[k].groupe;
+        pts[g].total += avgRankPts;
+        pts[g].played++;
+        pts[g].detail[col.key] = { val: withScore[k].val, rank: i + 1, unit: col.unit };
+      }
+      i = j;
+    }
+  });
+
+  return Object.values(pts).sort((a, b) => b.total - a.total || a.groupe.localeCompare(b.groupe));
+}
+
+let classementLoaded = false;
+
+async function loadClassement(manual = false) {
+  const btn = document.querySelector('.classement-refresh');
+  const updateEl = document.getElementById('classement-last-update');
+  if (btn) btn.disabled = true;
+  try {
+    const cacheBust = manual ? '&t=' + Date.now() : '';
+    const resp = await fetch(SCORES_CSV_URL + cacheBust);
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const text = await resp.text();
+    const rows = parseScoreCSV(text);
+    const ranking = computeClassement(rows);
+    renderClassementTable(ranking);
+    classementLoaded = true;
+    const now = new Date();
+    if (updateEl) updateEl.textContent = 'Mis à jour à ' + now.toLocaleTimeString('fr-BE', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  } catch (e) {
+    const c = document.getElementById('classement-container');
+    if (c) c.innerHTML = `<p class="classement-empty">Impossible de charger les scores.<br><small style="color:var(--gris)">${e.message}</small></p>`;
+    if (updateEl) updateEl.textContent = 'Échec du chargement';
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+function renderClassementTable(ranking) {
+  const c = document.getElementById('classement-container');
+  if (!c) return;
+  if (!ranking.length) { c.innerHTML = '<p class="classement-empty">Aucun score enregistré pour le moment.</p>'; return; }
+
+  const medals = ['🥇', '🥈', '🥉'];
+  const rows = ranking.map((item, i) => {
+    const rank = i + 1;
+    const rankClass = rank <= 3 ? ` rank-${rank}` : '';
+    const chips = SCORE_COLS
+      .filter(col => item.detail[col.key])
+      .map(col => {
+        const d = item.detail[col.key];
+        const shortKey = col.key.split(' ')[0];
+        return `<span class="cscore-chip" title="${col.key} — ${d.val} ${d.unit} · rang #${d.rank}">${shortKey}: <strong>${d.val}</strong></span>`;
+      }).join('');
+    const chipsRow = chips ? `<tr class="detail-row"><td colspan="4" class="cscore-chips">${chips}</td></tr>` : '';
+    return `<tr class="main-row${rankClass}">
+      <td><span class="crank">${rank}</span> ${medals[i] || ''}</td>
+      <td class="cgroupe">${item.groupe}</td>
+      <td class="cpts">${Math.round(item.total * 10) / 10} <span style="font-size:.7rem;font-family:inherit;color:var(--gris);font-weight:400">pts</span></td>
+      <td class="cavancement">${item.played}/${SCORE_COLS.length} atelier${item.played !== 1 ? 's' : ''}</td>
+    </tr>${chipsRow}`;
+  }).join('');
+
+  c.innerHTML = `
+    <div class="classement-table-wrap">
+      <table class="classement-table">
+        <thead><tr><th>Rang</th><th>Groupe</th><th>Points</th><th>Avancement</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    <p class="classement-note">Points calculés par classement relatif pour chaque atelier · La Mûrisserie hors classement</p>`;
+}
+
 function initApp() {
   updateHomeStats();
   updateLiveStatus();
@@ -1990,6 +2158,10 @@ function initApp() {
 
   renderSection('accueil');
   window.setInterval(updateLiveStatus, 30000);
+  window.setInterval(() => {
+    const sec = document.getElementById('section-classement');
+    if (sec && sec.classList.contains('active')) loadClassement(false);
+  }, 60000);
 }
 
 if (!window.__SPORT_LOCKED__) {
