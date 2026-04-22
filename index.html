@@ -2037,33 +2037,15 @@ function parseScoreCSV(text) {
 }
 
 function computeClassement(rows) {
-  const pts = {};
-  rows.forEach(r => { pts[r['Groupe']] = { groupe: r['Groupe'], total: 0, played: 0, detail: {} }; });
-
-  SCORE_COLS.forEach(col => {
-    const withScore = rows
-      .map(r => ({ groupe: r['Groupe'], val: parseFloat(r[col.key]) }))
-      .filter(r => !isNaN(r.val));
-    if (!withScore.length) return;
-
-    withScore.sort((a, b) => b.val - a.val);
-    const n = withScore.length;
-    let i = 0;
-    while (i < n) {
-      let j = i;
-      while (j < n && withScore[j].val === withScore[i].val) j++;
-      const avgRankPts = n - (i + j - 1) / 2;
-      for (let k = i; k < j; k++) {
-        const g = withScore[k].groupe;
-        pts[g].total += avgRankPts;
-        pts[g].played++;
-        pts[g].detail[col.key] = { val: withScore[k].val, rank: i + 1, unit: col.unit };
-      }
-      i = j;
-    }
-  });
-
-  return Object.values(pts).sort((a, b) => b.total - a.total || a.groupe.localeCompare(b.groupe));
+  return rows.map(r => {
+    let total = 0, played = 0;
+    const detail = {};
+    SCORE_COLS.forEach(col => {
+      const val = parseFloat(r[col.key]);
+      if (!isNaN(val)) { total += val; played++; detail[col.key] = { val, unit: col.unit }; }
+    });
+    return { groupe: r['Groupe'], total, played, detail };
+  }).sort((a, b) => b.total - a.total || a.groupe.localeCompare(b.groupe));
 }
 
 let classementLoaded = false;
@@ -2106,13 +2088,13 @@ function renderClassementTable(ranking) {
       .map(col => {
         const d = item.detail[col.key];
         const shortKey = col.key.split(' ')[0];
-        return `<span class="cscore-chip" title="${col.key} — ${d.val} ${d.unit} · rang #${d.rank}">${shortKey}: <strong>${d.val}</strong></span>`;
+        return `<span class="cscore-chip" title="${col.key} — ${d.val} ${d.unit}">${shortKey}: <strong>${d.val}</strong></span>`;
       }).join('');
     const chipsRow = chips ? `<tr class="detail-row"><td colspan="4" class="cscore-chips">${chips}</td></tr>` : '';
     return `<tr class="main-row${rankClass}">
       <td><span class="crank">${rank}</span> ${medals[i] || ''}</td>
       <td class="cgroupe">${item.groupe}</td>
-      <td class="cpts">${Math.round(item.total * 10) / 10} <span style="font-size:.7rem;font-family:inherit;color:var(--gris);font-weight:400">pts</span></td>
+      <td class="cpts">${item.total} <span style="font-size:.7rem;font-family:inherit;color:var(--gris);font-weight:400">pts</span></td>
       <td class="cavancement">${item.played}/${SCORE_COLS.length} atelier${item.played !== 1 ? 's' : ''}</td>
     </tr>${chipsRow}`;
   }).join('');
@@ -2124,7 +2106,7 @@ function renderClassementTable(ranking) {
         <tbody>${rows}</tbody>
       </table>
     </div>
-    <p class="classement-note">Points calculés par classement relatif pour chaque atelier · La Mûrisserie hors classement</p>`;
+    <p class="classement-note">Score total = somme des scores de tous les ateliers · La Mûrisserie hors classement</p>`;
 }
 
 function initApp() {
