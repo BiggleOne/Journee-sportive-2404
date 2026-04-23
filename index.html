@@ -1260,6 +1260,10 @@ button:active,
     <div class="fiche-input-wrap">
       <input class="fiche-input" type="text" id="fiche-nom" placeholder="Votre nom (ex: Chapelle, Amnad...)" oninput="searchFiche(this.value)">
     </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+      <button class="btn-print" style="display:inline-flex!important;background:var(--surface-strong);border:1px solid var(--border)" onclick="printAllFiches('profs')">🖨 Toutes les fiches accompagnateurs</button>
+      <button class="btn-print" style="display:inline-flex!important;background:var(--surface-strong);border:1px solid var(--border)" onclick="printAllFiches('ateliers')">🖨 Toutes les fiches ateliers</button>
+    </div>
   </div>
   <div class="fiche-result" id="fiche-result"></div>
 </section>
@@ -2031,6 +2035,135 @@ function printModal(contentId) {
     ${content}
     <script>window.onload=()=>window.print()<\/script>
   </body></html>`);
+  win.document.close();
+}
+
+// ── Impression toutes les fiches ─────────────────────────────────
+function printAllFiches(type) {
+  const CSS = `
+    body{font-family:'DM Sans',sans-serif;padding:0;color:#111;margin:0}
+    .page{max-width:700px;margin:0 auto;padding:28px 24px;page-break-after:always}
+    .page:last-child{page-break-after:auto}
+    h1{font-family:'Bebas Neue',sans-serif;font-size:2rem;margin:0 0 4px}
+    .sub{font-size:.8rem;color:#666;margin-bottom:16px}
+    .header-bar{border-bottom:2px solid #2d6a4f;padding-bottom:8px;margin-bottom:20px;font-size:.7rem;color:#888;letter-spacing:2px;text-transform:uppercase;display:flex;justify-content:space-between}
+    .card-title{font-family:'Bebas Neue',sans-serif;font-size:1rem;color:#2d6a4f;margin:16px 0 8px;letter-spacing:.5px}
+    .card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+    .card-item-label{font-size:.68rem;color:#888;text-transform:uppercase;display:block}
+    .card-item-val{font-size:.85rem;font-weight:500}
+    table{width:100%;border-collapse:collapse;font-size:.8rem;margin-bottom:16px}
+    th{text-align:left;padding:7px 8px;background:#f0f7f4;border-bottom:2px solid #2d6a4f;font-size:.7rem;text-transform:uppercase;letter-spacing:.5px}
+    td{padding:7px 8px;border-bottom:1px solid #eee}
+    .badge{padding:2px 7px;border-radius:3px;font-size:.68rem;font-weight:600;display:inline-block}
+    .badge-vert{background:#e8f5e9;color:#2d6a4f;border:1px solid #a5d6a7}
+    .badge-bleu{background:#e3f2fd;color:#1565c0;border:1px solid #90caf9}
+    .badge-jaune{background:#fff4dd;color:#a05b00;border:1px solid #f0d49c}
+    .badge-asbl{background:#fff8e1;color:#f57f17;border:1px solid #eed28b}
+    .badge-orange{background:#fff0ea;color:#b8542f;border:1px solid #f2b7a4}
+    .pause-row td{background:#fff8ee;text-align:center;color:#a05b00;font-weight:600;font-size:.75rem;letter-spacing:.5px}
+    .score-box{background:#f0f7f4;border:1px solid #a5d6a7;border-radius:6px;padding:10px 14px;font-size:.82rem;line-height:1.6;margin-bottom:14px}
+    .hors-classement{background:#fff8ee;border:1px solid #f0d49c;border-radius:6px;padding:10px 14px;font-size:.82rem;line-height:1.6;margin-bottom:14px;color:#a05b00}
+    .secu{background:#fff3e0;color:#e65100;padding:4px 10px;border-radius:3px;font-size:.72rem;display:inline-block;margin-bottom:12px}
+  `;
+
+  let pages = '';
+
+  if (type === 'profs') {
+    const accompagnateurs = DATA.groupes
+      .slice().sort((a,b) => a.num - b.num)
+      .map(g => DATA.personnel.find(p => p.nom === g.acc))
+      .filter(Boolean);
+
+    accompagnateurs.forEach(prof => {
+      const isAcc = DATA.groupes.find(g => g.acc === prof.nom);
+      const relaisAteliers = DATA.relais.filter(r => r.c1===prof.nom || r.c2===prof.nom || r.c3===prof.nom);
+      const res = DATA.reserve.find(r => r.nom === prof.nom);
+      const membres = DATA.eleves.filter(e => e.groupe === isAcc.num).sort((a,b) => a.nom.localeCompare(b.nom));
+      const planning = getPlanningForGroup(isAcc.num, true);
+      const firstPassage = planning.find(p => !p.isPause);
+
+      let p = `<div class="page">
+        <div class="header-bar"><span>EPEP Ixelles — Journée Sportive 24/04/2026</span><span>Fiche accompagnateur</span></div>
+        <h1>${prof.nom}</h1>
+        <div class="sub">${prof.dispo || ''} · Accompagnateur Gr.${isAcc.num} — ${isAcc.nom}</div>
+        <div class="card-title">Groupe accompagné</div>
+        <div class="card-grid">
+          <div><span class="card-item-label">Groupe</span><span class="card-item-val">Gr.${isAcc.num} — ${isAcc.nom}</span></div>
+          <div><span class="card-item-label">Phase</span><span class="card-item-val">${isAcc.phase}</span></div>
+          <div><span class="card-item-label">Effectif</span><span class="card-item-val">${membres.length} élèves</span></div>
+          <div><span class="card-item-label">Atelier de départ</span><span class="card-item-val">${firstPassage ? `Atelier ${firstPassage.atelierNum} — ${firstPassage.atelierNom}` : '—'}</span></div>
+        </div>
+        <div class="card-title">Planning du groupe</div>
+        <table><tr><th>Passage</th><th>Horaire</th><th>Atelier</th><th>Lieu</th></tr>
+        ${planning.map(p => p.isPause
+          ? `<tr class="pause-row"><td colspan="4">${p.label} · ${p.heure}</td></tr>`
+          : `<tr><td>${p.label}</td><td>${p.heure}</td><td><strong>Atelier ${p.atelierNum}</strong> — ${p.atelierNom}</td><td>${p.atelierLieu}</td></tr>`
+        ).join('')}</table>
+        <div class="card-title">Composition du groupe</div>
+        <table><tr><th>Nom</th><th>Prénom</th><th>Classe</th></tr>
+        ${membres.map(m => `<tr><td>${m.nom}</td><td>${m.prenom||''}</td><td>${m.classe||'—'}</td></tr>`).join('')}
+        </table>`;
+
+      if (res) {
+        p += `<div class="card-title">Disponibilité réserve</div>
+          <div class="card-grid">
+            <div><span class="card-item-label">08h30–10h05</span><span class="card-item-val">${res.c1}</span></div>
+            <div><span class="card-item-label">10h25–12h20</span><span class="card-item-val">${res.c2}</span></div>
+            <div><span class="card-item-label">13h30–15h05</span><span class="card-item-val">${res.c3}</span></div>
+          </div>`;
+      }
+
+      p += `</div>`;
+      pages += p;
+    });
+  }
+
+  if (type === 'ateliers') {
+    DATA.ateliers.forEach(at => {
+      const relais = DATA.relais.find(r => r.atelier === at.num);
+      const passageGroups = getGroupsForAtelier(at.num);
+
+      pages += `<div class="page">
+        <div class="header-bar"><span>EPEP Ixelles — Journée Sportive 24/04/2026</span><span>Fiche atelier</span></div>
+        <div style="font-size:.7rem;color:#2d6a4f;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px">Atelier ${at.num}</div>
+        <h1>${at.nom}</h1>
+        <div class="sub">📍 ${at.lieu}</div>
+        <div class="card-grid">
+          <div><span class="card-item-label">Principe</span><span class="card-item-val">${at.principe||'—'}</span></div>
+          <div><span class="card-item-label">Objectif</span><span class="card-item-val">${at.objectif||'—'}</span></div>
+        </div>
+        ${at.secu ? `<div class="secu">⚠ Sécurité : ${at.secu}</div>` : ''}
+        <div class="card-title">Déroulement</div>
+        <p style="font-size:.85rem;line-height:1.7;margin:0 0 14px">${at.deroulement||'—'}</p>
+        <div class="card-title">Score</div>
+        ${at.hors_classement
+          ? `<div class="hors-classement">⚠ ${at.score}</div>`
+          : `<div class="score-box">🏆 ${at.score}</div>`}
+        <div class="card-title">Matériel</div>
+        <p style="font-size:.85rem;line-height:1.7;margin:0 0 14px">${at.materiel}</p>
+        ${relais ? `<div class="card-title">Responsables par créneau</div>
+          <table><tr><th>08h30–10h05</th><th>10h25–12h20</th><th>13h30–15h05</th></tr>
+          <tr>
+            <td>${relais.c1==='ASBL'?'<span class="badge badge-asbl">ASBL</span>':relais.c1||'—'}</td>
+            <td>${relais.c2==='ASBL'?'<span class="badge badge-asbl">ASBL</span>':relais.c2||'—'}</td>
+            <td>${relais.c3==='ASBL'?'<span class="badge badge-asbl">ASBL</span>':relais.c3||'—'}</td>
+          </tr></table>
+          ${relais.remarque?`<p style="font-size:.75rem;color:#a05b00;margin-top:-10px">ℹ ${relais.remarque}</p>`:''}` : ''}
+        <div class="card-title">Groupes par passage</div>
+        <table><tr><th>Passage</th><th>Horaire</th><th>Groupe(s)</th></tr>
+        ${passageGroups.map(p => `<tr><td>${p.label}</td><td>${p.heure}</td><td>${p.groupes.length?p.groupes.join(', '):'—'}</td></tr>`).join('')}
+        </table>
+      </div>`;
+    });
+  }
+
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html><html><head>
+    <meta charset="UTF-8">
+    <title>${type === 'profs' ? 'Fiches accompagnateurs' : 'Fiches ateliers'} — EPEP Ixelles</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>${CSS}</style>
+  </head><body>${pages}<script>window.onload=()=>window.print()<\/script></body></html>`);
   win.document.close();
 }
 
