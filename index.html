@@ -1158,6 +1158,7 @@ button:active,
         <button class="nav-tab" data-section="materiel" onclick="showSection('materiel')">Matériel</button>
         <button class="nav-tab" data-section="reserve" onclick="showSection('reserve')">Réserve</button>
         <button class="nav-tab" data-section="classement" onclick="showSection('classement')">Classement</button>
+        <button class="nav-tab" data-section="admin" onclick="showSection('admin')">Admin</button>
       </div>
 
       <div class="search-bar search-bar-desktop">
@@ -1186,6 +1187,7 @@ button:active,
       <button class="nav-tab" data-section="materiel" onclick="showSection('materiel')">Matériel</button>
       <button class="nav-tab" data-section="reserve" onclick="showSection('reserve')">Réserve</button>
       <button class="nav-tab" data-section="classement" onclick="showSection('classement')">Classement</button>
+      <button class="nav-tab" data-section="admin" onclick="showSection('admin')">Admin</button>
     </div>
   </div>
 </nav>
@@ -1260,10 +1262,6 @@ button:active,
     <div class="fiche-input-wrap">
       <input class="fiche-input" type="text" id="fiche-nom" placeholder="Votre nom (ex: Chapelle, Amnad...)" oninput="searchFiche(this.value)">
     </div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
-      <button class="btn-print" style="display:inline-flex!important;background:var(--surface-strong);border:1px solid var(--border)" onclick="printAllFiches('profs')">🖨 Toutes les fiches accompagnateurs</button>
-      <button class="btn-print" style="display:inline-flex!important;background:var(--surface-strong);border:1px solid var(--border)" onclick="printAllFiches('ateliers')">🖨 Toutes les fiches ateliers</button>
-    </div>
   </div>
   <div class="fiche-result" id="fiche-result"></div>
 </section>
@@ -1303,6 +1301,28 @@ button:active,
   <p class="section-title">Profs <span>Réserve</span></p>
   <p class="section-sub">Profs disponibles pour intervenir en remplacement selon les créneaux.</p>
   <div id="reserve-container"></div>
+</section>
+
+<section class="section" id="section-admin">
+  <p class="section-title">Espace <span>Admin</span></p>
+  <p class="section-sub">Outils réservés à l'organisation — impression des fiches et documents de la journée.</p>
+  <div style="display:grid;gap:16px;max-width:500px;margin-top:24px">
+    <div class="assignment-card">
+      <div class="assignment-title">Fiches accompagnateurs</div>
+      <div class="assignment-sub" style="margin-bottom:14px">Une fiche par accompagnateur avec le groupe, le planning complet et la liste des élèves.</div>
+      <button class="classement-refresh" onclick="printAllFiches('profs')">🖨 Imprimer toutes les fiches accompagnateurs</button>
+    </div>
+    <div class="assignment-card">
+      <div class="assignment-title">Fiches ateliers</div>
+      <div class="assignment-sub" style="margin-bottom:14px">Une fiche par atelier avec le déroulement, le score, le matériel et les responsables.</div>
+      <button class="classement-refresh" onclick="printAllFiches('ateliers')">🖨 Imprimer toutes les fiches ateliers</button>
+    </div>
+    <div class="assignment-card">
+      <div class="assignment-title">Fiches groupes</div>
+      <div class="assignment-sub" style="margin-bottom:14px">Une fiche par groupe avec la composition, l'accompagnateur et le planning de rotation.</div>
+      <button class="classement-refresh" onclick="printAllFiches('groupes')">🖨 Imprimer toutes les fiches groupes</button>
+    </div>
+  </div>
 </section>
 
 <section class="section" id="section-classement">
@@ -1545,6 +1565,7 @@ function renderSection(id) {
   if (id === 'materiel') renderMateriel();
   if (id === 'reserve') renderReserve();
   if (id === 'classement') loadClassement();
+  if (id === 'admin') {}
 }
 
 function searchFiche(val) {
@@ -2115,6 +2136,34 @@ function printAllFiches(type) {
 
       p += `</div>`;
       pages += p;
+    });
+  }
+
+  if (type === 'groupes') {
+    DATA.groupes.slice().sort((a,b) => a.num - b.num).forEach(g => {
+      const membres = DATA.eleves.filter(e => e.groupe === g.num).sort((a,b) => a.nom.localeCompare(b.nom));
+      const planning = getPlanningForGroup(g.num, true);
+      const firstPassage = planning.find(p => !p.isPause);
+
+      pages += `<div class="page">
+        <div class="header-bar"><span>EPEP Ixelles — Journée Sportive 24/04/2026</span><span>Fiche groupe</span></div>
+        <h1>Gr.${g.num} — ${g.nom}</h1>
+        <div class="sub">${g.ref} · ${g.phase} · Accompagnateur : ${g.acc}</div>
+        <div class="card-grid">
+          <div><span class="card-item-label">Effectif</span><span class="card-item-val">${membres.length} élèves</span></div>
+          <div><span class="card-item-label">Atelier de départ</span><span class="card-item-val">${firstPassage ? `Atelier ${firstPassage.atelierNum} — ${firstPassage.atelierNom}` : '—'}</span></div>
+        </div>
+        <div class="card-title">Planning de rotation</div>
+        <table><tr><th>Passage</th><th>Horaire</th><th>Atelier</th><th>Lieu</th></tr>
+        ${planning.map(p => p.isPause
+          ? `<tr class="pause-row"><td colspan="4">${p.label} · ${p.heure}</td></tr>`
+          : `<tr><td>${p.label}</td><td>${p.heure}</td><td><strong>Atelier ${p.atelierNum}</strong> — ${p.atelierNom}</td><td>${p.atelierLieu}</td></tr>`
+        ).join('')}</table>
+        <div class="card-title">Composition du groupe</div>
+        <table><tr><th>Nom</th><th>Prénom</th><th>Classe</th></tr>
+        ${membres.map(m => `<tr><td>${m.nom}</td><td>${m.prenom||''}</td><td>${m.classe||'—'}</td></tr>`).join('')}
+        </table>
+      </div>`;
     });
   }
 
