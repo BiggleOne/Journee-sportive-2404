@@ -1347,7 +1347,7 @@ button:active,
   <div class="classement-toolbar">
     <span class="classement-update" id="classement-last-update">Pas encore chargé</span>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <a class="classement-refresh" href="https://docs.google.com/spreadsheets/d/1pWu6YbvxMCEnwc8_58HrXi34cphGES9C6NuzUcsCL7E/edit" target="_blank" style="text-decoration:none">✏ Saisir les scores</a>
+      <a class="classement-refresh" href="https://forms.gle/HXjBjCmkbsXV5cyL9" target="_blank" style="text-decoration:none">✏ Saisir les scores</a>
       <button class="classement-refresh" style="background:var(--surface-strong);color:var(--blanc);border:1px solid var(--border)" onclick="loadClassement(true)">⟳ Actualiser</button>
     </div>
   </div>
@@ -1671,10 +1671,10 @@ function searchFiche(val) {
         <div style="display:flex;gap:16px;align-items:center;margin-bottom:20px;flex-wrap:wrap">
           <div style="flex:1;min-width:180px">
             <div style="font-size:.82rem;line-height:1.6;margin-bottom:10px;color:#444">Encodez les scores de votre groupe après chaque atelier dans le Google Sheet.</div>
-            <a href="https://docs.google.com/spreadsheets/d/1pWu6YbvxMCEnwc8_58HrXi34cphGES9C6NuzUcsCL7E/edit" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#2d6a4f;color:#fff;border-radius:6px;font-size:.8rem;font-weight:600;text-decoration:none">✏ Saisir les scores</a>
+            <a href="https://forms.gle/HXjBjCmkbsXV5cyL9" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#2d6a4f;color:#fff;border-radius:6px;font-size:.8rem;font-weight:600;text-decoration:none">✏ Saisir les scores</a>
           </div>
           <div style="text-align:center;flex-shrink:0">
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=${encodeURIComponent('https://docs.google.com/spreadsheets/d/1pWu6YbvxMCEnwc8_58HrXi34cphGES9C6NuzUcsCL7E/edit')}" style="width:110px;height:110px;border-radius:6px;border:1px solid #c8e6d8" alt="QR scores">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=${encodeURIComponent('https://forms.gle/HXjBjCmkbsXV5cyL9')}" style="width:110px;height:110px;border-radius:6px;border:1px solid #c8e6d8" alt="QR scores">
             <div style="font-size:.65rem;color:#555;margin-top:4px">Scanner pour saisir</div>
           </div>
         </div>`;
@@ -2200,9 +2200,9 @@ function printAllFiches(type) {
           </table>
           <div class="card-title">Saisie des scores</div>
           <div style="display:flex;gap:16px;align-items:center;margin-bottom:14px">
-            <div style="flex:1;font-size:.82rem;line-height:1.6;color:#444">Encodez les scores de votre groupe après chaque atelier via le QR code ci-contre ou à l'adresse :<br><strong>docs.google.com/spreadsheets/d/1pWu6YbvxMCEnwc8_…</strong></div>
+            <div style="flex:1;font-size:.82rem;line-height:1.6;color:#444">Encodez les scores de votre groupe après chaque atelier via le QR code ci-contre ou à l'adresse :<br><strong>forms.gle/HXjBjCmkbsXV5cyL9</strong></div>
             <div style="text-align:center;flex-shrink:0">
-              <img src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=https%3A%2F%2Fdocs.google.com%2Fspreadsheets%2Fd%2F1pWu6YbvxMCEnwc8_58HrXi34cphGES9C6NuzUcsCL7E%2Fedit" style="width:110px;height:110px;border-radius:6px;border:1px solid #c8e6d8" alt="QR scores">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=https%3A%2F%2Fforms.gle%2FHXjBjCmkbsXV5cyL9" style="width:110px;height:110px;border-radius:6px;border:1px solid #c8e6d8" alt="QR scores">
               <div style="font-size:.62rem;color:#555;margin-top:4px">Saisir les scores</div>
             </div>
           </div>`;
@@ -2537,7 +2537,7 @@ function printAtelierSigns() {
 }
 
 // ── Classement en direct ──────────────────────────────────────────
-const SCORES_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRwqQlBHqDDzzvKdMJ7ahbmveCUduY8w4sjuqrsbEJ0gmumZc16xBnWWnSLcgYRyaNyOTkit0NzCWG1/pub?output=csv';
+const SCORES_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRcaH081xOZQfRl4BWP0uiruorOK3fL_t50uFHyj02Y5xCaQQVP7HWI5HpnTTMoUFaDnIBqSzl3wivK/pub?output=csv';
 
 const SCORE_COLS = [
   { key: 'Unihoc',            unit: 'buts' },
@@ -2559,8 +2559,9 @@ const SCORE_COLS = [
 
 function parseScoreCSV(text) {
   const lines = text.trim().split(/\r?\n/);
-  const rawHeaders = lines[0].split(',').map(h => h.replace(/^"|"$/g, '').trim());
-  return lines.slice(1).map(line => {
+  const headers = lines[0].split(',').map(h => h.replace(/^"|"$/g, '').trim());
+  const scores = {};
+  lines.slice(1).forEach(line => {
     const cols = [];
     let cur = '', inQ = false;
     for (const ch of line) {
@@ -2570,21 +2571,30 @@ function parseScoreCSV(text) {
     }
     cols.push(cur.trim());
     const obj = {};
-    rawHeaders.forEach((h, i) => { obj[h] = (cols[i] || '').replace(/^"|"$/g, '').trim(); });
-    return obj;
-  }).filter(r => r['Groupe'] && r['Groupe'].trim());
+    headers.forEach((h, i) => { obj[h] = (cols[i] || '').replace(/^"|"$/g, '').trim(); });
+    const grp = obj["Numéro de l'équipe"];
+    const atelier = obj['Atelier'];
+    const score = parseFloat(obj['Score']);
+    if (!grp || !atelier || isNaN(score)) return;
+    if (!scores[grp]) scores[grp] = {};
+    scores[grp][atelier] = score; // dernière entrée = valeur retenue
+  });
+  return scores;
 }
 
-function computeClassement(rows) {
-  return rows.map(r => {
+function computeClassement(scores) {
+  return DATA.groupes.map(g => {
+    const grpScores = scores[String(g.num)] || {};
     let total = 0, played = 0;
     const detail = {};
     SCORE_COLS.forEach(col => {
-      const val = parseFloat(r[col.key]);
-      if (!isNaN(val)) { total += val; played++; detail[col.key] = { val, unit: col.unit }; }
+      const matchKey = Object.keys(grpScores).find(k => k.toLowerCase() === col.key.toLowerCase());
+      const val = matchKey !== undefined ? grpScores[matchKey] : undefined;
+      if (val !== undefined && !isNaN(val)) { total += val; played++; detail[col.key] = { val, unit: col.unit }; }
     });
-    return { groupe: r['Groupe'], total, played, detail };
-  }).sort((a, b) => b.total - a.total || a.groupe.localeCompare(b.groupe));
+    return { groupe: `Groupe ${g.num}`, total, played, detail };
+  }).filter(g => g.played > 0)
+    .sort((a, b) => b.total - a.total || a.groupe.localeCompare(b.groupe));
 }
 
 let classementLoaded = false;
