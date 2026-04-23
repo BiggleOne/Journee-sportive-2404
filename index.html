@@ -1123,6 +1123,23 @@ button:active,
 .cscore-chip strong { color: var(--blanc); }
 .classement-empty { text-align: center; padding: 50px 20px; color: var(--gris); font-size: .95rem; }
 .classement-note { font-size: .72rem; color: var(--gris); margin-top: 16px; text-align: center; }
+
+/* ── Podium ── */
+.podium { display: flex; justify-content: center; align-items: flex-end; gap: 10px; margin-bottom: 32px; }
+.podium-slot { text-align: center; flex: 1; max-width: 160px; }
+.podium-card { border-radius: 14px; padding: 16px 10px 12px; }
+.podium-1 .podium-card { background: rgba(255,215,0,.12); border: 1.5px solid rgba(255,215,0,.4); }
+.podium-2 .podium-card { background: rgba(192,192,192,.10); border: 1.5px solid rgba(192,192,192,.3); }
+.podium-3 .podium-card { background: rgba(205,127,50,.10); border: 1.5px solid rgba(205,127,50,.3); }
+.podium-medal { font-size: 2rem; line-height: 1; margin-bottom: 6px; }
+.podium-nom { font-family: 'Bebas Neue', sans-serif; font-size: 1.15rem; letter-spacing: 1px; color: var(--blanc); line-height: 1.1; margin-bottom: 2px; }
+.podium-groupe { font-size: .7rem; color: var(--gris); margin-bottom: 6px; }
+.podium-pts { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; color: var(--vert-clair); }
+.podium-pts-label { font-size: .65rem; color: var(--gris); display: block; }
+.podium-base { height: 8px; border-radius: 0 0 8px 8px; margin-top: 8px; }
+.podium-1 .podium-base { background: rgba(255,215,0,.5); height: 12px; }
+.podium-2 .podium-base { background: rgba(192,192,192,.4); }
+.podium-3 .podium-base { background: rgba(205,127,50,.4); }
 </style>
 </head>
 <body>
@@ -2074,32 +2091,57 @@ async function loadClassement(manual = false) {
   }
 }
 
+function getGroupNom(groupeStr) {
+  const num = parseInt(groupeStr.replace(/\D/g, ''), 10);
+  const g = DATA.groupes.find(g => g.num === num);
+  return g ? g.nom : '';
+}
+
 function renderClassementTable(ranking) {
   const c = document.getElementById('classement-container');
   if (!c) return;
   if (!ranking.length) { c.innerHTML = '<p class="classement-empty">Aucun score enregistré pour le moment.</p>'; return; }
 
+  // Podium (top 3)
+  const podiumOrder = [ranking[1], ranking[0], ranking[2]]; // 2nd, 1st, 3rd
+  const podiumMedals = ['🥈', '🥇', '🥉'];
+  const podiumRanks = [2, 1, 3];
+  const podiumHTML = `<div class="podium">` + podiumOrder.map((item, i) => {
+    if (!item) return '';
+    const nom = getGroupNom(item.groupe);
+    return `<div class="podium-slot podium-${podiumRanks[i]}">
+      <div class="podium-card">
+        <div class="podium-medal">${podiumMedals[i]}</div>
+        <div class="podium-nom">${nom || item.groupe}</div>
+        <div class="podium-groupe">${item.groupe}</div>
+        <div class="podium-pts">${item.total}<span class="podium-pts-label">pts</span></div>
+      </div>
+      <div class="podium-base"></div>
+    </div>`;
+  }).join('') + `</div>`;
+
+  // Table
   const medals = ['🥇', '🥈', '🥉'];
   const rows = ranking.map((item, i) => {
     const rank = i + 1;
+    const nom = getGroupNom(item.groupe);
     const rankClass = rank <= 3 ? ` rank-${rank}` : '';
     const chips = SCORE_COLS
       .filter(col => item.detail[col.key])
       .map(col => {
         const d = item.detail[col.key];
-        const shortKey = col.key.split(' ')[0];
-        return `<span class="cscore-chip" title="${col.key} — ${d.val} ${d.unit}">${shortKey}: <strong>${d.val}</strong></span>`;
+        return `<span class="cscore-chip" title="${col.key} — ${d.val} ${d.unit}">${col.key.split(' ')[0]}: <strong>${d.val}</strong></span>`;
       }).join('');
     const chipsRow = chips ? `<tr class="detail-row"><td colspan="4" class="cscore-chips">${chips}</td></tr>` : '';
     return `<tr class="main-row${rankClass}">
       <td><span class="crank">${rank}</span> ${medals[i] || ''}</td>
-      <td class="cgroupe">${item.groupe}</td>
+      <td class="cgroupe">${nom ? `<span style="color:var(--blanc)">${nom}</span><br><span style="font-size:.72rem;color:var(--gris);font-weight:400">${item.groupe}</span>` : item.groupe}</td>
       <td class="cpts">${item.total} <span style="font-size:.7rem;font-family:inherit;color:var(--gris);font-weight:400">pts</span></td>
       <td class="cavancement">${item.played}/${SCORE_COLS.length} atelier${item.played !== 1 ? 's' : ''}</td>
     </tr>${chipsRow}`;
   }).join('');
 
-  c.innerHTML = `
+  c.innerHTML = podiumHTML + `
     <div class="classement-table-wrap">
       <table class="classement-table">
         <thead><tr><th>Rang</th><th>Groupe</th><th>Points</th><th>Avancement</th></tr></thead>
