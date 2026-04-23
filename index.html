@@ -1322,6 +1322,11 @@ button:active,
       <div class="assignment-sub" style="margin-bottom:14px">Une fiche par groupe avec la composition, l'accompagnateur et le planning de rotation.</div>
       <button class="classement-refresh" onclick="printAllFiches('groupes')">🖨 Imprimer toutes les fiches groupes</button>
     </div>
+    <div class="assignment-card">
+      <div class="assignment-title">Panneaux ateliers</div>
+      <div class="assignment-sub" style="margin-bottom:14px">Une page A4 par atelier à afficher sur le terrain — numéro et nom en grand.</div>
+      <button class="classement-refresh" onclick="printAtelierSigns()">🖨 Imprimer les panneaux</button>
+    </div>
   </div>
 </section>
 
@@ -2212,6 +2217,64 @@ function printAllFiches(type) {
     <title>${type === 'profs' ? 'Fiches accompagnateurs' : 'Fiches ateliers'} — EPEP Ixelles</title>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <style>${CSS}</style>
+  </head><body>${pages}<script>window.onload=()=>window.print()<\/script></body></html>`);
+  win.document.close();
+}
+
+function printAtelierSigns() {
+  const pages = DATA.ateliers.map(at => `
+    <div class="sign-page">
+      <div class="sign-num">Atelier ${at.num}</div>
+      <div class="sign-nom">${at.nom}</div>
+      <div class="sign-lieu">📍 ${at.lieu}</div>
+    </div>
+  `).join('');
+
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html><html><head>
+    <meta charset="UTF-8"><title>Panneaux Ateliers — EPEP Ixelles</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font-family: 'DM Sans', sans-serif; background: #fff; }
+      .sign-page {
+        width: 210mm;
+        height: 297mm;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 40mm 20mm;
+        page-break-after: always;
+        border: 4px solid #2d6a4f;
+      }
+      .sign-page:last-child { page-break-after: auto; }
+      .sign-num {
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+        font-size: 28pt;
+        color: #2d6a4f;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        margin-bottom: 16mm;
+      }
+      .sign-nom {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 72pt;
+        color: #111;
+        line-height: 1.05;
+        margin-bottom: 12mm;
+      }
+      .sign-lieu {
+        font-size: 18pt;
+        color: #666;
+        font-weight: 500;
+      }
+      @media print {
+        body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      }
+    </style>
   </head><body>${pages}<script>window.onload=()=>window.print()<\/script></body></html>`);
   win.document.close();
 }
