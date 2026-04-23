@@ -1306,7 +1306,10 @@ button:active,
   <p class="section-sub">Scores saisis dans Google Sheets, mis à jour automatiquement toutes les 60 secondes.</p>
   <div class="classement-toolbar">
     <span class="classement-update" id="classement-last-update">Pas encore chargé</span>
-    <button class="classement-refresh" onclick="loadClassement(true)">⟳ Actualiser</button>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <a class="classement-refresh" href="https://docs.google.com/spreadsheets/d/1pWu6YbvxMCEnwc8_58HrXi34cphGES9C6NuzUcsCL7E/edit" target="_blank" style="text-decoration:none">✏ Saisir les scores</a>
+      <button class="classement-refresh" style="background:var(--surface-strong);color:var(--blanc);border:1px solid var(--border)" onclick="loadClassement(true)">⟳ Actualiser</button>
+    </div>
   </div>
   <div id="classement-container"><p class="classement-empty">Chargement…</p></div>
 </section>
