@@ -2572,9 +2572,14 @@ function parseScoreCSV(text) {
     cols.push(cur.trim());
     const obj = {};
     headers.forEach((h, i) => { obj[h] = (cols[i] || '').replace(/^"|"$/g, '').trim(); });
-    const grp = obj["Numéro de l'équipe"];
-    const atelier = obj['Atelier'];
+    const rawGrp = obj["Numéro de l'équipe"] || '';
+    const rawAtelier = obj['Atelier'] || '';
     const score = parseFloat(obj['Score']);
+    // "Gr.1 — Les Orques" → "1"
+    const grpMatch = rawGrp.match(/(\d+)/);
+    const grp = grpMatch ? grpMatch[1] : '';
+    // "1. Unihoc" → "Unihoc"
+    const atelier = rawAtelier.replace(/^\d+\.\s*/, '').trim();
     if (!grp || !atelier || isNaN(score)) return;
     if (!scores[grp]) scores[grp] = {};
     scores[grp][atelier] = score; // dernière entrée = valeur retenue
