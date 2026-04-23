@@ -1332,6 +1332,11 @@ button:active,
       <div class="assignment-sub" style="margin-bottom:14px">16 pages A4 — une par groupe avec uniquement le numéro en très grand, à poser sur les tables.</div>
       <button class="classement-refresh" onclick="printGroupNumbers()">🖨 Imprimer les numéros de groupes</button>
     </div>
+    <div class="assignment-card">
+      <div class="assignment-title">Numéros d'ateliers</div>
+      <div class="assignment-sub" style="margin-bottom:14px">16 pages A4 — une par atelier avec uniquement le numéro en très grand, à poser sur les tables.</div>
+      <button class="classement-refresh" onclick="printAtelierNumbers()">🖨 Imprimer les numéros d'ateliers</button>
+    </div>
   </div>
 </section>
 
@@ -2340,6 +2345,51 @@ function printGroupNumbers() {
         font-size: 36pt;
         color: #52b788;
         letter-spacing: 3px;
+      }
+    </style>
+  </head><body>${pages}<script>window.onload=()=>window.print()<\/script></body></html>`);
+  win.document.close();
+}
+
+function printAtelierNumbers() {
+  const pages = DATA.ateliers.map(at => `
+    <div class="anum-page">
+      <div class="anum-top">Atelier</div>
+      <div class="anum-num">${at.num}</div>
+    </div>
+  `).join('');
+
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html><html><head>
+    <meta charset="UTF-8"><title>Numéros d'ateliers — EPEP Ixelles</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@700&display=swap" rel="stylesheet">
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font-family: 'DM Sans', sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .anum-page {
+        width: 210mm; height: 297mm;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        text-align: center;
+        page-break-after: always;
+        background: #fff;
+        border: 6px solid #1565c0;
+      }
+      .anum-page:last-child { page-break-after: auto; }
+      .anum-top {
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+        font-size: 36pt;
+        color: #1565c0;
+        letter-spacing: 10px;
+        text-transform: uppercase;
+        margin-bottom: 6mm;
+      }
+      .anum-num {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 220pt;
+        color: #0d2b5e;
+        line-height: .9;
       }
     </style>
   </head><body>${pages}<script>window.onload=()=>window.print()<\/script></body></html>`);
