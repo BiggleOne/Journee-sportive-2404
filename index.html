@@ -1308,9 +1308,9 @@ button:active,
   <p class="section-sub">Outils réservés à l'organisation — impression des fiches et documents de la journée.</p>
   <div style="display:grid;gap:16px;max-width:500px;margin-top:24px">
     <div class="assignment-card">
-      <div class="assignment-title">Fiches accompagnateurs</div>
-      <div class="assignment-sub" style="margin-bottom:14px">Une fiche par accompagnateur avec le groupe, le planning complet et la liste des élèves.</div>
-      <button class="classement-refresh" onclick="printAllFiches('profs')">🖨 Imprimer toutes les fiches accompagnateurs</button>
+      <div class="assignment-title">Fiches professeurs</div>
+      <div class="assignment-sub" style="margin-bottom:14px">Une fiche par professeur avec son rôle, son groupe accompagné, ses créneaux atelier et sa disponibilité réserve.</div>
+      <button class="classement-refresh" onclick="printAllFiches('profs')">🖨 Imprimer toutes les fiches professeurs</button>
     </div>
     <div class="assignment-card">
       <div class="assignment-title">Fiches ateliers</div>
@@ -2095,40 +2095,70 @@ function printAllFiches(type) {
   let pages = '';
 
   if (type === 'profs') {
-    const accompagnateurs = DATA.groupes
-      .slice().sort((a,b) => a.num - b.num)
-      .map(g => DATA.personnel.find(p => p.nom === g.acc))
-      .filter(Boolean);
+    const allProfs = DATA.personnel.slice().sort((a,b) => a.nom.localeCompare(b.nom));
 
-    accompagnateurs.forEach(prof => {
+    allProfs.forEach(prof => {
       const isAcc = DATA.groupes.find(g => g.acc === prof.nom);
       const relaisAteliers = DATA.relais.filter(r => r.c1===prof.nom || r.c2===prof.nom || r.c3===prof.nom);
       const res = DATA.reserve.find(r => r.nom === prof.nom);
-      const membres = DATA.eleves.filter(e => e.groupe === isAcc.num).sort((a,b) => a.nom.localeCompare(b.nom));
-      const planning = getPlanningForGroup(isAcc.num, true);
-      const firstPassage = planning.find(p => !p.isPause);
+
+      const roles = [];
+      if (isAcc) roles.push('Accompagnateur');
+      if (relaisAteliers.length) roles.push('Atelier / Relais');
+      if (res) roles.push('Réserve');
 
       let p = `<div class="page">
-        <div class="header-bar"><span>EPEP Ixelles — Journée Sportive 24/04/2026</span><span>Fiche accompagnateur</span></div>
+        <div class="header-bar"><span>EPEP Ixelles — Journée Sportive 24/04/2026</span><span>Fiche professeur</span></div>
         <h1>${prof.nom}</h1>
-        <div class="sub">${prof.dispo || ''} · Accompagnateur Gr.${isAcc.num} — ${isAcc.nom}</div>
-        <div class="card-title">Groupe accompagné</div>
-        <div class="card-grid">
-          <div><span class="card-item-label">Groupe</span><span class="card-item-val">Gr.${isAcc.num} — ${isAcc.nom}</span></div>
-          <div><span class="card-item-label">Phase</span><span class="card-item-val">${isAcc.phase}</span></div>
-          <div><span class="card-item-label">Effectif</span><span class="card-item-val">${membres.length} élèves</span></div>
-          <div><span class="card-item-label">Atelier de départ</span><span class="card-item-val">${firstPassage ? `Atelier ${firstPassage.atelierNum} — ${firstPassage.atelierNom}` : '—'}</span></div>
-        </div>
-        <div class="card-title">Planning du groupe</div>
-        <table><tr><th>Passage</th><th>Horaire</th><th>Atelier</th><th>Lieu</th></tr>
-        ${planning.map(p => p.isPause
-          ? `<tr class="pause-row"><td colspan="4">${p.label} · ${p.heure}</td></tr>`
-          : `<tr><td>${p.label}</td><td>${p.heure}</td><td><strong>Atelier ${p.atelierNum}</strong> — ${p.atelierNom}</td><td>${p.atelierLieu}</td></tr>`
-        ).join('')}</table>
-        <div class="card-title">Composition du groupe</div>
-        <table><tr><th>Nom</th><th>Prénom</th><th>Classe</th></tr>
-        ${membres.map(m => `<tr><td>${m.nom}</td><td>${m.prenom||''}</td><td>${m.classe||'—'}</td></tr>`).join('')}
-        </table>`;
+        <div class="sub">${prof.dispo || ''} · ${roles.join(' · ') || 'Aucun rôle assigné'}</div>`;
+
+      if (isAcc) {
+        const membres = DATA.eleves.filter(e => e.groupe === isAcc.num).sort((a,b) => a.nom.localeCompare(b.nom));
+        const planning = getPlanningForGroup(isAcc.num, true);
+        const firstPassage = planning.find(pp => !pp.isPause);
+        p += `<div class="card-title">Groupe accompagné</div>
+          <div class="card-grid">
+            <div><span class="card-item-label">Groupe</span><span class="card-item-val">Gr.${isAcc.num} — ${isAcc.nom}</span></div>
+            <div><span class="card-item-label">Phase</span><span class="card-item-val">${isAcc.phase}</span></div>
+            <div><span class="card-item-label">Effectif</span><span class="card-item-val">${membres.length} élèves</span></div>
+            <div><span class="card-item-label">Atelier de départ</span><span class="card-item-val">${firstPassage ? `Atelier ${firstPassage.atelierNum} — ${firstPassage.atelierNom}` : '—'}</span></div>
+          </div>
+          <div class="card-title">Planning du groupe</div>
+          <table><tr><th>Passage</th><th>Horaire</th><th>Atelier</th><th>Lieu</th></tr>
+          ${planning.map(pp => pp.isPause
+            ? `<tr class="pause-row"><td colspan="4">${pp.label} · ${pp.heure}</td></tr>`
+            : `<tr><td>${pp.label}</td><td>${pp.heure}</td><td><strong>Atelier ${pp.atelierNum}</strong> — ${pp.atelierNom}</td><td>${pp.atelierLieu}</td></tr>`
+          ).join('')}</table>
+          <div class="card-title">Composition du groupe</div>
+          <table><tr><th>Nom</th><th>Prénom</th><th>Classe</th></tr>
+          ${membres.map(m => `<tr><td>${m.nom}</td><td>${m.prenom||''}</td><td>${m.classe||'—'}</td></tr>`).join('')}
+          </table>`;
+      }
+
+      if (relaisAteliers.length) {
+        const assignments = getRelayAssignmentsForProf(prof.nom);
+        p += `<div class="card-title">Créneaux atelier</div>
+          <table><tr><th>Atelier</th><th>08h30–10h05</th><th>10h25–12h20</th><th>13h30–15h05</th></tr>`;
+        relaisAteliers.forEach(r => {
+          const at = DATA.ateliers.find(a => a.num === r.atelier);
+          p += `<tr>
+            <td><strong>At.${r.atelier}</strong> ${at ? at.nom : ''}</td>
+            <td>${r.c1===prof.nom ? '✓ Vous' : (r.c1||'—')}</td>
+            <td>${r.c2===prof.nom ? '✓ Vous' : (r.c2||'—')}</td>
+            <td>${r.c3===prof.nom ? '✓ Vous' : (r.c3||'—')}</td>
+          </tr>`;
+        });
+        p += `</table>`;
+        if (assignments.length) {
+          p += `<div class="card-title">Groupes qui passent à vos ateliers</div>`;
+          assignments.forEach(assign => {
+            p += `<p style="font-size:.8rem;font-weight:600;margin:8px 0 4px">Atelier ${assign.atelierNum} — ${assign.atelierNom} · ${assign.blockLabel} (${assign.blockTime})</p>
+              <table><tr><th>Passage</th><th>Horaire</th><th>Groupe(s)</th></tr>
+              ${assign.passages.map(pp => `<tr><td>${pp.label}</td><td>${pp.heure}</td><td>${pp.groupes.join(', ')||'—'}</td></tr>`).join('')}
+              </table>`;
+          });
+        }
+      }
 
       if (res) {
         p += `<div class="card-title">Disponibilité réserve</div>
@@ -2253,22 +2283,22 @@ function printAtelierSigns() {
       .sign-num {
         font-family: 'DM Sans', sans-serif;
         font-weight: 700;
-        font-size: 28pt;
+        font-size: 32pt;
         color: #2d6a4f;
         text-transform: uppercase;
-        letter-spacing: 4px;
-        margin-bottom: 16mm;
+        letter-spacing: 6px;
+        margin-bottom: 14mm;
       }
       .sign-nom {
         font-family: 'Bebas Neue', sans-serif;
-        font-size: 72pt;
+        font-size: 100pt;
         color: #111;
-        line-height: 1.05;
-        margin-bottom: 12mm;
+        line-height: 1;
+        margin-bottom: 14mm;
       }
       .sign-lieu {
-        font-size: 18pt;
-        color: #666;
+        font-size: 22pt;
+        color: #555;
         font-weight: 500;
       }
       @media print {
