@@ -1141,6 +1141,7 @@ button:active,
 .podium-2 .podium-base { background: rgba(192,192,192,.4); }
 .podium-3 .podium-base { background: rgba(205,127,50,.4); }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
 </head>
 <body>
 
@@ -2197,9 +2198,15 @@ function printAllFiches(type) {
         uniqueAtelierNums.forEach(num => {
           const at = DATA.ateliers.find(a => a.num === num);
           if (!at) return;
-          const qrUrl = at.video_url
-            ? `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(at.video_url)}`
-            : null;
+          let qrSvg = '';
+          if (at.video_url && typeof qrcode === 'function') {
+            try {
+              const qr = qrcode(0, 'M');
+              qr.addData(at.video_url);
+              qr.make();
+              qrSvg = qr.createSvgTag({scalable: false, margin: 2});
+            } catch(e) {}
+          }
           p += `<div class="card-title">Déroulement — At.${at.num} · ${at.nom}</div>
             <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:14px">
               <div style="flex:1">
@@ -2209,8 +2216,8 @@ function printAllFiches(type) {
                   ? `<div class="hors-classement">${at.score}</div>`
                   : `<div class="score-box"><strong>Score :</strong> ${at.score||''}</div>`}
               </div>
-              ${qrUrl ? `<div style="text-align:center;flex-shrink:0">
-                <img src="${qrUrl}" style="width:120px;height:120px;border-radius:6px;border:1px solid #c8e6d8" alt="QR vidéo">
+              ${qrSvg ? `<div style="text-align:center;flex-shrink:0">
+                <div style="width:120px;height:120px;border-radius:6px;border:1px solid #c8e6d8;overflow:hidden">${qrSvg}</div>
                 <div style="font-size:.62rem;color:#555;margin-top:4px">Vidéo démo</div>
               </div>` : ''}
             </div>`;
