@@ -2346,6 +2346,14 @@ function printAllFiches(type) {
         ${at.hors_classement
           ? `<div class="hors-classement">⚠ ${at.score}</div>`
           : `<div class="score-box">🏆 ${at.score}</div>`}
+        ${at.video_url ? `<div class="card-title">Vidéo démo</div>
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:14px">
+          <div style="font-size:.82rem;line-height:1.6;color:#444;flex:1">Scannez le QR code pour voir la vidéo démo de l'atelier.<br><strong>Lien :</strong> ${at.video_url}</div>
+          <div style="text-align:center;flex-shrink:0">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(at.video_url)}" style="width:100px;height:100px;border-radius:6px;border:1px solid #c8e6d8" alt="QR vidéo">
+            <div style="font-size:.6rem;color:#555;margin-top:4px">Vidéo démo</div>
+          </div>
+        </div>` : ''}
         <div class="card-title">Matériel</div>
         <p style="font-size:.85rem;line-height:1.7;margin:0 0 14px">${at.materiel}</p>
         ${relais ? `<div class="card-title">Responsables par créneau</div>
