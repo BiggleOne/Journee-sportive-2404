@@ -1344,12 +1344,15 @@ button:active,
 </section>
 
 <section class="section" id="section-podium">
-  <p class="section-title">Podium <span>en direct</span></p>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:8px">
+    <p class="section-title" style="margin:0">Podium <span>en direct</span></p>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span id="podium-last-update" style="font-size:.72rem;color:var(--gris)">Pas encore chargé</span>
+      <button onclick="loadClassement(true)" style="padding:5px 12px;background:var(--surface-strong);color:var(--blanc);border:1px solid var(--border);border-radius:6px;font-size:.75rem;cursor:pointer;font-family:inherit">⟳ Actualiser</button>
+    </div>
+  </div>
   <div id="podium-container" style="display:flex;justify-content:center;align-items:flex-end;gap:16px;width:100%;padding:20px 0 40px;flex-wrap:nowrap">
     <div style="text-align:center;color:var(--gris);font-size:.9rem;padding:40px">Chargement…</div>
-  </div>
-  <div style="text-align:center;margin-top:8px">
-    <span class="classement-update" id="podium-last-update" style="font-size:.75rem;color:var(--gris)">Pas encore chargé</span>
   </div>
 </section>
 
@@ -2797,7 +2800,8 @@ function initApp() {
   window.setInterval(updateLiveStatus, 30000);
   window.setInterval(() => {
     const sec = document.getElementById('section-classement');
-    if (sec && sec.classList.contains('active')) loadClassement(false);
+    const sec2 = document.getElementById('section-podium');
+    if ((sec && sec.classList.contains('active')) || (sec2 && sec2.classList.contains('active'))) loadClassement(false);
   }, 60000);
 }
 
