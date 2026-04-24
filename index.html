@@ -1159,6 +1159,7 @@ button:active,
         <button class="nav-tab" data-section="materiel" onclick="showSection('materiel')">Matériel</button>
         <button class="nav-tab" data-section="reserve" onclick="showSection('reserve')">Réserve</button>
         <button class="nav-tab" data-section="classement" onclick="showSection('classement')">Classement</button>
+        <button class="nav-tab" data-section="podium" onclick="showSection('podium')">Podium</button>
         <button class="nav-tab" data-section="admin" onclick="showSection('admin')">Admin</button>
       </div>
 
@@ -1188,6 +1189,7 @@ button:active,
       <button class="nav-tab" data-section="materiel" onclick="showSection('materiel')">Matériel</button>
       <button class="nav-tab" data-section="reserve" onclick="showSection('reserve')">Réserve</button>
       <button class="nav-tab" data-section="classement" onclick="showSection('classement')">Classement</button>
+      <button class="nav-tab" data-section="podium" onclick="showSection('podium')">Podium</button>
       <button class="nav-tab" data-section="admin" onclick="showSection('admin')">Admin</button>
     </div>
   </div>
@@ -1338,6 +1340,16 @@ button:active,
       <div class="assignment-sub" style="margin-bottom:14px">16 pages A4 — une par atelier avec uniquement le numéro en très grand, à poser sur les tables.</div>
       <button class="classement-refresh" onclick="printAtelierNumbers()">🖨 Imprimer les numéros d'ateliers</button>
     </div>
+  </div>
+</section>
+
+<section class="section" id="section-podium">
+  <p class="section-title">Podium <span>en direct</span></p>
+  <div id="podium-container" style="display:flex;justify-content:center;align-items:flex-end;gap:16px;width:100%;padding:20px 0 40px;flex-wrap:nowrap">
+    <div style="text-align:center;color:var(--gris);font-size:.9rem;padding:40px">Chargement…</div>
+  </div>
+  <div style="text-align:center;margin-top:8px">
+    <span class="classement-update" id="podium-last-update" style="font-size:.75rem;color:var(--gris)">Pas encore chargé</span>
   </div>
 </section>
 
@@ -1581,6 +1593,7 @@ function renderSection(id) {
   if (id === 'materiel') renderMateriel();
   if (id === 'reserve') renderReserve();
   if (id === 'classement') loadClassement();
+  if (id === 'podium') loadClassement();
   if (id === 'admin') {}
 }
 
@@ -2706,6 +2719,49 @@ function renderClassementTable(ranking) {
       </table>
     </div>
     <p class="classement-note">Score total = somme des scores de tous les ateliers · La Mûrisserie hors classement</p>`;
+
+  renderPodiumBig(ranking);
+}
+
+function renderPodiumBig(ranking) {
+  const el = document.getElementById('podium-container');
+  const upd = document.getElementById('podium-last-update');
+  if (!el) return;
+
+  if (!ranking.length) {
+    el.innerHTML = '<div style="text-align:center;color:var(--gris);font-size:.9rem;padding:40px">Aucun score pour le moment.</div>';
+    return;
+  }
+
+  const order = [ranking[1], ranking[0], ranking[2]];
+  const medals  = ['🥈','🥇','🥉'];
+  const ranks   = [2, 1, 3];
+  const heights = ['55vh', '70vh', '45vh'];
+  const colors  = [
+    'rgba(192,192,192,.15)', 'rgba(255,215,0,.15)', 'rgba(205,127,50,.15)'
+  ];
+  const borders = [
+    '2px solid rgba(192,192,192,.5)', '3px solid rgba(255,215,0,.6)', '2px solid rgba(205,127,50,.5)'
+  ];
+  const baseColors = [
+    'rgba(192,192,192,.4)', 'rgba(255,215,0,.5)', 'rgba(205,127,50,.4)'
+  ];
+
+  el.innerHTML = order.map((item, i) => {
+    if (!item) return `<div style="flex:1"></div>`;
+    const nom = getGroupNom(item.groupe);
+    return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end">
+      <div style="width:100%;background:${colors[i]};border:${borders[i]};border-radius:20px;padding:clamp(16px,3vw,40px) 10px clamp(20px,3vw,40px);display:flex;flex-direction:column;align-items:center;gap:8px;height:${heights[i]};justify-content:flex-end;box-sizing:border-box">
+        <div style="font-size:clamp(3rem,8vw,7rem);line-height:1">${medals[i]}</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(1.6rem,5vw,4.5rem);letter-spacing:2px;color:var(--blanc);text-align:center;line-height:1.05">${nom || item.groupe}</div>
+        <div style="font-size:clamp(.7rem,1.5vw,1rem);color:var(--gris);letter-spacing:1px">${item.groupe}</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,7vw,6rem);color:var(--vert-clair);line-height:1">${item.total}<span style="font-size:clamp(.9rem,2vw,1.8rem);color:var(--gris);font-family:inherit"> pts</span></div>
+      </div>
+      <div style="width:100%;height:14px;background:${baseColors[i]};border-radius:0 0 12px 12px;margin-top:4px"></div>
+    </div>`;
+  }).join('');
+
+  if (upd) upd.textContent = 'Mis à jour à ' + new Date().toLocaleTimeString('fr-BE', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
 }
 
 function initApp() {
